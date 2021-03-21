@@ -19,6 +19,8 @@ class PostScreen extends StatefulWidget {
 class _PostScreenState extends State<PostScreen> {
   List<dynamic> stories = [];
 
+  bool isUpdating = false;
+
   @override
   void initState() {
     super.initState();
@@ -30,19 +32,24 @@ class _PostScreenState extends State<PostScreen> {
 
   void _getData() async {
     var param = {
-      'userid' : currentUser.id,
+      'userid': currentUser.id,
     };
 
+    setState(() {
+      isUpdating = true;
+    });
+
     var resp = await NetworkService(context)
-        .ajax('chat_post', param, isProgress: true);
+        .ajax('chat_post', param, isProgress: false);
 
     stories.clear();
-    stories = (resp['stories'].map((item) => ExtraStoryModel.fromMap(item)).toList());
+    stories =
+        (resp['stories'].map((item) => ExtraStoryModel.fromMap(item)).toList());
     stories.sort((b, a) => a.list.last.regdate.compareTo(b.list.last.regdate));
 
-    setState(() {
+    isUpdating = false;
 
-    });
+    setState(() {});
   }
 
   @override
@@ -62,7 +69,30 @@ class _PostScreenState extends State<PostScreen> {
         padding: EdgeInsets.symmetric(vertical: offsetXSm),
         child: Column(
           children: [
-            StoryWidget(),
+            AnimatedContainer(
+              duration: Duration(milliseconds: 300),
+              height: isUpdating ? 48 : 0,
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: offsetSm),
+                padding: EdgeInsets.symmetric(
+                    vertical: offsetSm, horizontal: offsetBase),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
+                  gradient: getGradientColor(color: blueColor),
+                ),
+                child: Text(
+                  'Updating now...',
+                  style:
+                      semiBold.copyWith(fontSize: fontSm, color: Colors.white),
+                ),
+              ),
+            ),
+            StoryWidget(
+              stories: stories,
+              refresh: () {
+                _getData();
+              },
+            ),
           ],
         ),
       ),
