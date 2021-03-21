@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+
 import 'package:simplechat/models/story_model.dart';
 import 'package:simplechat/screens/story/add_story_screen.dart';
 import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/utils/dimens.dart';
 
 class StoryWidget extends StatefulWidget {
+  final List<dynamic> stories;
+  final Function() refresh;
+
+  const StoryWidget({
+    Key key,
+    @required this.stories,
+    this.refresh,
+  }) : super(key: key);
+
   @override
   _StoryWidgetState createState() => _StoryWidgetState();
 }
@@ -31,17 +41,16 @@ class _StoryWidgetState extends State<StoryWidget> {
       child: Row(
         children: [
           InkWell(
-            onTap: () {
-              NavigatorService(context).pushToWidget(screen: AddStoryScreen(),
-                pop: (value) {
-                  if (value != null) {
-                    setState(() {});
-                  }
-                }
-              );
-            },
-              child: StoryModel().addCell()
-          ),
+              onTap: () {
+                NavigatorService(context).pushToWidget(
+                    screen: AddStoryScreen(),
+                    pop: (value) {
+                      if (value != null) {
+                        if (widget.refresh != null) widget.refresh();
+                      }
+                    });
+              },
+              child: StoryModel().addCell()),
           Expanded(
             child: ListView.builder(
               shrinkWrap: true,
