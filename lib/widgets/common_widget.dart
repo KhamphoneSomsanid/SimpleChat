@@ -92,3 +92,35 @@ class SettingCellWidget extends StatelessWidget {
     );
   }
 }
+
+class UpdateWidget extends StatelessWidget {
+  const UpdateWidget({
+    Key key,
+    @required this.isUpdating,
+    @required this.title,
+  }) : super(key: key);
+
+  final bool isUpdating;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 300),
+      height: isUpdating ? 48 : 0,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: offsetSm),
+        padding:
+            EdgeInsets.symmetric(vertical: offsetSm, horizontal: offsetBase),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
+          gradient: getGradientColor(color: blueColor),
+        ),
+        child: Text(
+          title,
+          style: semiBold.copyWith(fontSize: fontSm, color: Colors.white),
+        ),
+      ),
+    );
+  }
+}

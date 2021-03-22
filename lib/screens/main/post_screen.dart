@@ -7,8 +7,8 @@ import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/utils/colors.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/params.dart';
-import 'package:simplechat/utils/themes.dart';
 import 'package:simplechat/widgets/appbar_widget.dart';
+import 'package:simplechat/widgets/common_widget.dart';
 import 'package:simplechat/widgets/story_widget.dart';
 
 class PostScreen extends StatefulWidget {
@@ -17,8 +17,9 @@ class PostScreen extends StatefulWidget {
 }
 
 class _PostScreenState extends State<PostScreen> {
-  List<dynamic> stories = [];
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+  List<dynamic> stories = [];
   bool isUpdating = false;
 
   @override
@@ -47,14 +48,15 @@ class _PostScreenState extends State<PostScreen> {
         (resp['stories'].map((item) => ExtraStoryModel.fromMap(item)).toList());
     stories.sort((b, a) => a.list.last.regdate.compareTo(b.list.last.regdate));
 
-    isUpdating = false;
-
-    setState(() {});
+    setState(() {
+      isUpdating = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: MainBarWidget(
         titleIcon: Container(
           padding: EdgeInsets.all(offsetBase),
@@ -69,23 +71,9 @@ class _PostScreenState extends State<PostScreen> {
         padding: EdgeInsets.symmetric(vertical: offsetXSm),
         child: Column(
           children: [
-            AnimatedContainer(
-              duration: Duration(milliseconds: 300),
-              height: isUpdating ? 48 : 0,
-              child: Container(
-                margin: EdgeInsets.symmetric(vertical: offsetSm),
-                padding: EdgeInsets.symmetric(
-                    vertical: offsetSm, horizontal: offsetBase),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
-                  gradient: getGradientColor(color: blueColor),
-                ),
-                child: Text(
-                  'Updating now...',
-                  style:
-                      semiBold.copyWith(fontSize: fontSm, color: Colors.white),
-                ),
-              ),
+            UpdateWidget(
+              isUpdating: isUpdating,
+              title: 'Updating now ...',
             ),
             StoryWidget(
               stories: stories,

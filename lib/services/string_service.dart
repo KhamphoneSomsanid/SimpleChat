@@ -4,14 +4,14 @@ import 'dart:io';
 import 'package:intl/intl.dart';
 
 class StringService {
-  
   static String getCurrentTime(String str) {
     if (str.isNotEmpty) {
       DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
       DateTime dateTime = dateFormat.parse(str, true);
       DateTime localTime = dateTime.toLocal();
       return dateFormat.format(localTime);
-    } else return '';
+    } else
+      return '';
   }
 
   static String getCurrentTimeValue(String str) {
@@ -33,7 +33,8 @@ class StringService {
       if (diffMin > 0) return '${diffMin}m ago';
 
       return 'less a min';
-    } else return '';
+    } else
+      return '';
   }
 
   static String getChatTime(String str) {
@@ -43,14 +44,17 @@ class StringService {
       DateTime localTime = dateTime.toLocal();
 
       return DateFormat("h:mm a").format(localTime);
-    } else return '';
+    } else
+      return '';
   }
 
   static String formatName(String str) {
     if (str != null && str.isNotEmpty)
       return str[0].toUpperCase() + str.substring(1);
-    else if (str.isEmpty) return '';
-    else return null;
+    else if (str.isEmpty)
+      return '';
+    else
+      return null;
   }
 
   static String getCurrentUTCTime() {
@@ -61,6 +65,4 @@ class StringService {
     List<int> imageBytes = file.readAsBytesSync();
     return base64Encode(imageBytes);
   }
-
-  
 }
