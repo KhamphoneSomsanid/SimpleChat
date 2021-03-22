@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:simplechat/services/string_service.dart';
 import 'package:simplechat/utils/colors.dart';
 import 'package:simplechat/utils/dimens.dart';
@@ -48,7 +50,7 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
     if (timer != null) {
       timer.cancel();
     }
-    timer = Timer(const Duration(seconds: 3), () {
+    timer = Timer(const Duration(seconds: 5), () {
       pageChangeToNext();
     });
   }
@@ -181,11 +183,25 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
                       color: Colors.black.withOpacity(0.7),
                       borderRadius: BorderRadius.all(Radius.circular(24.0)),
                     ),
-                    child: Center(
-                        child: Icon(
-                      Icons.close,
-                      color: Colors.white,
-                    )),
+                    child: Stack(
+                      children: [
+                        Center(
+                            child: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                        )),
+                        CircularPercentIndicator(
+                          radius: 48.0,
+                          lineWidth: 3.0,
+                          animationDuration: 5000,
+                          percent: 1.0,
+                          animation: true,
+                          restartAnimation: true,
+                          progressColor: primaryColor,
+                          backgroundColor: Colors.white,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

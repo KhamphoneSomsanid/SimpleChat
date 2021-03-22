@@ -133,8 +133,15 @@ class UserModel {
 
   Widget itemRequestWidget(Function() send) {
     return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(offsetBase),
+      ),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetSm),
+        padding: EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetBase),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
+          gradient: getGradientColor(color: Colors.grey),
+        ),
         child: Row(
           children: [
             CircleAvatarWidget(
@@ -177,12 +184,19 @@ class UserModel {
 
   Widget itemAcceptWidget(Function() accept, Function() cancel, Function() detail) {
     return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(offsetBase),
+      ),
       child: InkWell(
         onTap: () {
           detail();
         },
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetSm),
+          padding: EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetBase),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
+            gradient: getGradientColor(color: primaryColor),
+          ),
           child: Row(
             children: [
               CircleAvatarWidget(
