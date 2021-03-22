@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:simplechat/screens/login_screen.dart';
+import 'package:simplechat/screens/setting/membership_screen.dart';
 import 'package:simplechat/screens/setting/profile_screen.dart';
 import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/network_service.dart';
@@ -51,22 +52,7 @@ class _SettingScreenState extends State<SettingScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  OutLineLabel(title: 'User managment'),
-                  Spacer(),
-                  Column(
-                    children: [
-                      Text('Expired', style: semiBold.copyWith(fontSize: fontXSm),),
-                      SizedBox(height: offsetXSm,),
-                      OutLineLabel(title: currentUser.expiredate.split(' ')[0],
-                        fontSize: fontXSm,
-                        titleColor: Colors.deepOrange,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+              OutLineLabel(title: 'User managment'),
               SizedBox(
                 height: offsetSm,
               ),
@@ -76,6 +62,25 @@ class _SettingScreenState extends State<SettingScreen> {
                         .pushToWidget(screen: ProfileScreen());
                   },
                   child: currentUser.itemSettingWidget()),
+              SizedBox(
+                height: offsetSm,
+              ),
+              InkWell(
+                onTap: () {
+                  NavigatorService(context).pushToWidget(
+                      screen: MemberShipScreen(),
+                    pop: (value) {
+                      setState(() {});
+                    }
+                  );
+                },
+                child: SettingCellWidget(
+                  icon: 'assets/icons/ic_membership.svg',
+                  title: 'Membership',
+                  detail: currentUser.expiredate.split(' ')[0],
+                  textColor: primaryColor,
+                ),
+              ),
               SizedBox(
                 height: offsetBase,
               ),
@@ -103,8 +108,17 @@ class _SettingScreenState extends State<SettingScreen> {
                 height: offsetSm,
               ),
               SettingCellWidget(
-                icon: 'assets/icons/ic_post.svg',
-                title: 'Posts',
+                icon: 'assets/icons/ic_chat.svg',
+                title: 'Chat',
+                detail: '11',
+                textColor: Colors.deepPurpleAccent,
+              ),
+              SizedBox(
+                height: offsetSm,
+              ),
+              SettingCellWidget(
+                icon: 'assets/icons/ic_friend.svg',
+                title: 'Friends',
                 detail: '11',
                 textColor: Colors.deepPurpleAccent,
               ),

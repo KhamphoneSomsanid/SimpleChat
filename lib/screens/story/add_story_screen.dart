@@ -260,7 +260,6 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
                           ],
                         ),
                       ),
-                if (thumbnail != null) Image.memory(thumbnail),
                 SizedBox(
                   height: offsetLg,
                 ),

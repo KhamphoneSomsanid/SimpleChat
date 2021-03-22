@@ -20,6 +20,7 @@ class Assets {
   static const String iconsIcLike = 'assets/icons/ic_like.svg';
   static const String iconsIcLink = 'assets/icons/ic_link.svg';
   static const String iconsIcLogo = 'assets/icons/ic_logo.png';
+  static const String iconsIcMembership = 'assets/icons/ic_membership.svg';
   static const String iconsIcNearby = 'assets/icons/ic_nearby.svg';
   static const String iconsIcNotificationOn = 'assets/icons/ic_notification_on.svg';
   static const String iconsIcPicture = 'assets/icons/ic_picture.svg';

@@ -12,6 +12,7 @@ import 'package:simplechat/utils/colors.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/params.dart';
 import 'package:simplechat/widgets/appbar_widget.dart';
+import 'package:simplechat/widgets/common_widget.dart';
 import 'package:simplechat/widgets/empty_widget.dart';
 import 'package:simplechat/widgets/textfield_widget.dart';
 
@@ -26,6 +27,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
   var badgeInfo = {};
   var searchController = TextEditingController();
 
+  bool isUpdating = false;
 
   @override
   void initState() {
@@ -49,6 +51,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
   }
 
   _getRoom() async {
+    setState(() {
+      isUpdating = true;
+    });
+
     var param = {
       'id' : currentUser.id,
     };
@@ -77,7 +83,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
         showRooms.add(room);
       }
     }
-    setState(() {});
+    setState(() {isUpdating = false;});
   }
 
   @override
@@ -105,6 +111,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
           padding: EdgeInsets.all(offsetBase),
           child: Column(
             children: [
+              UpdateWidget(
+                isUpdating: isUpdating,
+                title: 'Updating now ...',
+              ),
               SearchWidget(
                 searchController: searchController,
                 onClear: () {

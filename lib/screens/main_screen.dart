@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:simplechat/main.dart';
 import 'package:simplechat/screens/main/chat_list_screen.dart';
@@ -6,6 +7,9 @@ import 'package:simplechat/screens/main/nearby_screen.dart';
 import 'package:simplechat/screens/main/noti_screen.dart';
 import 'package:simplechat/screens/main/post_screen.dart';
 import 'package:simplechat/screens/main/setting_screen.dart';
+import 'package:simplechat/screens/post/add_post_screen.dart';
+import 'package:simplechat/screens/setting/invite_screen.dart';
+import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/notification_service.dart';
 import 'package:simplechat/services/socket_service.dart';
 import 'package:simplechat/utils/constants.dart';
@@ -28,6 +32,14 @@ class _MainScreenState extends State<MainScreen> {
 
     socketService = injector.get<SocketService>();
     socketService.createSocketConnection();
+
+    initInAppPurchase();
+  }
+
+  initInAppPurchase() async {
+    // prepare
+    var result = await FlutterInappPurchase.instance.initConnection;
+    print('result: $result');
   }
 
   var _screens = <int, Widget Function()>{
@@ -71,6 +83,19 @@ class _MainScreenState extends State<MainScreen> {
     } else {
       return Colors.green.withOpacity(0.6);
     }
+  }
+
+  Icon getIcon() {
+    switch (selectedIndex) {
+      case 0:
+      case 1:
+        return Icon(Icons.add);
+      case 3:
+        return appSettingInfo['isNearby']? Icon(Icons.add) : Icon(Icons.admin_panel_settings_outlined);
+      case 4:
+        return Icon(Icons.admin_panel_settings_outlined);
+    }
+    return Icon(Icons.add);
   }
 
   @override
@@ -135,7 +160,30 @@ class _MainScreenState extends State<MainScreen> {
           notchMargin: 8.0,
         ),
         floatingActionButton:
-            FloatingActionButton(child: Icon(Icons.add), onPressed: () {}),
+            FloatingActionButton(child: getIcon(), onPressed: () {
+              switch (selectedIndex) {
+                case 0:
+                  NavigatorService(context).pushToWidget(
+                      screen: AddPostScreen(),
+                      pop: (value) {
+                        if (value != null) {
+                          setState(() {});
+                        }
+                      }
+                  );
+                  break;
+                case 1:
+                  NavigatorService(context).pushToWidget(
+                      screen: InviteScreen(),
+                      pop: (value) {
+                        if (value != null) {
+                          setState(() {});
+                        }
+                      }
+                  );
+                  break;
+              }
+            }),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
