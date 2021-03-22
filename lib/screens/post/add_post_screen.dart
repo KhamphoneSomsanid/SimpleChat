@@ -49,6 +49,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetMd),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: offsetBase),
@@ -111,6 +112,16 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 ),
                 SizedBox(
                   height: offsetLg,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: offsetBase),
+                  child: Text(
+                    'Add Media',
+                    style: semiBold.copyWith(fontSize: fontMd),
+                  ),
+                ),
+                SizedBox(
+                  height: offsetBase,
                 ),
               ],
             ),

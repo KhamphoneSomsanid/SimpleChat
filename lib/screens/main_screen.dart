@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:simplechat/main.dart';
 import 'package:simplechat/screens/main/chat_list_screen.dart';
@@ -31,6 +32,14 @@ class _MainScreenState extends State<MainScreen> {
 
     socketService = injector.get<SocketService>();
     socketService.createSocketConnection();
+
+    initInAppPurchase();
+  }
+
+  initInAppPurchase() async {
+    // prepare
+    var result = await FlutterInappPurchase.instance.initConnection;
+    print('result: $result');
   }
 
   var _screens = <int, Widget Function()>{

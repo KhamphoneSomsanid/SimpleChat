@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:simplechat/utils/colors.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/params.dart';
@@ -12,6 +15,12 @@ class MemberShipScreen extends StatefulWidget {
 }
 
 class _MemberShipScreenState extends State<MemberShipScreen> {
+  StreamSubscription _purchaseUpdatedSubscription;
+  StreamSubscription _purchaseErrorSubscription;
+  StreamSubscription _conectionSubscription;
+  final List<String> _productLists = ['com.laodev.simplechat.membership'];
+  List<IAPItem> _items = [];
+  List<PurchasedItem> _purchases = [];
 
   var isFree = true;
   var freeMemberFeature = [
@@ -33,6 +42,91 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
   @override
   void initState() {
     super.initState();
+
+    initPlatformState();
+  }
+
+  @override
+  void dispose() {
+    if (_conectionSubscription != null) {
+      _conectionSubscription.cancel();
+      _conectionSubscription = null;
+    }
+    super.dispose();
+  }
+
+
+  Future<void> initPlatformState() async {
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    // refresh items for android
+    try {
+      String msg = await FlutterInappPurchase.instance.consumeAllItems;
+      print('consumeAllItems: $msg');
+    } catch (err) {
+      print('consumeAllItems error: $err');
+    }
+
+    _conectionSubscription = FlutterInappPurchase.connectionUpdated.listen((connected) {
+      print('connected: $connected');
+    });
+
+    _purchaseUpdatedSubscription = FlutterInappPurchase.purchaseUpdated.listen((productItem) {
+      print('purchase-updated: $productItem');
+    });
+
+    _purchaseErrorSubscription = FlutterInappPurchase.purchaseError.listen((purchaseError) {
+      print('purchase-error: $purchaseError');
+    });
+
+    _getProduct();
+  }
+
+  void _requestPurchase(IAPItem item) {
+    FlutterInappPurchase.instance.requestPurchase(item.productId);
+  }
+
+  Future _getProduct() async {
+    List<IAPItem> items = await FlutterInappPurchase.instance.getProducts(_productLists);
+    for (var item in items) {
+      print('${item.toString()}');
+      this._items.add(item);
+    }
+
+    setState(() {
+      this._items = items;
+      this._purchases = [];
+    });
+  }
+
+  Future _getPurchases() async {
+    List<PurchasedItem> items =
+    await FlutterInappPurchase.instance.getAvailablePurchases();
+    for (var item in items) {
+      print('${item.toString()}');
+      this._purchases.add(item);
+    }
+
+    setState(() {
+      this._items = [];
+      this._purchases = items;
+    });
+  }
+
+  Future _getPurchaseHistory() async {
+    List<PurchasedItem> items = await FlutterInappPurchase.instance.getPurchaseHistory();
+    for (var item in items) {
+      print('${item.toString()}');
+      this._purchases.add(item);
+    }
+
+    setState(() {
+      this._items = [];
+      this._purchases = items;
+    });
   }
 
   @override
@@ -128,10 +222,16 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
                       ],
                     ),
                     SizedBox(height: offsetBase),
-                    isFree ? OutLineLabel(
-                      title: 'Upgrade Now',
-                      titleColor: Colors.white,
-                      fontSize: fontMd,
+                    isFree ? InkWell(
+                      onTap: () {
+                        if (_items.isEmpty) return;
+                        _requestPurchase(_items[0]);
+                      },
+                      child: OutLineLabel(
+                        title: 'Upgrade Now',
+                        titleColor: Colors.white,
+                        fontSize: fontMd,
+                      ),
                     ) : Container(
                       child: Text(
                           'Your account will be expired in ${currentUser.expiredate.split(' ')[0]}.',
