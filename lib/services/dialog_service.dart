@@ -52,7 +52,8 @@ class DialogService {
     String content,
     GlobalKey<ScaffoldState> _scaffoldKey, {
     SnackBarType type = SnackBarType.SUCCESS,
-        Function() dismiss,
+    Function() dismiss,
+    int microseconds = 1500,
   }) {
     var backgroundColor = Colors.white;
     switch (type) {
@@ -70,26 +71,30 @@ class DialogService {
         break;
     }
 
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Card(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(offsetBase)),
-        elevation: 1.0,
-        child: Container(
-          padding: EdgeInsets.all(offsetBase),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
-            gradient: getGradientColor(color: backgroundColor),
+    _scaffoldKey.currentState
+        .showSnackBar(SnackBar(
+          content: Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(offsetBase)),
+            elevation: 1.0,
+            child: Container(
+              padding: EdgeInsets.all(offsetBase),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
+                gradient: getGradientColor(color: backgroundColor),
+              ),
+              child: Text(
+                content,
+                style: semiBold.copyWith(fontSize: fontMd, color: Colors.white),
+              ),
+            ),
           ),
-          child: Text(
-            content,
-            style: semiBold.copyWith(fontSize: fontMd, color: Colors.white),
-          ),
-        ),
-      ),
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-    )).closed.then((value) {
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          duration: Duration(microseconds: 1500),
+        ))
+        .closed
+        .then((value) {
       if (dismiss != null) dismiss();
     });
   }

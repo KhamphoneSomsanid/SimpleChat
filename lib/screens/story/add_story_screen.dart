@@ -12,6 +12,7 @@ import 'package:simplechat/services/load_service.dart';
 import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/services/string_service.dart';
 import 'package:simplechat/utils/colors.dart';
+import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/params.dart';
 import 'package:simplechat/utils/themes.dart';
@@ -58,7 +59,9 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
   }
 
   _videoPicker(ImageSource source) async {
-    PickedFile video = await ImagePicker().getVideo(source: source,);
+    PickedFile video = await ImagePicker().getVideo(
+      source: source,
+    );
     setState(() {
       _video = video;
       _playVideo();
@@ -87,141 +90,198 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
           titleString: 'Add Story',
         ),
         body: Container(
-          padding: EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetMd),
+          padding:
+              EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetMd),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: offsetBase),
-                  child: Text('Add Media', style: semiBold.copyWith(fontSize: fontMd),),
+                  child: Text(
+                    'Add Media',
+                    style: semiBold.copyWith(fontSize: fontMd),
+                  ),
                 ),
-                SizedBox(height: offsetBase,),
+                SizedBox(
+                  height: offsetBase,
+                ),
                 (_image == null && _video == null)
                     ? DottedBorder(
-                  borderType: BorderType.RRect,
-                  radius: Radius.circular(offsetBase),
-                  dashPattern: [8, 4],
-                  strokeWidth: 2,
-                  color: Colors.blueGrey,
-                  child: Container(
-                    width: double.infinity,
-                    height: (MediaQuery.of(context).size.width - offsetBase * 2) * 0.56,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
-                      child: Row(
-                        children: [
-                          Spacer(),
-                          InkWell(
-                            onTap: () {
-                              showPickerDialog();
-                            },
-                            child: Container(
-                              margin: EdgeInsets.symmetric(vertical: offsetLg),
-                              padding: EdgeInsets.all(offsetMd),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(offsetMd)),
-                                gradient: getGradientColor(color: Colors.purple)
-                              ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Spacer(),
-                                  SvgPicture.asset('assets/icons/ic_picture.svg', width: 48, height: 48, color: Colors.white,),
-                                  SizedBox(height: offsetBase,),
-                                  Text('Image', style: semiBold.copyWith(fontSize: fontLg, color: Colors.white,),),
-                                  Spacer(),
-                                ],
-                              ),
-                            ),
+                        borderType: BorderType.RRect,
+                        radius: Radius.circular(offsetBase),
+                        dashPattern: [8, 4],
+                        strokeWidth: 2,
+                        color: Colors.blueGrey,
+                        child: Container(
+                          width: double.infinity,
+                          height: (MediaQuery.of(context).size.width -
+                                  offsetBase * 2) *
+                              0.56,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(offsetBase)),
                           ),
-                          SizedBox(width: offsetXLg,),
-                          InkWell(
-                            onTap: () {
-                              showPickerDialog(isVideo: true);
-                            },
-                            child: Container(
-                              margin: EdgeInsets.symmetric(vertical: offsetLg),
-                              padding: EdgeInsets.all(offsetMd),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(Radius.circular(offsetMd)),
-                                  gradient: getGradientColor(color: Colors.pink)
-                              ),
-                              child: Column(
-                                children: [
-                                  Spacer(),
-                                  SvgPicture.asset('assets/icons/ic_camera.svg', width: 48, height: 48, color: Colors.white,),
-                                  SizedBox(height: offsetBase,),
-                                  Text('Video', style: semiBold.copyWith(fontSize: fontLg, color: Colors.white,),),
-                                  Spacer(),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Spacer(),
-                        ],
-                      ),
-                    ),
-                  ),
-                )
-                    : Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(offsetBase))
-                  ),
-                  child: Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
-                        child: _image != null ? previewImage() : previewVideo(),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Align(
-                          alignment: Alignment.topRight,
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                _image = null;
-                                _video = null;
-                                if (_videoController != null && _videoController.value.isPlaying) {
-                                  _videoController.pause();
-                                }
-                              });
-                            },
-                            child: Container(
-                              width: 36.0, height: 36.0,
-                              decoration: BoxDecoration(
-                                color: Colors.black54,
-                                borderRadius: BorderRadius.all(Radius.circular(18.0))
-                              ),
-                              child: Icon(Icons.close, color: Colors.white,),
+                          child: ClipRRect(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(offsetBase)),
+                            child: Row(
+                              children: [
+                                Spacer(),
+                                InkWell(
+                                  onTap: () {
+                                    showPickerDialog();
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: offsetLg),
+                                    padding: EdgeInsets.all(offsetMd),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(offsetMd)),
+                                        gradient: getGradientColor(
+                                            color: Colors.purple)),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Spacer(),
+                                        SvgPicture.asset(
+                                          'assets/icons/ic_picture.svg',
+                                          width: 48,
+                                          height: 48,
+                                          color: Colors.white,
+                                        ),
+                                        SizedBox(
+                                          height: offsetBase,
+                                        ),
+                                        Text(
+                                          'Image',
+                                          style: semiBold.copyWith(
+                                            fontSize: fontLg,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Spacer(),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                if (appSettingInfo['isVideoStory'])
+                                  SizedBox(
+                                    width: offsetXLg,
+                                  ),
+                                if (appSettingInfo['isVideoStory'])
+                                  InkWell(
+                                    onTap: () {
+                                      showPickerDialog(isVideo: true);
+                                    },
+                                    child: Container(
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: offsetLg),
+                                      padding: EdgeInsets.all(offsetMd),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(offsetMd)),
+                                          gradient: getGradientColor(
+                                              color: Colors.pink)),
+                                      child: Column(
+                                        children: [
+                                          Spacer(),
+                                          SvgPicture.asset(
+                                            'assets/icons/ic_camera.svg',
+                                            width: 48,
+                                            height: 48,
+                                            color: Colors.white,
+                                          ),
+                                          SizedBox(
+                                            height: offsetBase,
+                                          ),
+                                          Text(
+                                            'Video',
+                                            style: semiBold.copyWith(
+                                              fontSize: fontLg,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          Spacer(),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                Spacer(),
+                              ],
                             ),
                           ),
                         ),
+                      )
+                    : Container(
+                        decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(offsetBase))),
+                        child: Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(offsetBase)),
+                              child: _image != null
+                                  ? previewImage()
+                                  : previewVideo(),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Align(
+                                alignment: Alignment.topRight,
+                                child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _image = null;
+                                      _video = null;
+                                      if (_videoController != null &&
+                                          _videoController.value.isPlaying) {
+                                        _videoController.pause();
+                                      }
+                                    });
+                                  },
+                                  child: Container(
+                                    width: 36.0,
+                                    height: 36.0,
+                                    decoration: BoxDecoration(
+                                        color: Colors.black54,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(18.0))),
+                                    child: Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                ),
-
                 if (thumbnail != null) Image.memory(thumbnail),
-
-                SizedBox(height: offsetLg,),
+                SizedBox(
+                  height: offsetLg,
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: offsetBase),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Add Comment', style: semiBold.copyWith(fontSize: fontMd),),
+                      Text(
+                        'Add Comment',
+                        style: semiBold.copyWith(fontSize: fontMd),
+                      ),
                       InkWell(
                         onTap: () {
                           setState(() {
                             _commentController.text = '';
                           });
                         },
-                        child: Text('Clear', style: semiBold.copyWith(
+                        child: Text(
+                          'Clear',
+                          style: semiBold.copyWith(
                             fontSize: fontMd,
                             color: Colors.red,
                             decoration: TextDecoration.underline,
@@ -231,7 +291,9 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: offsetBase,),
+                SizedBox(
+                  height: offsetBase,
+                ),
                 Container(
                   padding: EdgeInsets.all(offsetBase),
                   decoration: BoxDecoration(
@@ -261,14 +323,18 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: offsetLg,),
+                SizedBox(
+                  height: offsetLg,
+                ),
                 FullWidthButton(
                   title: 'Add Story',
                   action: () {
                     _addStory();
                   },
                 ),
-                SizedBox(height: offsetLg,),
+                SizedBox(
+                  height: offsetLg,
+                ),
               ],
             ),
           ),
@@ -278,16 +344,19 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
   }
 
   Future<void> _addStory() async {
-    String comment =  _commentController.text;
+    String comment = _commentController.text;
     if (_image == null && _video == null && comment.isEmpty) {
-      DialogService(context).showSnackbar('Please input a story data.', _scaffoldKey, type: SnackBarType.WARING);
+      DialogService(context).showSnackbar(
+          'Please input a story data.', _scaffoldKey,
+          type: SnackBarType.WARING);
       return;
     }
 
     LoadService().showLoading(context);
 
     var param = {
-      'userid' : currentUser.id,
+      'userid': currentUser.id,
+      'regdate': StringService.getCurrentUTCTime(),
     };
     var resp = await NetworkService(context)
         .ajax('chat_add_story', param, isProgress: false);
@@ -309,11 +378,17 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
       File file;
       String type;
       if (_image != null) {
-        base64Thumnbail = await ImageService().getThumbnailBase64FromImage(File(_image.path), width: 90, height: 160);
+        base64Thumnbail = await ImageService().getThumbnailBase64FromImage(
+            File(_image.path),
+            width: 90,
+            height: 160);
         file = File(_image.path);
         type = 'IMAGE';
       } else if (_video != null) {
-        base64Thumnbail = await ImageService().getThumbnailBase64FromVideo(File(_video.path), width: 90, height: 160);
+        base64Thumnbail = await ImageService().getThumbnailBase64FromVideo(
+            File(_video.path),
+            width: 90,
+            height: 160);
         file = File(_video.path);
         type = 'VIDEO';
       }
@@ -326,19 +401,17 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
         type: type,
         regdate: StringService.getCurrentUTCTime(),
       );
-      respUpload = await mediaModel.upload(file: file, thumbnail: base64Thumnbail);
+      respUpload =
+          await mediaModel.upload(file: file, thumbnail: base64Thumnbail);
     }
 
     LoadService().hideLoading(context);
 
     if (respUpload['ret'] == 10000) {
       DialogService(context).showSnackbar(
-        'Successfully posting your story.',
-        _scaffoldKey,
-        dismiss: () {
-          Navigator.of(context).pop(true);
-        }
-      );
+          'Successfully posting your story.', _scaffoldKey, dismiss: () {
+        Navigator.of(context).pop(true);
+      });
     }
   }
 
@@ -438,7 +511,8 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
                             horizontal: offsetBase, vertical: offsetBase),
                         decoration: BoxDecoration(
                           gradient: getGradientColor(color: data['color']),
-                          borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(offsetBase)),
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -448,7 +522,9 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
                               size: 36,
                               color: Colors.white,
                             ),
-                            SizedBox(height: offsetSm,),
+                            SizedBox(
+                              height: offsetSm,
+                            ),
                             Text(
                               data['title'],
                               style: semiBold.copyWith(

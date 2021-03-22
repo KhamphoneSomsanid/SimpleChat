@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:simplechat/models/user_model.dart';
 import 'package:simplechat/services/string_service.dart';
 import 'package:simplechat/utils/colors.dart';
@@ -11,43 +14,21 @@ import 'package:simplechat/widgets/image_widget.dart';
 class StoryModel {
   String id;
   String userid;
-  String username;
-  String userimg;
   String content;
+  String thumbnail;
+  String url;
   String regdate;
   String type;
 
-  StoryModel(
-      {this.id,
-      this.userid,
-      this.username,
-      this.userimg,
-      this.content,
-      this.regdate,
-      this.type});
-
-  factory StoryModel.fromMap(Map<String, dynamic> map) {
-    return new StoryModel(
-      id: map['id'] as String,
-      userid: map['userid'] as String,
-      username: map['username'] as String,
-      userimg: map['userimg'] as String,
-      content: map['content'] as String,
-      regdate: map['regdate'] as String,
-      type: map['type'] as String,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'userid': this.userid,
-      'username': this.username,
-      'userimg': this.userimg,
-      'content': this.content,
-      'regdate': this.regdate,
-      'type': this.type,
-    };
-  }
+  StoryModel({
+    this.id,
+    this.userid,
+    this.content,
+    this.thumbnail,
+    this.url,
+    this.regdate,
+    this.type,
+  });
 
   Widget addCell() {
     return Container(
@@ -69,7 +50,8 @@ class StoryModel {
         borderRadius: BorderRadius.all(Radius.circular(offsetSm)),
         child: Stack(
           children: [
-            Image.network(currentUser.imgurl,
+            Image.network(
+              currentUser.imgurl,
               width: double.infinity,
               height: double.infinity,
               fit: BoxFit.cover,
@@ -77,8 +59,13 @@ class StoryModel {
                 return event == null
                     ? widget
                     : Center(
-                      child: Image.asset('assets/icons/ic_logo.png', color: Colors.grey, width: 48, fit: BoxFit.fitWidth,),
-                );
+                        child: Image.asset(
+                          'assets/icons/ic_logo.png',
+                          color: Colors.grey,
+                          width: 48,
+                          fit: BoxFit.fitWidth,
+                        ),
+                      );
               },
             ),
             Padding(
@@ -86,14 +73,17 @@ class StoryModel {
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Container(
-                  width: 40.0, height: 40.0,
+                  width: 40.0,
+                  height: 40.0,
                   decoration: BoxDecoration(
                       color: primaryColor,
                       border: Border.all(color: Colors.white, width: 2.0),
-                      borderRadius: BorderRadius.all(Radius.circular(24.0))
-                  ),
+                      borderRadius: BorderRadius.all(Radius.circular(24.0))),
                   child: Center(
-                    child: Icon(Icons.add, color: Colors.white,),
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -104,8 +94,10 @@ class StoryModel {
                 width: double.infinity,
                 color: Colors.black.withOpacity(0.5),
                 padding: EdgeInsets.all(offsetSm),
-                child: Text('Add to\nStory',
-                  style: boldText.copyWith(fontSize: fontXSm, color: Colors.white),
+                child: Text(
+                  'Add to\nStory',
+                  style:
+                      boldText.copyWith(fontSize: fontXSm, color: Colors.white),
                 ),
               ),
             ),
@@ -115,6 +107,34 @@ class StoryModel {
     );
   }
 
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'userid': userid,
+      'content': content,
+      'thumbnail': thumbnail,
+      'url': url,
+      'regdate': regdate,
+      'type': type,
+    };
+  }
+
+  factory StoryModel.fromMap(Map<String, dynamic> map) {
+    return StoryModel(
+      id: map['id'],
+      userid: map['userid'],
+      regdate: map['regdate'],
+      content: map['content'],
+      thumbnail: map['thumbnail'],
+      url: map['url'],
+      type: map['type'],
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory StoryModel.fromJson(String source) =>
+      StoryModel.fromMap(json.decode(source));
 }
 
 class ExtraStoryModel {
@@ -126,11 +146,18 @@ class ExtraStoryModel {
   factory ExtraStoryModel.fromMap(Map<String, dynamic> map) {
     List<dynamic> stories = [];
     stories = (map['list'].map((item) => StoryModel.fromMap(item)).toList());
-    stories.sort((a, b) => a.regdate.compareTo(b.regdate));
+
+    var rArray = [];
+    for (var story in stories) {
+      if (story.type != null) {
+        rArray.add(story);
+      }
+    }
+    rArray.sort((b, a) => b.regdate.compareTo(a.regdate));
 
     return new ExtraStoryModel(
       user: UserModel.fromMap(map['user']),
-      list: stories,
+      list: rArray,
     );
   }
 
@@ -156,24 +183,30 @@ class ExtraStoryModel {
         borderRadius: BorderRadius.all(Radius.circular(offsetSm)),
         child: Stack(
           children: [
-            content == null? Container(
-              color: getRandomColor(),
-              width: double.infinity, height: double.infinity,
-            ) : content,
+            content == null
+                ? Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    decoration: BoxDecoration(
+                      gradient: getGradientColor(color: getRandomColor()),
+                    ),
+                  )
+                : content,
             Padding(
               padding: const EdgeInsets.all(4.0),
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Container(
-                  width: 40.0, height: 40.0,
+                  width: 40.0,
+                  height: 40.0,
                   decoration: BoxDecoration(
                       color: Colors.grey,
                       border: Border.all(color: Colors.white, width: 2.0),
-                      borderRadius: BorderRadius.all(Radius.circular(24.0))
-                  ),
+                      borderRadius: BorderRadius.all(Radius.circular(24.0))),
                   child: CircleAvatarWidget(
                     headurl: user.imgurl,
                     size: 40,
+                    borderWidth: 0.5,
                   ),
                 ),
               ),
@@ -188,13 +221,17 @@ class ExtraStoryModel {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(user.username,
+                    Text(
+                      StringService.getCurrentTimeValue(list.last.regdate),
                       maxLines: 1,
-                      style: boldText.copyWith(fontSize: fontXSm, color: Colors.white),
+                      style: mediumText.copyWith(
+                          fontSize: fontXSm, color: Colors.white),
                     ),
-                    Text(StringService.getCurrentTimeValue(list.last.regdate),
+                    Text(
+                      user.id == currentUser.id ? 'Yours' : user.username,
                       maxLines: 1,
-                      style: mediumText.copyWith(fontSize: fontXSm, color: Colors.white),
+                      style: boldText.copyWith(
+                          fontSize: fontXSm, color: Colors.white),
                     ),
                   ],
                 ),
@@ -205,5 +242,4 @@ class ExtraStoryModel {
       ),
     );
   }
-
 }
