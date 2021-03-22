@@ -8,7 +8,6 @@ import 'package:simplechat/screens/main/post_screen.dart';
 import 'package:simplechat/screens/main/setting_screen.dart';
 import 'package:simplechat/services/notification_service.dart';
 import 'package:simplechat/services/socket_service.dart';
-import 'package:simplechat/utils/colors.dart';
 import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/themes.dart';
@@ -50,13 +49,15 @@ class _MainScreenState extends State<MainScreen> {
       'icon': '',
       'title': '',
     },
-    appSettingInfo['isNearby'] ? {
-      'icon': 'assets/icons/ic_nearby.svg',
-      'title': 'Nearby',
-    } : {
-      'icon': 'assets/icons/ic_notification_on.svg',
-      'title': 'Notify',
-    },
+    appSettingInfo['isNearby']
+        ? {
+            'icon': 'assets/icons/ic_nearby.svg',
+            'title': 'Nearby',
+          }
+        : {
+            'icon': 'assets/icons/ic_notification_on.svg',
+            'title': 'Notify',
+          },
     {
       'icon': 'assets/icons/ic_setting.svg',
       'title': 'Setting',
@@ -118,8 +119,8 @@ class _MainScreenState extends State<MainScreen> {
                                     item['title'],
                                     style: semiBold.copyWith(
                                         fontSize: fontSm,
-                                        color:
-                                            getColor(bottomItems.indexOf(item))),
+                                        color: getColor(
+                                            bottomItems.indexOf(item))),
                                   ),
                                 ],
                               ),
