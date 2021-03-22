@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:simplechat/models/story_model.dart';
 import 'package:simplechat/screens/story/add_story_screen.dart';
+import 'package:simplechat/screens/story/story_detail_screen.dart';
 import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/utils/colors.dart';
 import 'package:simplechat/utils/dimens.dart';
@@ -58,8 +59,14 @@ class _StoryWidgetState extends State<StoryWidget> {
                 itemCount: widget.stories.length,
                 itemBuilder: (context, i) {
                   return widget.stories[i].cell(
-                    content: _getContent(widget.stories[i]),
-                  );
+                      content: _getContent(widget.stories[i]),
+                      action: () {
+                        NavigatorService(context).pushToWidget(
+                            screen: StoryDetailScreen(
+                          list: widget.stories[i].list,
+                          user: widget.stories[i].user,
+                        ));
+                      });
                 },
                 scrollDirection: Axis.horizontal,
               ),

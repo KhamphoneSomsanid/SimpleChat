@@ -163,81 +163,88 @@ class ExtraStoryModel {
 
   Widget cell({
     Widget content,
+    Function() action,
   }) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: offsetXSm, vertical: offsetXSm),
-      width: 90,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(offsetSm)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.15),
-            spreadRadius: 2,
-            blurRadius: 3,
-            offset: Offset(0, 1), // changes position of shadow
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(offsetSm)),
-        child: Stack(
-          children: [
-            content == null
-                ? Container(
-                    width: double.infinity,
-                    height: double.infinity,
+    return InkWell(
+      onTap: () {
+        action();
+      },
+      child: Container(
+        margin:
+            EdgeInsets.symmetric(horizontal: offsetXSm, vertical: offsetXSm),
+        width: 90,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(offsetSm)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.15),
+              spreadRadius: 2,
+              blurRadius: 3,
+              offset: Offset(0, 1), // changes position of shadow
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(offsetSm)),
+          child: Stack(
+            children: [
+              content == null
+                  ? Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      decoration: BoxDecoration(
+                        gradient: getGradientColor(color: getRandomColor()),
+                      ),
+                    )
+                  : content,
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Container(
+                    width: 40.0,
+                    height: 40.0,
                     decoration: BoxDecoration(
-                      gradient: getGradientColor(color: getRandomColor()),
+                        color: Colors.grey,
+                        border: Border.all(color: Colors.white, width: 2.0),
+                        borderRadius: BorderRadius.all(Radius.circular(24.0))),
+                    child: CircleAvatarWidget(
+                      headurl: user.imgurl,
+                      size: 40,
+                      borderWidth: 0.5,
                     ),
-                  )
-                : content,
-            Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  width: 40.0,
-                  height: 40.0,
-                  decoration: BoxDecoration(
-                      color: Colors.grey,
-                      border: Border.all(color: Colors.white, width: 2.0),
-                      borderRadius: BorderRadius.all(Radius.circular(24.0))),
-                  child: CircleAvatarWidget(
-                    headurl: user.imgurl,
-                    size: 40,
-                    borderWidth: 0.5,
                   ),
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Container(
-                width: double.infinity,
-                height: 40,
-                color: Colors.black.withOpacity(0.5),
-                padding: EdgeInsets.all(offsetSm),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      StringService.getCurrentTimeValue(list.last.regdate),
-                      maxLines: 1,
-                      style: mediumText.copyWith(
-                          fontSize: fontXSm, color: Colors.white),
-                    ),
-                    Text(
-                      user.id == currentUser.id ? 'Yours' : user.username,
-                      maxLines: 1,
-                      style: boldText.copyWith(
-                          fontSize: fontXSm, color: Colors.white),
-                    ),
-                  ],
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Container(
+                  width: double.infinity,
+                  height: 40,
+                  color: Colors.black.withOpacity(0.5),
+                  padding: EdgeInsets.all(offsetSm),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        StringService.getCurrentTimeValue(list.last.regdate),
+                        maxLines: 1,
+                        style: mediumText.copyWith(
+                            fontSize: fontXSm, color: Colors.white),
+                      ),
+                      Text(
+                        user.id == currentUser.id ? 'Yours' : user.username,
+                        maxLines: 1,
+                        style: boldText.copyWith(
+                            fontSize: fontXSm, color: Colors.white),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
