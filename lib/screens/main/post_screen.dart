@@ -20,6 +20,8 @@ class _PostScreenState extends State<PostScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   List<dynamic> stories = [];
+  List<dynamic> posts = [];
+
   bool isUpdating = false;
 
   @override

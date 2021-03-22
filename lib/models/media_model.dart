@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/services/string_service.dart';
+import 'package:simplechat/utils/dimens.dart';
 
 class MediaModel {
   String id;
@@ -15,6 +17,8 @@ class MediaModel {
   String regdate;
   String other;
 
+  File file;
+
   MediaModel(
       {this.id,
       this.userid,
@@ -25,7 +29,8 @@ class MediaModel {
       this.kind,
       this.type,
       this.regdate,
-      this.other});
+      this.other,
+      this.file});
 
   factory MediaModel.fromMap(Map<String, dynamic> map) {
     return new MediaModel(
@@ -53,7 +58,42 @@ class MediaModel {
     };
   }
 
-  Future<dynamic> upload({File file, String thumbnail}) async {
+  Widget mediaWidget(Widget preview, {Function() remove}) {
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius:
+          BorderRadius.all(Radius.circular(offsetBase))),
+      child: Stack(
+        children: [
+          ClipRRect(
+            borderRadius:
+            BorderRadius.all(Radius.circular(offsetBase)),
+            child: preview,
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: InkWell(
+              onTap: () {
+                remove();
+              },
+              child: Container(
+                margin: EdgeInsets.only(right: offsetSm, top: offsetSm),
+                padding: EdgeInsets.all(offsetXSm),
+                width: 24.0, height: 24.0,
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.7),
+                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                ),
+                child: Icon(Icons.close, color: Colors.white, size: 16,),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<dynamic> upload() async {
     var param = toMap();
     if (file != null) {
       param['base64'] = StringService.getBase64FromFile(file);

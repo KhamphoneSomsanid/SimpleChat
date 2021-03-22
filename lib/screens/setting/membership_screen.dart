@@ -149,6 +149,14 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
                   gradient: getGradientColor(color: blueColor),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.15),
+                      spreadRadius: 0,
+                      blurRadius: 1,
+                      offset: Offset(0, 0), // changes position of shadow
+                    ),
+                  ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,6 +197,14 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
                   gradient: getGradientColor(color: primaryColor),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.15),
+                      spreadRadius: 0,
+                      blurRadius: 1,
+                      offset: Offset(0, 0), // changes position of shadow
+                    ),
+                  ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
