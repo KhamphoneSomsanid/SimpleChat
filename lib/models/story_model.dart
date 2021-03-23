@@ -139,25 +139,19 @@ class StoryModel {
 
 class ExtraStoryModel {
   UserModel user;
-  List<dynamic> list;
+  List<StoryModel> list;
 
   ExtraStoryModel({this.user, this.list});
 
   factory ExtraStoryModel.fromMap(Map<String, dynamic> map) {
-    List<dynamic> stories = [];
-    stories = (map['list'].map((item) => StoryModel.fromMap(item)).toList());
-
-    var rArray = [];
-    for (var story in stories) {
-      if (story.type != null) {
-        rArray.add(story);
-      }
+    List<StoryModel> stories = [];
+    for (var storyJson in map['list']) {
+      StoryModel model = StoryModel.fromMap(storyJson);
+      stories.add(model);
     }
-    rArray.sort((b, a) => b.regdate.compareTo(a.regdate));
-
-    return new ExtraStoryModel(
+    return ExtraStoryModel(
       user: UserModel.fromMap(map['user']),
-      list: rArray,
+      list: stories,
     );
   }
 
@@ -249,4 +243,20 @@ class ExtraStoryModel {
       ),
     );
   }
+
+  Map<String, dynamic> toMap() {
+    List<dynamic> listMap = [];
+    for (var item in list) {
+      listMap.add(item.toMap());
+    }
+    return {
+      'user': user.toMap(),
+      'list': listMap,
+    };
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory ExtraStoryModel.fromJson(String source) =>
+      ExtraStoryModel.fromMap(json.decode(source));
 }

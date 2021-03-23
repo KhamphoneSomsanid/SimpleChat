@@ -1,11 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
-import 'package:simplechat/widgets/image_widget.dart';
-import 'package:simplechat/widgets/user_status_widget.dart';
 import 'package:flutter/material.dart';
+
 import 'package:simplechat/services/string_service.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/themes.dart';
 import 'package:simplechat/widgets/common_widget.dart';
+import 'package:simplechat/widgets/image_widget.dart';
+import 'package:simplechat/widgets/user_status_widget.dart';
 
 class RoomModel {
   String id;
@@ -35,18 +38,18 @@ class RoomModel {
       this.lasttime});
 
   factory RoomModel.fromMap(Map<String, dynamic> map) {
-    return new RoomModel(
-      id: map['id'] as String,
-      title: map['title'] as String,
-      imgurl: map['imgurl'] as String,
-      creatorid: map['creatorid'] as String,
-      type: map['type'] as String,
-      regdate: map['regdate'] as String,
-      status: map['status'] as String,
-      other: map['other'] as String,
-      lastname: map['lastname'] as String,
-      lastmsg: map['lastmsg'] as String,
-      lasttime: map['lasttime'] as String,
+    return RoomModel(
+      id: map['id'],
+      title: map['title'],
+      imgurl: map['imgurl'],
+      creatorid: map['creatorid'],
+      type: map['type'],
+      regdate: map['regdate'],
+      status: map['status'],
+      other: map['other'],
+      lastname: map['lastname'],
+      lastmsg: map['lastmsg'],
+      lasttime: map['lasttime'],
     );
   }
 
@@ -71,13 +74,12 @@ class RoomModel {
     return Column(
       children: [
         Container(
-          padding:
-              EdgeInsets.only(
-                left: offsetBase,
-                right: offsetBase,
-                top: offsetBase,
-                bottom: offsetSm,
-              ),
+          padding: EdgeInsets.only(
+            left: offsetBase,
+            right: offsetBase,
+            top: offsetBase,
+            bottom: offsetSm,
+          ),
           child: InkWell(
             onTap: () {
               chat();
@@ -140,7 +142,7 @@ class RoomModel {
                     SizedBox(
                       height: offsetSm,
                     ),
-                    if (badge > 0)
+                    if (badge != null && badge > 0)
                       Container(
                         padding: EdgeInsets.symmetric(
                             horizontal: 6.0, vertical: 2.0),
@@ -161,8 +163,31 @@ class RoomModel {
             ),
           ),
         ),
-        DividerWidget(padding: EdgeInsets.only(left: 64),),
+        DividerWidget(
+          padding: EdgeInsets.only(left: 64),
+        ),
       ],
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'imgurl': imgurl,
+      'creatorid': creatorid,
+      'type': type,
+      'regdate': regdate,
+      'status': status,
+      'other': other,
+      'lastname': lastname,
+      'lastmsg': lastmsg,
+      'lasttime': lasttime,
+    };
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory RoomModel.fromJson(String source) =>
+      RoomModel.fromMap(json.decode(source));
 }

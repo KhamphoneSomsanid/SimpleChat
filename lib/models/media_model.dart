@@ -52,6 +52,7 @@ class MediaModel {
       'userid': this.userid,
       'mediaid': this.mediaid,
       'content': this.content,
+      'thumbnail': this.thumbnail ?? '',
       'kind': this.kind,
       'type': this.type,
       'regdate': this.regdate,
@@ -61,13 +62,11 @@ class MediaModel {
   Widget mediaWidget(Widget preview, {Function() remove}) {
     return Container(
       decoration: BoxDecoration(
-          borderRadius:
-          BorderRadius.all(Radius.circular(offsetBase))),
+          borderRadius: BorderRadius.all(Radius.circular(offsetBase))),
       child: Stack(
         children: [
           ClipRRect(
-            borderRadius:
-            BorderRadius.all(Radius.circular(offsetBase)),
+            borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
             child: preview,
           ),
           Align(
@@ -79,12 +78,17 @@ class MediaModel {
               child: Container(
                 margin: EdgeInsets.only(right: offsetSm, top: offsetSm),
                 padding: EdgeInsets.all(offsetXSm),
-                width: 24.0, height: 24.0,
+                width: 24.0,
+                height: 24.0,
                 decoration: BoxDecoration(
                   color: Colors.black.withOpacity(0.7),
                   borderRadius: BorderRadius.all(Radius.circular(12.0)),
                 ),
-                child: Icon(Icons.close, color: Colors.white, size: 16,),
+                child: Icon(
+                  Icons.close,
+                  color: Colors.white,
+                  size: 16,
+                ),
               ),
             ),
           ),
@@ -98,24 +102,29 @@ class MediaModel {
       aspectRatio: 1.0,
       child: ClipRRect(
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular((isOne == false && (type == 3 || type == 5)) ? offsetBase : 0),
-          topRight: Radius.circular((isOne == false && (type == 2 || type == 4)) ? offsetBase : 0),
-          bottomLeft: Radius.circular((isOne == false && (type == 1 || type == 5)) ? offsetBase : 0),
-          bottomRight: Radius.circular((isOne == false && (type == 0 || type == 4)) ? offsetBase : 0),
+          topLeft: Radius.circular(
+              (isOne == false && (type == 3 || type == 5)) ? offsetBase : 0),
+          topRight: Radius.circular(
+              (isOne == false && (type == 2 || type == 4)) ? offsetBase : 0),
+          bottomLeft: Radius.circular(
+              (isOne == false && (type == 1 || type == 5)) ? offsetBase : 0),
+          bottomRight: Radius.circular(
+              (isOne == false && (type == 0 || type == 4)) ? offsetBase : 0),
         ),
-        child: Image.network(thumbnail,
+        child: Image.network(
+          thumbnail,
           fit: BoxFit.cover,
           loadingBuilder: (context, widget, event) {
             return event == null
                 ? widget
                 : Center(
-              child: Image.asset(
-                'assets/icons/ic_logo.png',
-                color: Colors.grey,
-                width: 56,
-                fit: BoxFit.fitWidth,
-              ),
-            );
+                    child: Image.asset(
+                      'assets/icons/ic_logo.png',
+                      color: Colors.grey,
+                      width: 56,
+                      fit: BoxFit.fitWidth,
+                    ),
+                  );
           },
         ),
       ),
@@ -132,5 +141,4 @@ class MediaModel {
         .ajax('chat_upload', param, isProgress: false);
     return resp;
   }
-
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:simplechat/utils/colors.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/themes.dart';
@@ -52,8 +53,8 @@ class UserModel {
       expiredate: map['expiredate'],
       type: map['type'],
       other: map['other'],
-      birthday: map['birthday'],
       gender: map['gender'],
+      birthday: map['birthday'],
       language: map['language'],
       comment: map['comment'],
     );
@@ -137,7 +138,8 @@ class UserModel {
         borderRadius: BorderRadius.circular(offsetBase),
       ),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetBase),
+        padding:
+            EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetBase),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
           gradient: getGradientColor(color: Colors.grey),
@@ -154,8 +156,7 @@ class UserModel {
             Expanded(
               child: Text(
                 username,
-                style: semiBold.copyWith(
-                    fontSize: fontMd),
+                style: semiBold.copyWith(fontSize: fontMd),
               ),
             ),
             InkWell(
@@ -163,7 +164,8 @@ class UserModel {
                 send();
               },
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: offsetSm, vertical: offsetXSm),
+                padding: EdgeInsets.symmetric(
+                    horizontal: offsetSm, vertical: offsetXSm),
                 decoration: BoxDecoration(
                   color: primaryColor.withOpacity(0.3),
                   border: Border.all(color: primaryColor, width: 0.3),
@@ -182,7 +184,8 @@ class UserModel {
     );
   }
 
-  Widget itemAcceptWidget(Function() accept, Function() cancel, Function() detail) {
+  Widget itemAcceptWidget(
+      Function() accept, Function() cancel, Function() detail) {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(offsetBase),
@@ -192,7 +195,8 @@ class UserModel {
           detail();
         },
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetBase),
+          padding: EdgeInsets.symmetric(
+              horizontal: offsetBase, vertical: offsetBase),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
             gradient: getGradientColor(color: primaryColor),
@@ -209,8 +213,7 @@ class UserModel {
               Expanded(
                 child: Text(
                   username,
-                  style: semiBold.copyWith(
-                      fontSize: fontMd),
+                  style: semiBold.copyWith(fontSize: fontMd),
                 ),
               ),
               InkWell(
@@ -218,7 +221,8 @@ class UserModel {
                   accept();
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: offsetSm, vertical: offsetXSm),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: offsetSm, vertical: offsetXSm),
                   decoration: BoxDecoration(
                     color: primaryColor.withOpacity(0.3),
                     border: Border.all(color: primaryColor, width: 0.3),
@@ -231,13 +235,16 @@ class UserModel {
                   ),
                 ),
               ),
-              SizedBox(width: offsetSm,),
+              SizedBox(
+                width: offsetSm,
+              ),
               InkWell(
                 onTap: () {
                   cancel();
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: offsetSm, vertical: offsetXSm),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: offsetSm, vertical: offsetXSm),
                   decoration: BoxDecoration(
                     color: Colors.red.withOpacity(0.3),
                     border: Border.all(color: Colors.red, width: 0.3),
@@ -272,7 +279,8 @@ class UserModel {
           detail();
         },
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetBase),
+          padding: EdgeInsets.symmetric(
+              horizontal: offsetBase, vertical: offsetBase),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
             gradient: getGradientColor(color: getRandomColor()),
@@ -289,8 +297,8 @@ class UserModel {
               Expanded(
                 child: Text(
                   username,
-                  style: semiBold.copyWith(
-                      fontSize: fontMd, color: Colors.white),
+                  style:
+                      semiBold.copyWith(fontSize: fontMd, color: Colors.white),
                 ),
               ),
               InkWell(
@@ -298,46 +306,65 @@ class UserModel {
                   chat();
                 },
                 child: Container(
-                  width: 28.0, height: 28.0,
+                  width: 28.0,
+                  height: 28.0,
                   padding: EdgeInsets.all(offsetSm),
                   decoration: BoxDecoration(
                     color: Colors.green.withOpacity(0.3),
                     border: Border.all(color: Colors.green, width: 0.3),
                     borderRadius: BorderRadius.all(Radius.circular(offsetXMd)),
                   ),
-                  child: Icon(Icons.chat, color: Colors.green, size: 12.0,),
+                  child: Icon(
+                    Icons.chat,
+                    color: Colors.green,
+                    size: 12.0,
+                  ),
                 ),
               ),
-              SizedBox(width: offsetBase,),
+              SizedBox(
+                width: offsetBase,
+              ),
               InkWell(
                 onTap: () {
                   voice();
                 },
                 child: Container(
-                  width: 28.0, height: 28.0,
+                  width: 28.0,
+                  height: 28.0,
                   padding: EdgeInsets.all(offsetSm),
                   decoration: BoxDecoration(
                     color: Colors.green.withOpacity(0.3),
                     border: Border.all(color: Colors.green, width: 0.3),
                     borderRadius: BorderRadius.all(Radius.circular(offsetXMd)),
                   ),
-                  child: Icon(Icons.call, color: Colors.green, size: 12.0,),
+                  child: Icon(
+                    Icons.call,
+                    color: Colors.green,
+                    size: 12.0,
+                  ),
                 ),
               ),
-              SizedBox(width: offsetBase,),
+              SizedBox(
+                width: offsetBase,
+              ),
               InkWell(
                 onTap: () {
                   video();
                 },
                 child: Container(
-                  width: 28.0, height: 28.0,
+                  width: 28.0,
+                  height: 28.0,
                   padding: EdgeInsets.all(offsetSm),
                   decoration: BoxDecoration(
                     color: Colors.green.withOpacity(0.3),
                     border: Border.all(color: Colors.green, width: 0.3),
                     borderRadius: BorderRadius.all(Radius.circular(offsetXMd)),
                   ),
-                  child: Icon(Icons.videocam, color: Colors.green, size: 12.0,),
+                  child: Icon(
+                    Icons.videocam,
+                    color: Colors.green,
+                    size: 12.0,
+                  ),
                 ),
               ),
             ],
@@ -347,4 +374,24 @@ class UserModel {
     );
   }
 
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'email': email,
+      'username': username,
+      'imgurl': imgurl,
+      'deviceid': deviceid,
+      'regdate': regdate,
+      'updatedate': updatedate,
+      'expiredate': expiredate,
+      'type': type,
+      'other': other,
+      'gender': gender,
+      'birthday': birthday,
+      'language': language,
+      'comment': comment,
+    };
+  }
+
+  String toJson() => json.encode(toMap());
 }

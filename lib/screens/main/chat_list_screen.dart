@@ -22,8 +22,8 @@ class ChatListScreen extends StatefulWidget {
 }
 
 class _ChatListScreenState extends State<ChatListScreen> {
-  var rooms = [];
-  var showRooms = [];
+  List<RoomModel> rooms = [];
+  List<RoomModel> showRooms = [];
   var badgeInfo = {};
   var searchController = TextEditingController();
 
@@ -42,6 +42,15 @@ class _ChatListScreenState extends State<ChatListScreen> {
     });
 
     socketService.updateChatList(updateChatList: _updateChatList);
+
+    preViewData();
+  }
+
+  void preViewData() async {
+    rooms.clear();
+    rooms = await PreferenceService().getRoomData();
+
+    filterData();
   }
 
   _updateChatList(value) {
@@ -56,14 +65,18 @@ class _ChatListScreenState extends State<ChatListScreen> {
     });
 
     var param = {
-      'id' : currentUser.id,
+      'id': currentUser.id,
     };
-    var resp = await NetworkService(null)
-        .ajax('chat_room', param, isProgress: false);
+    var resp =
+        await NetworkService(null).ajax('chat_room', param, isProgress: false);
     if (resp['ret'] == 10000) {
       rooms.clear();
-      rooms = (resp['result'].map((item) => RoomModel.fromMap(item)).toList());
+      for (var storyJson in resp['result']) {
+        RoomModel model = RoomModel.fromMap(storyJson);
+        rooms.add(model);
+      }
       rooms.sort((b, a) => a.lasttime.compareTo(b.lasttime));
+      await PreferenceService().setRoomData(rooms);
 
       for (var room in rooms) {
         var badge = await PreferenceService().getRoomBadge(room.id);
@@ -83,7 +96,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
         showRooms.add(room);
       }
     }
-    setState(() {isUpdating = false;});
+    setState(() {
+      isUpdating = false;
+    });
   }
 
   @override
@@ -130,25 +145,26 @@ class _ChatListScreenState extends State<ChatListScreen> {
               Expanded(
                 child: showRooms.isEmpty
                     ? EmptyWidget(
-                  title: 'You have not any chat room. After accept friend, please try it again.',
-                ) : ListView.builder(
-                    itemCount: showRooms.length,
-                    itemBuilder: (context, i) {
-                      return showRooms[i].itemRoom(
-                        badge: badgeInfo[showRooms[i].id],
-                        chat: () {
-                          PreferenceService().setRoomBadge(showRooms[i].id, 0);
-                          NavigatorService(context).pushToWidget(
-                              screen: ChatScreen(
-                                room: showRooms[i],
-                              ),
-                            pop: (val) {
-                              _getRoom();
-                            }
-                          );
-                        }
-                      );
-                    }),
+                        title:
+                            'You have not any chat room. After accept friend, please try it again.',
+                      )
+                    : ListView.builder(
+                        itemCount: showRooms.length,
+                        itemBuilder: (context, i) {
+                          return showRooms[i].itemRoom(
+                              badge: badgeInfo[showRooms[i].id],
+                              chat: () {
+                                PreferenceService()
+                                    .setRoomBadge(showRooms[i].id, 0);
+                                NavigatorService(context).pushToWidget(
+                                    screen: ChatScreen(
+                                      room: showRooms[i],
+                                    ),
+                                    pop: (val) {
+                                      _getRoom();
+                                    });
+                              });
+                        }),
               ),
             ],
           ),
