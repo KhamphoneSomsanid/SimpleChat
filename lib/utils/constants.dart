@@ -23,3 +23,12 @@ final digits4Mask =
 new MaskTextInputFormatter(mask: '####', filter: {"#": RegExp(r'[0-9]')});
 final cvvMask =
 new MaskTextInputFormatter(mask: '###', filter: {"#": RegExp(r'[0-9]')});
+
+const List<String> reviewIcons = [
+  'assets/icons/ic_review_like.png',
+  'assets/icons/ic_review_funny.png',
+  'assets/icons/ic_review_love.png',
+  'assets/icons/ic_review_angry.png',
+  'assets/icons/ic_review_sad.png',
+  'assets/icons/ic_review_wow.png',
+];

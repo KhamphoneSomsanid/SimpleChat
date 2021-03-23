@@ -73,6 +73,7 @@ class _RequestScreenState extends State<RequestScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         key: _scaffoldKey,
         appBar: MainBarWidget(
           titleString: 'Request Friend',

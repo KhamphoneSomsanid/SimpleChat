@@ -152,7 +152,7 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
                                           color: Colors.white,
                                         ),
                                         SizedBox(
-                                          height: offsetBase,
+                                          height: offsetSm,
                                         ),
                                         Text(
                                           'Image',

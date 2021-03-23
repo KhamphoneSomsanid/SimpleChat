@@ -200,15 +200,8 @@ class _UserScreenState extends State<UserScreen> {
                 onTap: () {
                   _video();
                 },
-                child: Container(
-                  width: 44.0, height: 44.0,
-                  padding: EdgeInsets.symmetric(horizontal: offsetSm, vertical: offsetSm),
-                  decoration: BoxDecoration(
-                    color: Colors.green.withOpacity(0.3),
-                    border: Border.all(color: Colors.green, width: 0.3),
-                    borderRadius: BorderRadius.all(Radius.circular(offsetXMd)),
-                  ),
-                  child: Icon(Icons.videocam, color: Colors.green, size: 28.0,),
+                child: CircleIconWidget(
+                  icon: Icon(Icons.videocam, color: Colors.green, size: 28.0,),
                 ),
               ),
               Spacer(),

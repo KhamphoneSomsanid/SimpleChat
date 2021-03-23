@@ -93,6 +93,35 @@ class MediaModel {
     );
   }
 
+  Widget cellMediaWidget({bool isOne = false, int type = 0}) {
+    return AspectRatio(
+      aspectRatio: 1.0,
+      child: ClipRRect(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular((isOne == false && (type == 3 || type == 5)) ? offsetBase : 0),
+          topRight: Radius.circular((isOne == false && (type == 2 || type == 4)) ? offsetBase : 0),
+          bottomLeft: Radius.circular((isOne == false && (type == 1 || type == 5)) ? offsetBase : 0),
+          bottomRight: Radius.circular((isOne == false && (type == 0 || type == 4)) ? offsetBase : 0),
+        ),
+        child: Image.network(thumbnail,
+          fit: BoxFit.cover,
+          loadingBuilder: (context, widget, event) {
+            return event == null
+                ? widget
+                : Center(
+              child: Image.asset(
+                'assets/icons/ic_logo.png',
+                color: Colors.grey,
+                width: 56,
+                fit: BoxFit.fitWidth,
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
   Future<dynamic> upload() async {
     var param = toMap();
     if (file != null) {
