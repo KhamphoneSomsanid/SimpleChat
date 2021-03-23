@@ -9,7 +9,6 @@ import 'package:simplechat/utils/colors.dart';
 import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/params.dart';
-import 'package:simplechat/utils/themes.dart';
 import 'package:simplechat/widgets/appbar_widget.dart';
 import 'package:simplechat/widgets/common_widget.dart';
 import 'package:simplechat/widgets/label_widget.dart';
@@ -20,7 +19,6 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -47,7 +45,8 @@ class _SettingScreenState extends State<SettingScreen> {
         ],
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetBase),
+        padding:
+            EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetBase),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,10 +68,9 @@ class _SettingScreenState extends State<SettingScreen> {
                 onTap: () {
                   NavigatorService(context).pushToWidget(
                       screen: MemberShipScreen(),
-                    pop: (value) {
-                      setState(() {});
-                    }
-                  );
+                      pop: (value) {
+                        setState(() {});
+                      });
                 },
                 child: SettingCellWidget(
                   icon: 'assets/icons/ic_membership.svg',
@@ -125,26 +123,27 @@ class _SettingScreenState extends State<SettingScreen> {
               SizedBox(
                 height: offsetBase,
               ),
-              if (appSettingInfo['isNearby']) Column(
-                children: [
-                  OutLineLabel(
-                    title: 'Nearby managment',
-                    titleColor: Colors.red,
-                  ),
-                  SizedBox(
-                    height: offsetSm,
-                  ),
-                  SettingCellWidget(
-                    icon: 'assets/icons/ic_post.svg',
-                    title: 'Posts',
-                    detail: '11',
-                    textColor: Colors.red,
-                  ),
-                  SizedBox(
-                    height: offsetBase,
-                  ),
-                ],
-              ),
+              if (appSettingInfo['isNearby'])
+                Column(
+                  children: [
+                    OutLineLabel(
+                      title: 'Nearby managment',
+                      titleColor: Colors.red,
+                    ),
+                    SizedBox(
+                      height: offsetSm,
+                    ),
+                    SettingCellWidget(
+                      icon: 'assets/icons/ic_post.svg',
+                      title: 'Posts',
+                      detail: '11',
+                      textColor: Colors.red,
+                    ),
+                    SizedBox(
+                      height: offsetBase,
+                    ),
+                  ],
+                ),
               OutLineLabel(
                 title: 'App management',
                 titleColor: Colors.orange,

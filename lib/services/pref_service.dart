@@ -7,6 +7,7 @@ class PreferenceService {
   static const keyRequestBadge = 'request_badge';
   static const keyFriendBadge = 'request_friend';
   static const keyRoomBadge = 'room_badge_';
+  static const keyNewFeed = 'new_feed';
 
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
@@ -52,9 +53,10 @@ class PreferenceService {
     await prefs.setInt(key, badge);
   }
 
-
-
-
+  Future<void> setNewFeed(int count) async {
+    final SharedPreferences prefs = await _prefs;
+    await prefs.setInt(keyFriendBadge, count);
+  }
 
   Future<String> getEmail() async {
     final SharedPreferences prefs = await _prefs;
@@ -63,17 +65,17 @@ class PreferenceService {
 
   Future<bool> getRemember() async {
     final SharedPreferences prefs = await _prefs;
-    return prefs.getBool(keyIsRemember)?? false;
+    return prefs.getBool(keyIsRemember) ?? false;
   }
 
   Future<bool> getRequestBadge() async {
     final SharedPreferences prefs = await _prefs;
-    return prefs.getBool(keyRequestBadge)?? false;
+    return prefs.getBool(keyRequestBadge) ?? false;
   }
 
   Future<bool> getFriendBadge() async {
     final SharedPreferences prefs = await _prefs;
-    return prefs.getBool(keyFriendBadge)?? false;
+    return prefs.getBool(keyFriendBadge) ?? false;
   }
 
   Future<String> getPassword() async {
@@ -87,11 +89,13 @@ class PreferenceService {
     return prefs.getInt(key) ?? 0;
   }
 
-
+  Future<int> getNewFeed() async {
+    final SharedPreferences prefs = await _prefs;
+    return prefs.getInt(keyNewFeed) ?? 0;
+  }
 
   Future<bool> checkKey(String key) async {
     final SharedPreferences prefs = await _prefs;
     return prefs.containsKey(key);
   }
-
 }
