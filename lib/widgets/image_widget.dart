@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:simplechat/utils/colors.dart';
 import 'package:simplechat/utils/constants.dart';
+import 'package:simplechat/utils/dimens.dart';
 
 class CircleAvatarWidget extends StatelessWidget {
   final String headurl;
@@ -48,4 +50,36 @@ class CircleAvatarWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+class CircleIconWidget extends StatelessWidget {
+  final double size;
+  final double borderWidth;
+  final double padding;
+  final Color color;
+  final Widget icon;
+
+  const CircleIconWidget({
+    Key key,
+    this.size = 44.0,
+    this.borderWidth = 0.3,
+    this.padding = offsetSm,
+    this.color = primaryColor,
+    @required this.icon
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size, height: size,
+      padding: EdgeInsets.all(padding),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.3),
+        border: Border.all(color: color, width: borderWidth),
+        borderRadius: BorderRadius.all(Radius.circular(size / 2)),
+      ),
+      child: icon,
+    );
+  }
+
 }

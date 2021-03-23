@@ -116,6 +116,7 @@ class _InviteScreenState extends State<InviteScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: _scaffoldKey,
+        resizeToAvoidBottomInset: false,
         appBar: MainBarWidget(
           titleString: 'Invite Friend',
           titleIcon: InkWell(

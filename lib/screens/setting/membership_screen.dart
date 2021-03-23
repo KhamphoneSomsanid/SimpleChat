@@ -149,6 +149,14 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
                   gradient: getGradientColor(color: blueColor),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.15),
+                      spreadRadius: 0,
+                      blurRadius: 1,
+                      offset: Offset(0, 0), // changes position of shadow
+                    ),
+                  ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,7 +165,7 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Free Member',
-                          style: boldText.copyWith(fontSize: fontLg, color: Colors.white),
+                          style: boldText.copyWith(fontSize: fontMd, color: Colors.white),
                         ),
                         if (isFree) OutLineLabel(
                           title: 'Your Account',
@@ -165,17 +173,17 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: offsetBase, width: double.infinity,),
+                    SizedBox(height: offsetSm, width: double.infinity,),
                     Text('Main Features',
-                      style: boldText.copyWith(fontSize: fontMd, color: Colors.white),
+                      style: boldText.copyWith(fontSize: fontBase, color: Colors.white),
                     ),
                     SizedBox(height: offsetSm),
                     for (var content in freeMemberFeature) Column(
                       children: [
                         Text(content,
-                          style: mediumText.copyWith(fontSize: fontMd, color: Colors.white),
+                          style: mediumText.copyWith(fontSize: fontBase, color: Colors.white),
                         ),
-                        SizedBox(height: offsetXSm),
+                        SizedBox(height: 2.0),
                       ],
                     ),
                   ],
@@ -189,6 +197,14 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
                   gradient: getGradientColor(color: primaryColor),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.15),
+                      spreadRadius: 0,
+                      blurRadius: 1,
+                      offset: Offset(0, 0), // changes position of shadow
+                    ),
+                  ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -197,7 +213,7 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Plus Member',
-                          style: boldText.copyWith(fontSize: fontLg, color: Colors.white),
+                          style: boldText.copyWith(fontSize: fontMd, color: Colors.white),
                         ),
                         isFree ? OutLineLabel(
                           title: '5\$ / Month',
@@ -208,17 +224,17 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: offsetBase, width: double.infinity,),
+                    SizedBox(height: offsetSm, width: double.infinity,),
                     Text('Main Features',
-                      style: boldText.copyWith(fontSize: fontMd, color: Colors.white),
+                      style: boldText.copyWith(fontSize: fontBase, color: Colors.white),
                     ),
                     SizedBox(height: offsetSm),
                     for (var content in plusMemberFeature) Column(
                       children: [
                         Text(content,
-                          style: mediumText.copyWith(fontSize: fontMd, color: Colors.white),
+                          style: mediumText.copyWith(fontSize: fontBase, color: Colors.white),
                         ),
-                        SizedBox(height: offsetXSm),
+                        SizedBox(height: 2.0),
                       ],
                     ),
                     SizedBox(height: offsetBase),
@@ -230,12 +246,12 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
                       child: OutLineLabel(
                         title: 'Upgrade Now',
                         titleColor: Colors.white,
-                        fontSize: fontMd,
+                        fontSize: fontBase,
                       ),
                     ) : Container(
                       child: Text(
                           'Your account will be expired in ${currentUser.expiredate.split(' ')[0]}.',
-                        style: semiBold.copyWith(fontSize: fontMd, color: Colors.red),
+                        style: semiBold.copyWith(fontSize: fontBase, color: Colors.red),
                       ),
                     ),
                     Spacer(),

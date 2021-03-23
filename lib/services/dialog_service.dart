@@ -98,6 +98,54 @@ class DialogService {
       if (dismiss != null) dismiss();
     });
   }
+
+  Future<dynamic> showCustomDialog ({
+    @required Widget titleWidget,
+    @required Widget bodyWidget,
+    @required Widget bottomWidget,
+  }) async {
+    return await showDialog<dynamic>(
+        context: context,
+        builder: (context) => GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Container(
+              padding: EdgeInsets.all(offsetBase),
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                        width: double.infinity,
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.all(offsetBase),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(offsetBase), topRight: Radius.circular(offsetBase)),
+                        ),
+                        child: titleWidget
+                    ),
+                    DividerWidget(),
+                    bodyWidget,
+                    DividerWidget(),
+                    Container(
+                        width: double.infinity,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(offsetBase), bottomRight: Radius.circular(offsetBase)),
+                        ),
+                        child: bottomWidget
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        )
+    );
+  }
 }
 
 enum SnackBarType { SUCCESS, WARING, INFO, ERROR }

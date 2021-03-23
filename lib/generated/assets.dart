@@ -27,6 +27,12 @@ class Assets {
   static const String iconsIcPost = 'assets/icons/ic_post.svg';
   static const String iconsIcProject = 'assets/icons/ic_project.svg';
   static const String iconsIcRecord = 'assets/icons/ic_record.svg';
+  static const String iconsIcReviewAngry = 'assets/icons/ic_review_angry.png';
+  static const String iconsIcReviewFunny = 'assets/icons/ic_review_funny.png';
+  static const String iconsIcReviewLike = 'assets/icons/ic_review_like.png';
+  static const String iconsIcReviewLove = 'assets/icons/ic_review_love.png';
+  static const String iconsIcReviewSad = 'assets/icons/ic_review_sad.png';
+  static const String iconsIcReviewWow = 'assets/icons/ic_review_wow.png';
   static const String iconsIcSecret = 'assets/icons/ic_secret.svg';
   static const String iconsIcSetting = 'assets/icons/ic_setting.svg';
   static const String iconsIcShare = 'assets/icons/ic_share.svg';

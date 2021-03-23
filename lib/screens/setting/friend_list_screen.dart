@@ -68,6 +68,7 @@ class _FriendListScreenState extends State<FriendListScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: _scaffoldKey,
+        resizeToAvoidBottomInset: false,
         appBar: MainBarWidget(
           titleString: 'Friend List',
           titleIcon: InkWell(

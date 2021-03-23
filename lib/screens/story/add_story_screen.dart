@@ -152,7 +152,7 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
                                           color: Colors.white,
                                         ),
                                         SizedBox(
-                                          height: offsetBase,
+                                          height: offsetSm,
                                         ),
                                         Text(
                                           'Image',
@@ -399,9 +399,10 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
         kind: 'STORY',
         type: type,
         regdate: StringService.getCurrentUTCTime(),
+        file: file,
+        thumbnail: base64Thumnbail,
       );
-      respUpload =
-          await mediaModel.upload(file: file, thumbnail: base64Thumnbail);
+      respUpload = await mediaModel.upload();
     }
 
     LoadService().hideLoading(context);
