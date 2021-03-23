@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:simplechat/models/post_model.dart';
 import 'package:simplechat/models/story_model.dart';
+import 'package:simplechat/screens/post/post_detail_screen.dart';
+import 'package:simplechat/screens/setting/user_screen.dart';
+import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/services/pref_service.dart';
 import 'package:simplechat/utils/colors.dart';
@@ -136,7 +139,22 @@ class _PostScreenState extends State<PostScreen> {
                     ),
                   ),
                 ),
-              for (var post in posts) post.item(),
+              for (var post in posts)
+                post.item(
+                    toUserDtail: () {
+                      NavigatorService(context)
+                          .pushToWidget(screen: UserScreen(user: post.user));
+                    },
+                    toDtail: () {
+                      NavigatorService(context)
+                          .pushToWidget(screen: PostDetailScreen(model: post));
+                    },
+                    toLike: () {},
+                    toComment: () {},
+                    toFollow: () {},
+                    setLike: () {},
+                    setComment: () {},
+                    setFollow: () {}),
               SizedBox(
                 height: offsetLg,
               ),
