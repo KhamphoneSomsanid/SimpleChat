@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 const Color primaryColor = Colors.green;
 const Color blueColor = Color(0xFF439FDF);
 const Color blackColor = Color(0xFF383838);
+const Color shadowColor = Color(0x38000000);
 
 Color getRandomColor() {
   var colors = [

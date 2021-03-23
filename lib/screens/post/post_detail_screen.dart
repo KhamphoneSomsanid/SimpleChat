@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:page_view_indicators/circle_page_indicator.dart';
 import 'package:simplechat/models/media_model.dart';
 import 'package:simplechat/models/post_model.dart';
 import 'package:simplechat/services/string_service.dart';
@@ -22,10 +23,13 @@ class PostDetailScreen extends StatefulWidget {
 }
 
 class _PostDetailScreenState extends State<PostDetailScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   final PageController controller = PageController(initialPage: 0);
   List<Widget> contents = [];
   var pageIndex = 0;
   var selectedItem;
+  final _currentPageNotifier = ValueNotifier<int>(0);
 
   @override
   void initState() {
@@ -36,6 +40,20 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     }
 
     selectedItem = widget.model.list[0];
+  }
+
+  _buildCircleIndicator() {
+    return CirclePageIndicator(
+      size: 18.0,
+      selectedSize: 24.0,
+      itemCount: widget.model.list.length,
+      currentPageNotifier: _currentPageNotifier,
+      dotColor: Colors.white,
+      borderColor: primaryColor,
+      selectedDotColor: primaryColor,
+      selectedBorderColor: Colors.white,
+      borderWidth: 3,
+    );
   }
 
   Widget _getContent(MediaModel item) {
@@ -94,6 +112,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: Container(
         decoration: BoxDecoration(
           gradient: getGradientColor(color: getRandomColor()),
@@ -103,6 +122,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             PageView(
               scrollDirection: Axis.horizontal,
               onPageChanged: (index) {
+                _currentPageNotifier.value = index;
                 pageChanged(index);
               },
               controller: controller,
@@ -322,7 +342,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                           child: Center(
                             child: InkWell(
                               onTap: () {
-                                // setFollow();
+                                widget.model.setFollow(context, _scaffoldKey);
                               },
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -356,6 +376,13 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                     ),
                   ],
                 ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                margin: EdgeInsets.only(bottom: offsetXLg * 2 + 90),
+                child: _buildCircleIndicator(),
               ),
             )
           ],

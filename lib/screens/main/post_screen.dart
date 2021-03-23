@@ -10,6 +10,7 @@ import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/services/pref_service.dart';
 import 'package:simplechat/utils/colors.dart';
+import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/params.dart';
 import 'package:simplechat/utils/themes.dart';
@@ -31,6 +32,7 @@ class _PostScreenState extends State<PostScreen> {
   bool isUpdating = false;
   var limitCount = 20;
   var newFeedAccount = 0;
+  var isFriendMenu = false;
 
   @override
   void initState() {
@@ -50,6 +52,8 @@ class _PostScreenState extends State<PostScreen> {
 
     posts.clear();
     posts = await PreferenceService().getPostData();
+
+    isFriendMenu = false;
 
     setState(() {});
   }
@@ -84,6 +88,7 @@ class _PostScreenState extends State<PostScreen> {
     await PreferenceService().setPostData(posts);
 
     setState(() {
+      isFriendMenu = false;
       isUpdating = false;
     });
   }
@@ -152,9 +157,13 @@ class _PostScreenState extends State<PostScreen> {
                     toLike: () {},
                     toComment: () {},
                     toFollow: () {},
-                    setLike: () {},
+                    setLike: (offset) {
+                      _showPopupMenu(offset, post);
+                    },
                     setComment: () {},
-                    setFollow: () {}),
+                    setFollow: () {
+                      post.setFollow(context, _scaffoldKey);
+                    }),
               SizedBox(
                 height: offsetLg,
               ),
@@ -163,5 +172,41 @@ class _PostScreenState extends State<PostScreen> {
         ),
       ),
     );
+  }
+
+  _showPopupMenu(Offset offset, ExtraPostModel post) async {
+    double top = offset.dy;
+    await showMenu(
+        context: context,
+        position: RelativeRect.fromLTRB(0, top, 0, 0),
+        items: [
+          PopupMenuItem(
+            value: 1,
+            child: Row(
+              children: [
+                for (var likeItem in reviewIcons)
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onTap: () async {
+                          print('like ===> ${reviewIcons.indexOf(likeItem)}');
+                          Navigator.of(context).pop();
+                          await post.setLike(context, _scaffoldKey,
+                              reviewIcons.indexOf(likeItem));
+                          _getData();
+                        },
+                        child: Image.asset(
+                          likeItem,
+                          width: 36,
+                          height: 36,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ]);
   }
 }

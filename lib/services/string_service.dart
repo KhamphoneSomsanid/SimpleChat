@@ -65,4 +65,19 @@ class StringService {
     List<int> imageBytes = file.readAsBytesSync();
     return base64Encode(imageBytes);
   }
+
+  static String getCountValue(int value) {
+    if (value == 0) return 'Not now';
+    if (value > 100000) {
+      double showValue = value / 1000000;
+      final formatter = new NumberFormat("#.##");
+      return formatter.format(showValue) + ' M';
+    } else if (value > 100) {
+      double showValue = value / 1000;
+      final formatter = new NumberFormat("#.##");
+      return formatter.format(showValue) + ' K';
+    } else {
+      return '$value';
+    }
+  }
 }

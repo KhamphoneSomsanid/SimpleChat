@@ -4,12 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:simplechat/models/media_model.dart';
+import 'package:simplechat/models/review_model.dart';
 import 'package:simplechat/models/user_model.dart';
+import 'package:simplechat/services/dialog_service.dart';
 import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/services/string_service.dart';
 import 'package:simplechat/utils/colors.dart';
 import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
+import 'package:simplechat/utils/params.dart';
 import 'package:simplechat/utils/themes.dart';
 import 'package:simplechat/widgets/common_widget.dart';
 import 'package:simplechat/widgets/image_widget.dart';
@@ -64,8 +67,9 @@ class ExtraPostModel {
   UserModel user;
   PostModel post;
   List<MediaModel> list;
+  List<ReviewModel> reviews;
 
-  ExtraPostModel({this.post, this.list, this.user});
+  ExtraPostModel({this.post, this.list, this.user, this.reviews});
 
   factory ExtraPostModel.fromMap(Map<String, dynamic> map) {
     List<MediaModel> medias = [];
@@ -74,10 +78,19 @@ class ExtraPostModel {
       medias.add(model);
     }
 
+    List<ReviewModel> reviews = [];
+    if (map['review'] != null) {
+      for (var json in map['review']) {
+        ReviewModel model = ReviewModel.fromMap(json);
+        reviews.add(model);
+      }
+    }
+
     return new ExtraPostModel(
       user: UserModel.fromMap(map['user']),
       post: PostModel.fromMap(map['post']),
       list: medias,
+      reviews: reviews,
     );
   }
 
@@ -86,10 +99,17 @@ class ExtraPostModel {
     for (var item in list) {
       listMap.add(item.toMap());
     }
+
+    List<dynamic> reviewMap = [];
+    for (var item in reviews) {
+      reviewMap.add(item.toMap());
+    }
+
     return {
       'user': user.toMap(),
       'post': post.toMap(),
       'list': listMap,
+      'review': reviewMap,
     };
   }
 
@@ -101,11 +121,29 @@ class ExtraPostModel {
     Function() toLike,
     Function() toComment,
     Function() toFollow,
-    Function() setLike,
+    Function(Offset) setLike,
     Function() setComment,
     Function() setFollow,
   }) {
     List<String> tags = post.tag.split(',');
+    List<String> reviewTypes = ['0'];
+    List<String> icons = [reviewIcons[0]];
+    if (reviews != null) {
+      reviewTypes.clear();
+      icons.clear();
+      for (var review in reviews) {
+        if (!reviewTypes.contains(review.type)) {
+          reviewTypes.add(review.type);
+        }
+      }
+      if (reviewTypes.isEmpty) {
+        reviewTypes.add('0');
+        icons.add(reviewIcons[0]);
+      }
+      for (var type in reviewTypes) {
+        icons.add(reviewIcons[int.parse(type)]);
+      }
+    }
     return InkWell(
       onTap: () {
         toDtail();
@@ -384,12 +422,12 @@ class ExtraPostModel {
                       children: [
                         Stack(
                           children: [
-                            for (var iconName in reviewIcons)
+                            for (var iconName in icons)
                               Container(
                                   margin: EdgeInsets.only(
                                       left: 15 *
                                           double.parse(
-                                              '${reviewIcons.indexOf(iconName)}')),
+                                              '${icons.indexOf(iconName)}')),
                                   child: Image.asset(
                                     iconName,
                                     width: 24.0,
@@ -400,7 +438,7 @@ class ExtraPostModel {
                           width: offsetSm,
                         ),
                         Text(
-                          '1.3 K',
+                          StringService.getCountValue(reviews.length),
                           style: mediumText.copyWith(fontSize: fontBase),
                         ),
                       ],
@@ -468,9 +506,9 @@ class ExtraPostModel {
                 children: [
                   Expanded(
                     child: Center(
-                      child: InkWell(
-                        onTap: () {
-                          setLike();
+                      child: GestureDetector(
+                        onTapDown: (details) {
+                          setLike(details.globalPosition);
                         },
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -566,5 +604,45 @@ class ExtraPostModel {
         ),
       ),
     );
+  }
+
+  setFollow(BuildContext context, GlobalKey<ScaffoldState> scaffoldKey) async {
+    if (user.id == currentUser.id) {
+      DialogService(context).showSnackbar(
+          'This feed is yours. You can\'t follow it.', scaffoldKey,
+          type: SnackBarType.WARING);
+      return;
+    }
+    var param = {
+      'userid': currentUser.id,
+      'postid': post.id,
+    };
+
+    var resp = await NetworkService(context)
+        .ajax('chat_add_follow_post', param, isProgress: true);
+    if (resp['ret'] == 10000) {
+      DialogService(context).showSnackbar(resp['msg'], scaffoldKey);
+    }
+  }
+
+  setLike(BuildContext context, GlobalKey<ScaffoldState> scaffoldKey,
+      int type) async {
+    if (user.id == currentUser.id) {
+      DialogService(context).showSnackbar(
+          'This feed is yours. You can\'t follow it.', scaffoldKey,
+          type: SnackBarType.WARING);
+      return;
+    }
+    var param = {
+      'userid': currentUser.id,
+      'postid': post.id,
+      'type': '$type',
+    };
+
+    var resp = await NetworkService(context)
+        .ajax('chat_add_review_post', param, isProgress: true);
+    if (resp['ret'] == 10000) {
+      DialogService(context).showSnackbar(resp['msg'], scaffoldKey);
+    }
   }
 }

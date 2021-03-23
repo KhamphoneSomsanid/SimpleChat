@@ -14,7 +14,6 @@ import 'package:simplechat/widgets/appbar_widget.dart';
 import 'package:simplechat/widgets/image_widget.dart';
 import 'package:simplechat/widgets/user_widget.dart';
 
-
 class UserScreen extends StatefulWidget {
   final dynamic user;
 
@@ -43,16 +42,14 @@ class _UserScreenState extends State<UserScreen> {
 
   void _getStatus() async {
     var param = {
-      'id' : currentUser.id,
-      'userid' : widget.user.id,
+      'id': currentUser.id,
+      'userid': widget.user.id,
     };
     var resp = await NetworkService(context)
         .ajax('chat_user_status', param, isProgress: true);
     if (resp['ret'] == 10000) {
       userStatus = resp['result']['status'] as int;
-      setState(() {
-
-      });
+      setState(() {});
     }
   }
 
@@ -64,23 +61,30 @@ class _UserScreenState extends State<UserScreen> {
           child: Row(
             children: [
               Spacer(),
-              Text('No Friend',
+              Text(
+                'No Friend',
                 style: mediumText.copyWith(fontSize: fontBase),
               ),
-              SizedBox(width: offsetBase,),
+              SizedBox(
+                width: offsetBase,
+              ),
               InkWell(
                 onTap: () {
                   _request();
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: offsetSm, vertical: offsetXSm),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: offsetSm, vertical: offsetXSm),
                   decoration: BoxDecoration(
                     color: Colors.orange.withOpacity(0.3),
                     border: Border.all(color: Colors.orange, width: 0.3),
                     borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
                   ),
-                  child: Text('Send Request',
-                    style: regularText.copyWith(fontSize: fontSm, color: Colors.orange),),
+                  child: Text(
+                    'Send Request',
+                    style: regularText.copyWith(
+                        fontSize: fontSm, color: Colors.orange),
+                  ),
                 ),
               ),
               Spacer(),
@@ -94,18 +98,25 @@ class _UserScreenState extends State<UserScreen> {
           child: Row(
             children: [
               Spacer(),
-              Text('Send Request',
+              Text(
+                'Send Request',
                 style: mediumText.copyWith(fontSize: fontBase),
               ),
-              SizedBox(width: offsetBase,),
+              SizedBox(
+                width: offsetBase,
+              ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: offsetSm, vertical: offsetXSm),
+                padding: EdgeInsets.symmetric(
+                    horizontal: offsetSm, vertical: offsetXSm),
                 decoration: BoxDecoration(
                   color: Colors.grey.withOpacity(0.3),
                   borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
                 ),
-                child: Text('Waiting Accept',
-                  style: regularText.copyWith(fontSize: fontSm, color: Colors.grey),),
+                child: Text(
+                  'Waiting Accept',
+                  style: regularText.copyWith(
+                      fontSize: fontSm, color: Colors.grey),
+                ),
               ),
               Spacer(),
             ],
@@ -118,39 +129,52 @@ class _UserScreenState extends State<UserScreen> {
           child: Row(
             children: [
               Spacer(),
-              Text('Received Request',
+              Text(
+                'Received Request',
                 style: mediumText.copyWith(fontSize: fontBase),
               ),
-              SizedBox(width: offsetBase,),
+              SizedBox(
+                width: offsetBase,
+              ),
               InkWell(
                 onTap: () {
                   _accept();
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: offsetSm, vertical: offsetXSm),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: offsetSm, vertical: offsetXSm),
                   decoration: BoxDecoration(
                     color: Colors.green.withOpacity(0.3),
                     border: Border.all(color: Colors.green, width: 0.3),
                     borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
                   ),
-                  child: Text('Accept',
-                    style: regularText.copyWith(fontSize: fontSm, color: Colors.green),),
+                  child: Text(
+                    'Accept',
+                    style: regularText.copyWith(
+                        fontSize: fontSm, color: Colors.green),
+                  ),
                 ),
               ),
-              SizedBox(width: offsetBase,),
+              SizedBox(
+                width: offsetBase,
+              ),
               InkWell(
                 onTap: () {
                   _cancel();
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: offsetSm, vertical: offsetXSm),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: offsetSm, vertical: offsetXSm),
                   decoration: BoxDecoration(
                     color: Colors.red.withOpacity(0.3),
                     border: Border.all(color: Colors.red, width: 0.3),
                     borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
                   ),
-                  child: Text('Cancel',
-                    style: regularText.copyWith(fontSize: fontSm, color: Colors.red),),
+                  child: Text(
+                    'Cancel',
+                    style: regularText.copyWith(
+                        fontSize: fontSm, color: Colors.red),
+                  ),
                 ),
               ),
               Spacer(),
@@ -168,40 +192,42 @@ class _UserScreenState extends State<UserScreen> {
                 onTap: () {
                   _chat();
                 },
-                child: Container(
-                  width: 44.0, height: 44.0,
-                  padding: EdgeInsets.symmetric(horizontal: offsetSm, vertical: offsetSm),
-                  decoration: BoxDecoration(
-                    color: Colors.green.withOpacity(0.3),
-                    border: Border.all(color: Colors.green, width: 0.3),
-                    borderRadius: BorderRadius.all(Radius.circular(offsetXMd)),
+                child: CircleIconWidget(
+                  icon: Icon(
+                    Icons.chat,
+                    color: Colors.green,
+                    size: 20.0,
                   ),
-                  child: Icon(Icons.chat, color: Colors.green, size: 28.0,),
                 ),
               ),
-              SizedBox(width: offsetLg,),
+              SizedBox(
+                width: offsetLg,
+              ),
               InkWell(
                 onTap: () {
                   _voice();
                 },
-                child: Container(
-                  width: 44.0, height: 44.0,
-                  padding: EdgeInsets.symmetric(horizontal: offsetSm, vertical: offsetSm),
-                  decoration: BoxDecoration(
-                    color: Colors.green.withOpacity(0.3),
-                    border: Border.all(color: Colors.green, width: 0.3),
-                    borderRadius: BorderRadius.all(Radius.circular(offsetXMd)),
+                child: CircleIconWidget(
+                  icon: Icon(
+                    Icons.call,
+                    color: Colors.green,
+                    size: 20.0,
                   ),
-                  child: Icon(Icons.call, color: Colors.green, size: 28.0,),
                 ),
               ),
-              SizedBox(width: offsetLg,),
+              SizedBox(
+                width: offsetLg,
+              ),
               InkWell(
                 onTap: () {
                   _video();
                 },
                 child: CircleIconWidget(
-                  icon: Icon(Icons.videocam, color: Colors.green, size: 28.0,),
+                  icon: Icon(
+                    Icons.videocam,
+                    color: Colors.green,
+                    size: 20.0,
+                  ),
                 ),
               ),
               Spacer(),
@@ -238,7 +264,8 @@ class _UserScreenState extends State<UserScreen> {
       },
       {
         'icon': Icon(Icons.language),
-        'title': widget.user.language.isEmpty? 'English' : widget.user.language,
+        'title':
+            widget.user.language.isEmpty ? 'English' : widget.user.language,
       },
     ];
 
@@ -260,18 +287,22 @@ class _UserScreenState extends State<UserScreen> {
               CircleAvatarWidget(
                 headurl: widget.user.imgurl,
               ),
-              SizedBox(height: offsetBase,),
+              SizedBox(
+                height: offsetBase,
+              ),
               getContent(userStatus),
-              SizedBox(height: offsetMd,),
+              SizedBox(
+                height: offsetMd,
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: offsetBase),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     UserReviewCell(
-                        icon: 'assets/icons/ic_post.svg',
-                        title: 'Posts',
-                        value: '1.2K',
+                      icon: 'assets/icons/ic_post.svg',
+                      title: 'Posts',
+                      value: '1.2K',
                       color: Colors.green,
                     ),
                     UserReviewCell(
@@ -292,15 +323,18 @@ class _UserScreenState extends State<UserScreen> {
                       value: '0.8K',
                       color: Colors.red,
                     ),
-                    if (appSettingInfo['isNearby']) UserReviewCell(
-                      icon: 'assets/icons/ic_project.svg',
-                      title: 'Projects',
-                      value: '2',
-                    ),
+                    if (appSettingInfo['isNearby'])
+                      UserReviewCell(
+                        icon: 'assets/icons/ic_project.svg',
+                        title: 'Projects',
+                        value: '2',
+                      ),
                   ],
                 ),
               ),
-              SizedBox(height: offsetMd,),
+              SizedBox(
+                height: offsetMd,
+              ),
               Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(offsetBase)),
@@ -309,9 +343,9 @@ class _UserScreenState extends State<UserScreen> {
                   padding: EdgeInsets.symmetric(
                       horizontal: offsetMd, vertical: offsetBase),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
-                    gradient: getGradientColor(color: Colors.grey)
-                  ),
+                      borderRadius:
+                          BorderRadius.all(Radius.circular(offsetBase)),
+                      gradient: getGradientColor(color: Colors.grey)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -349,10 +383,10 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
-  void _accept() async{
+  void _accept() async {
     var param = {
-      'id' : currentUser.id,
-      'userid' : widget.user.id,
+      'id': currentUser.id,
+      'userid': widget.user.id,
     };
     var resp = await NetworkService(context)
         .ajax('chat_submit_accept', param, isProgress: true);
@@ -364,14 +398,15 @@ class _UserScreenState extends State<UserScreen> {
 
       _getStatus();
     } else {
-      DialogService(context).showSnackbar(resp['msg'], _scaffoldKey, type: SnackBarType.WARING);
+      DialogService(context)
+          .showSnackbar(resp['msg'], _scaffoldKey, type: SnackBarType.WARING);
     }
   }
 
-  void _cancel() async{
+  void _cancel() async {
     var param = {
-      'id' : currentUser.id,
-      'userid' : widget.user.id,
+      'id': currentUser.id,
+      'userid': widget.user.id,
     };
     var resp = await NetworkService(context)
         .ajax('chat_submit_cancel', param, isProgress: true);
@@ -379,14 +414,15 @@ class _UserScreenState extends State<UserScreen> {
       DialogService(context).showSnackbar(resp['msg'], _scaffoldKey);
       _getStatus();
     } else {
-      DialogService(context).showSnackbar(resp['msg'], _scaffoldKey, type: SnackBarType.WARING);
+      DialogService(context)
+          .showSnackbar(resp['msg'], _scaffoldKey, type: SnackBarType.WARING);
     }
   }
 
-  void _request() async{
+  void _request() async {
     var param = {
-      'id' : currentUser.id,
-      'userid' : widget.user.id,
+      'id': currentUser.id,
+      'userid': widget.user.id,
     };
     var resp = await NetworkService(context)
         .ajax('chat_send_request', param, isProgress: true);
@@ -396,20 +432,14 @@ class _UserScreenState extends State<UserScreen> {
 
       _getStatus();
     } else {
-      DialogService(context).showSnackbar(resp['msg'], _scaffoldKey, type: SnackBarType.WARING);
+      DialogService(context)
+          .showSnackbar(resp['msg'], _scaffoldKey, type: SnackBarType.WARING);
     }
   }
 
-  void _chat() async{
+  void _chat() async {}
 
-  }
+  void _voice() async {}
 
-  void _voice() async{
-
-  }
-
-  void _video() async{
-
-  }
-
+  void _video() async {}
 }
