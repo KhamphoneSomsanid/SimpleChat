@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:simplechat/services/string_service.dart';
 import 'package:simplechat/utils/colors.dart';
 import 'package:simplechat/utils/dimens.dart';

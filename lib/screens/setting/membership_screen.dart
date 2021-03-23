@@ -15,12 +15,10 @@ class MemberShipScreen extends StatefulWidget {
 }
 
 class _MemberShipScreenState extends State<MemberShipScreen> {
-  StreamSubscription _purchaseUpdatedSubscription;
-  StreamSubscription _purchaseErrorSubscription;
   StreamSubscription _conectionSubscription;
   final List<String> _productLists = ['com.laodev.simplechat.membership'];
   List<IAPItem> _items = [];
-  List<PurchasedItem> _purchases = [];
+  // List<PurchasedItem> _purchases = [];
 
   var isFree = true;
   var freeMemberFeature = [
@@ -38,7 +36,6 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
     '· Post your job using nearby.',
   ];
 
-
   @override
   void initState() {
     super.initState();
@@ -55,7 +52,6 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
     super.dispose();
   }
 
-
   Future<void> initPlatformState() async {
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
@@ -70,16 +66,9 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
       print('consumeAllItems error: $err');
     }
 
-    _conectionSubscription = FlutterInappPurchase.connectionUpdated.listen((connected) {
+    _conectionSubscription =
+        FlutterInappPurchase.connectionUpdated.listen((connected) {
       print('connected: $connected');
-    });
-
-    _purchaseUpdatedSubscription = FlutterInappPurchase.purchaseUpdated.listen((productItem) {
-      print('purchase-updated: $productItem');
-    });
-
-    _purchaseErrorSubscription = FlutterInappPurchase.purchaseError.listen((purchaseError) {
-      print('purchase-error: $purchaseError');
     });
 
     _getProduct();
@@ -90,7 +79,8 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
   }
 
   Future _getProduct() async {
-    List<IAPItem> items = await FlutterInappPurchase.instance.getProducts(_productLists);
+    List<IAPItem> items =
+        await FlutterInappPurchase.instance.getProducts(_productLists);
     for (var item in items) {
       print('${item.toString()}');
       this._items.add(item);
@@ -98,36 +88,36 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
 
     setState(() {
       this._items = items;
-      this._purchases = [];
+      // this._purchases = [];
     });
   }
 
-  Future _getPurchases() async {
-    List<PurchasedItem> items =
-    await FlutterInappPurchase.instance.getAvailablePurchases();
-    for (var item in items) {
-      print('${item.toString()}');
-      this._purchases.add(item);
-    }
+  // Future _getPurchases() async {
+  //   List<PurchasedItem> items =
+  //   await FlutterInappPurchase.instance.getAvailablePurchases();
+  //   for (var item in items) {
+  //     print('${item.toString()}');
+  //     this._purchases.add(item);
+  //   }
 
-    setState(() {
-      this._items = [];
-      this._purchases = items;
-    });
-  }
+  //   setState(() {
+  //     this._items = [];
+  //     this._purchases = items;
+  //   });
+  // }
 
-  Future _getPurchaseHistory() async {
-    List<PurchasedItem> items = await FlutterInappPurchase.instance.getPurchaseHistory();
-    for (var item in items) {
-      print('${item.toString()}');
-      this._purchases.add(item);
-    }
+  // Future _getPurchaseHistory() async {
+  //   List<PurchasedItem> items = await FlutterInappPurchase.instance.getPurchaseHistory();
+  //   for (var item in items) {
+  //     print('${item.toString()}');
+  //     this._purchases.add(item);
+  //   }
 
-    setState(() {
-      this._items = [];
-      this._purchases = items;
-    });
-  }
+  //   setState(() {
+  //     this._items = [];
+  //     this._purchases = items;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -136,13 +126,17 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
         titleString: 'Membership',
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetMd),
+        padding:
+            EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetMd),
         child: Column(
           children: [
-            Text('You are a ${isFree? 'free' : 'plus'} member',
+            Text(
+              'You are a ${isFree ? 'free' : 'plus'} member',
               style: boldText.copyWith(fontSize: fontLg),
             ),
-            SizedBox(height: offsetMd,),
+            SizedBox(
+              height: offsetMd,
+            ),
             Expanded(
               child: Container(
                 padding: EdgeInsets.all(offsetMd),
@@ -164,33 +158,46 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Free Member',
-                          style: boldText.copyWith(fontSize: fontMd, color: Colors.white),
+                        Text(
+                          'Free Member',
+                          style: boldText.copyWith(
+                              fontSize: fontMd, color: Colors.white),
                         ),
-                        if (isFree) OutLineLabel(
-                          title: 'Your Account',
-                          titleColor: Colors.white,
-                        ),
+                        if (isFree)
+                          OutLineLabel(
+                            title: 'Your Account',
+                            titleColor: Colors.white,
+                          ),
                       ],
                     ),
-                    SizedBox(height: offsetSm, width: double.infinity,),
-                    Text('Main Features',
-                      style: boldText.copyWith(fontSize: fontBase, color: Colors.white),
+                    SizedBox(
+                      height: offsetSm,
+                      width: double.infinity,
+                    ),
+                    Text(
+                      'Main Features',
+                      style: boldText.copyWith(
+                          fontSize: fontBase, color: Colors.white),
                     ),
                     SizedBox(height: offsetSm),
-                    for (var content in freeMemberFeature) Column(
-                      children: [
-                        Text(content,
-                          style: mediumText.copyWith(fontSize: fontBase, color: Colors.white),
-                        ),
-                        SizedBox(height: 2.0),
-                      ],
-                    ),
+                    for (var content in freeMemberFeature)
+                      Column(
+                        children: [
+                          Text(
+                            content,
+                            style: mediumText.copyWith(
+                                fontSize: fontBase, color: Colors.white),
+                          ),
+                          SizedBox(height: 2.0),
+                        ],
+                      ),
                   ],
                 ),
               ),
             ),
-            SizedBox(height: offsetMd,),
+            SizedBox(
+              height: offsetMd,
+            ),
             Expanded(
               child: Container(
                 padding: EdgeInsets.all(offsetMd),
@@ -212,57 +219,76 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Plus Member',
-                          style: boldText.copyWith(fontSize: fontMd, color: Colors.white),
+                        Text(
+                          'Plus Member',
+                          style: boldText.copyWith(
+                              fontSize: fontMd, color: Colors.white),
                         ),
-                        isFree ? OutLineLabel(
-                          title: '5\$ / Month',
-                          titleColor: Colors.white,
-                        ) : OutLineLabel(
-                          title: 'Your Account',
-                          titleColor: Colors.white,
-                        ),
+                        isFree
+                            ? OutLineLabel(
+                                title: '5\$ / Month',
+                                titleColor: Colors.white,
+                              )
+                            : OutLineLabel(
+                                title: 'Your Account',
+                                titleColor: Colors.white,
+                              ),
                       ],
                     ),
-                    SizedBox(height: offsetSm, width: double.infinity,),
-                    Text('Main Features',
-                      style: boldText.copyWith(fontSize: fontBase, color: Colors.white),
+                    SizedBox(
+                      height: offsetSm,
+                      width: double.infinity,
+                    ),
+                    Text(
+                      'Main Features',
+                      style: boldText.copyWith(
+                          fontSize: fontBase, color: Colors.white),
                     ),
                     SizedBox(height: offsetSm),
-                    for (var content in plusMemberFeature) Column(
-                      children: [
-                        Text(content,
-                          style: mediumText.copyWith(fontSize: fontBase, color: Colors.white),
-                        ),
-                        SizedBox(height: 2.0),
-                      ],
-                    ),
+                    for (var content in plusMemberFeature)
+                      Column(
+                        children: [
+                          Text(
+                            content,
+                            style: mediumText.copyWith(
+                                fontSize: fontBase, color: Colors.white),
+                          ),
+                          SizedBox(height: 2.0),
+                        ],
+                      ),
                     SizedBox(height: offsetBase),
-                    isFree ? InkWell(
-                      onTap: () {
-                        if (_items.isEmpty) return;
-                        _requestPurchase(_items[0]);
-                      },
-                      child: OutLineLabel(
-                        title: 'Upgrade Now',
-                        titleColor: Colors.white,
-                        fontSize: fontBase,
-                      ),
-                    ) : Container(
-                      child: Text(
-                          'Your account will be expired in ${currentUser.expiredate.split(' ')[0]}.',
-                        style: semiBold.copyWith(fontSize: fontBase, color: Colors.red),
-                      ),
-                    ),
+                    isFree
+                        ? InkWell(
+                            onTap: () {
+                              if (_items.isEmpty) return;
+                              _requestPurchase(_items[0]);
+                            },
+                            child: OutLineLabel(
+                              title: 'Upgrade Now',
+                              titleColor: Colors.white,
+                              fontSize: fontBase,
+                            ),
+                          )
+                        : Container(
+                            child: Text(
+                              'Your account will be expired in ${currentUser.expiredate.split(' ')[0]}.',
+                              style: semiBold.copyWith(
+                                  fontSize: fontBase, color: Colors.red),
+                            ),
+                          ),
                     Spacer(),
-                    Text('Learn More',
-                      style: semiBold.copyWith(fontSize: fontMd, color: Colors.white),
+                    Text(
+                      'Learn More',
+                      style: semiBold.copyWith(
+                          fontSize: fontMd, color: Colors.white),
                     ),
                   ],
                 ),
               ),
             ),
-            SizedBox(height: offsetMd,),
+            SizedBox(
+              height: offsetMd,
+            ),
           ],
         ),
       ),
