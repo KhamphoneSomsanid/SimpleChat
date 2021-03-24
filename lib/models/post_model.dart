@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:simplechat/models/comment_model.dart';
 import 'package:simplechat/models/media_model.dart';
+import 'package:simplechat/models/post_follow_model.dart';
 import 'package:simplechat/models/review_model.dart';
 import 'package:simplechat/models/user_model.dart';
 import 'package:simplechat/services/dialog_service.dart';
@@ -68,14 +70,24 @@ class ExtraPostModel {
   PostModel post;
   List<MediaModel> list;
   List<ReviewModel> reviews;
+  List<PostFollowModel> follows;
+  List<CommentModel> comments;
 
-  ExtraPostModel({this.post, this.list, this.user, this.reviews});
+  ExtraPostModel(
+      {this.post,
+      this.list,
+      this.user,
+      this.reviews,
+      this.follows,
+      this.comments});
 
   factory ExtraPostModel.fromMap(Map<String, dynamic> map) {
     List<MediaModel> medias = [];
-    for (var json in map['list']) {
-      MediaModel model = MediaModel.fromMap(json);
-      medias.add(model);
+    if (map['list'] != null) {
+      for (var json in map['list']) {
+        MediaModel model = MediaModel.fromMap(json);
+        medias.add(model);
+      }
     }
 
     List<ReviewModel> reviews = [];
@@ -86,11 +98,29 @@ class ExtraPostModel {
       }
     }
 
+    List<PostFollowModel> follows = [];
+    if (map['follow'] != null) {
+      for (var json in map['follow']) {
+        PostFollowModel model = PostFollowModel.fromMap(json);
+        follows.add(model);
+      }
+    }
+
+    List<CommentModel> comments = [];
+    if (map['comment'] != null) {
+      for (var json in map['comment']) {
+        CommentModel model = CommentModel.fromMap(json);
+        comments.add(model);
+      }
+    }
+
     return new ExtraPostModel(
       user: UserModel.fromMap(map['user']),
       post: PostModel.fromMap(map['post']),
       list: medias,
       reviews: reviews,
+      follows: follows,
+      comments: comments,
     );
   }
 
@@ -105,11 +135,23 @@ class ExtraPostModel {
       reviewMap.add(item.toMap());
     }
 
+    List<dynamic> followMap = [];
+    for (var item in follows) {
+      followMap.add(item.toMap());
+    }
+
+    List<dynamic> commentMap = [];
+    for (var item in comments) {
+      commentMap.add(item.toMap());
+    }
+
     return {
       'user': user.toMap(),
       'post': post.toMap(),
       'list': listMap,
       'review': reviewMap,
+      'follow': followMap,
+      'comment': commentMap,
     };
   }
 
@@ -463,7 +505,7 @@ class ExtraPostModel {
                           width: offsetSm,
                         ),
                         Text(
-                          '1.3 K',
+                          StringService.getCountValue(comments.length),
                           style: mediumText.copyWith(fontSize: fontBase),
                         ),
                       ],
@@ -490,7 +532,7 @@ class ExtraPostModel {
                           width: offsetSm,
                         ),
                         Text(
-                          '1.3 K',
+                          StringService.getCountValue(follows.length),
                           style: mediumText.copyWith(fontSize: fontBase),
                         ),
                       ],

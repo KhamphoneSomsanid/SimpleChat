@@ -2,17 +2,19 @@ import 'dart:convert';
 
 class ReviewModel {
   String id;
-  String postid;
+  String reviewid;
   String userid;
   String type;
+  String kind;
   String regdate;
   String other;
 
   ReviewModel({
     this.id,
-    this.postid,
+    this.reviewid,
     this.userid,
     this.type,
+    this.kind,
     this.regdate,
     this.other,
   });
@@ -20,9 +22,10 @@ class ReviewModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'postid': postid,
+      'reviewid': reviewid,
       'userid': userid,
       'type': type,
+      'kind': kind,
       'regdate': regdate,
       'other': other,
     };
@@ -31,9 +34,10 @@ class ReviewModel {
   factory ReviewModel.fromMap(Map<String, dynamic> map) {
     return ReviewModel(
       id: map['id'],
-      postid: map['postid'],
+      reviewid: map['reviewid'],
       userid: map['userid'],
       type: map['type'],
+      kind: map['kind'],
       regdate: map['regdate'],
       other: map['other'],
     );

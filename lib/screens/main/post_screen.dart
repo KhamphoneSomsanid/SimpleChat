@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:simplechat/models/post_model.dart';
 import 'package:simplechat/models/story_model.dart';
+import 'package:simplechat/screens/post/comment_screen.dart';
 import 'package:simplechat/screens/post/post_detail_screen.dart';
 import 'package:simplechat/screens/setting/user_screen.dart';
 import 'package:simplechat/services/navigator_service.dart';
@@ -155,14 +156,31 @@ class _PostScreenState extends State<PostScreen> {
                           .pushToWidget(screen: PostDetailScreen(model: post));
                     },
                     toLike: () {},
-                    toComment: () {},
+                    toComment: () {
+                      NavigatorService(context).pushToWidget(
+                          screen: CommentScreen(),
+                          pop: (value) {
+                            if (value != null) {
+                              _getData();
+                            }
+                          });
+                    },
                     toFollow: () {},
                     setLike: (offset) {
                       _showPopupMenu(offset, post);
                     },
-                    setComment: () {},
-                    setFollow: () {
-                      post.setFollow(context, _scaffoldKey);
+                    setComment: () {
+                      NavigatorService(context).pushToWidget(
+                          screen: CommentScreen(),
+                          pop: (value) {
+                            if (value != null) {
+                              _getData();
+                            }
+                          });
+                    },
+                    setFollow: () async {
+                      await post.setFollow(context, _scaffoldKey);
+                      _getData();
                     }),
               SizedBox(
                 height: offsetLg,
