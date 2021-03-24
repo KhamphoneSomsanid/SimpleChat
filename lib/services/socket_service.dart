@@ -143,7 +143,7 @@ class SocketService {
       'userRoom': 'room$userRoom',
       'toid': 'user$userid',
     };
-    print("[send] leave chat send");
+    print("[send] join chat");
     socket.emit('joinChat', param);
   }
 

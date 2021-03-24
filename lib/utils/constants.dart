@@ -9,6 +9,8 @@ const appSettingInfo = {
   'isNearby': false,
   'isVideoStory': false,
   'isReplyComment': false,
+  'isVoiceCall': false,
+  'isVideoCall': false,
 };
 
 final tagMask = new MaskTextInputFormatter(
@@ -31,3 +33,5 @@ const List<String> reviewIcons = [
   'assets/icons/ic_review_sad.png',
   'assets/icons/ic_review_wow.png',
 ];
+
+const String notSupport = 'This feature is not supported yet.';

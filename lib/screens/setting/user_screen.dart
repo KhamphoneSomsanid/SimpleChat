@@ -3,9 +3,12 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:simplechat/main.dart';
+import 'package:simplechat/models/room_model.dart';
+import 'package:simplechat/screens/chat/chat_screen.dart';
 import 'package:simplechat/services/dialog_service.dart';
+import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/network_service.dart';
-import 'package:simplechat/utils/colors.dart';
+import 'package:simplechat/services/string_service.dart';
 import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/params.dart';
@@ -30,6 +33,10 @@ class _UserScreenState extends State<UserScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   var userStatus = -1;
+  var postCount = 0;
+  var friendCount = 0;
+  var reviewCount = 0;
+  var followCount = 0;
 
   @override
   void initState() {
@@ -49,6 +56,10 @@ class _UserScreenState extends State<UserScreen> {
         .ajax('chat_user_status', param, isProgress: true);
     if (resp['ret'] == 10000) {
       userStatus = resp['result']['status'] as int;
+      postCount = resp['result']['posts'] as int;
+      friendCount = resp['result']['friends'] as int;
+      reviewCount = resp['result']['reviews'] as int;
+      followCount = resp['result']['follows'] as int;
       setState(() {});
     }
   }
@@ -280,10 +291,11 @@ class _UserScreenState extends State<UserScreen> {
             child: Icon(Icons.arrow_back_ios)),
       ),
       body: Container(
-        padding: EdgeInsets.all(offsetBase),
+        padding: EdgeInsets.symmetric(horizontal: offsetBase),
         child: SingleChildScrollView(
           child: Column(
             children: [
+              SizedBox(height: offsetBase,),
               CircleAvatarWidget(
                 headurl: widget.user.imgurl,
               ),
@@ -292,48 +304,46 @@ class _UserScreenState extends State<UserScreen> {
               ),
               getContent(userStatus),
               SizedBox(
-                height: offsetMd,
+                height: offsetBase,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: offsetBase),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  UserReviewCell(
+                    icon: 'assets/icons/ic_post.svg',
+                    title: 'Posts',
+                    value: StringService.getCountValue(postCount),
+                    color: Colors.green,
+                  ),
+                  UserReviewCell(
+                    icon: 'assets/icons/ic_friend.svg',
+                    title: 'Friends',
+                    value: StringService.getCountValue(friendCount),
+                    color: Colors.blue,
+                  ),
+                  UserReviewCell(
+                    icon: 'assets/icons/ic_like.svg',
+                    title: 'Likes',
+                    value: StringService.getCountValue(reviewCount),
+                    color: Colors.purple,
+                  ),
+                  UserReviewCell(
+                    icon: 'assets/icons/ic_follow.svg',
+                    title: 'Follows',
+                    value: StringService.getCountValue(followCount),
+                    color: Colors.red,
+                  ),
+                  if (appSettingInfo['isNearby'])
                     UserReviewCell(
-                      icon: 'assets/icons/ic_post.svg',
-                      title: 'Posts',
-                      value: '1.2K',
-                      color: Colors.green,
+                      icon: 'assets/icons/ic_project.svg',
+                      title: 'Projects',
+                      value: '2',
+                      color: Colors.orange,
                     ),
-                    UserReviewCell(
-                      icon: 'assets/icons/ic_friend.svg',
-                      title: 'Friends',
-                      value: '0.3K',
-                      color: Colors.blue,
-                    ),
-                    UserReviewCell(
-                      icon: 'assets/icons/ic_like.svg',
-                      title: 'Likes',
-                      value: '3.2K',
-                      color: Colors.purple,
-                    ),
-                    UserReviewCell(
-                      icon: 'assets/icons/ic_follow.svg',
-                      title: 'Follows',
-                      value: '0.8K',
-                      color: Colors.red,
-                    ),
-                    if (appSettingInfo['isNearby'])
-                      UserReviewCell(
-                        icon: 'assets/icons/ic_project.svg',
-                        title: 'Projects',
-                        value: '2',
-                      ),
-                  ],
-                ),
+                ],
               ),
               SizedBox(
-                height: offsetMd,
+                height: offsetBase,
               ),
               Card(
                 shape: RoundedRectangleBorder(
@@ -345,7 +355,7 @@ class _UserScreenState extends State<UserScreen> {
                   decoration: BoxDecoration(
                       borderRadius:
                           BorderRadius.all(Radius.circular(offsetBase)),
-                      gradient: getGradientColor(color: Colors.grey)),
+                      color: Colors.white),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -376,6 +386,7 @@ class _UserScreenState extends State<UserScreen> {
                   ),
                 ),
               ),
+              SizedBox(height: offsetBase,),
             ],
           ),
         ),
@@ -437,9 +448,34 @@ class _UserScreenState extends State<UserScreen> {
     }
   }
 
-  void _chat() async {}
+  void _chat() async {
+    var param = {
+      'id' : currentUser.id,
+      'userid' : widget.user.id,
+      'type' : 'INDIVIAL'
+    };
 
-  void _voice() async {}
+    var resp = await NetworkService(context)
+        .ajax('chat_room_id', param, isProgress: true);
+    if (resp['ret'] == 10000) {
+      RoomModel model = RoomModel.fromMap(resp['result']);
+      model.title = widget.user.username;
+      model.imgurl = widget.user.imgurl;
+      NavigatorService(context).pushToWidget(screen: ChatScreen(room: model,));
+    }
+  }
 
-  void _video() async {}
+  void _voice() async {
+    if (!appSettingInfo['isVoiceCall']) {
+      DialogService(context).showSnackbar(notSupport, _scaffoldKey, type: SnackBarType.ERROR);
+      return;
+    }
+  }
+
+  void _video() async {
+    if (!appSettingInfo['isVideoCall']) {
+      DialogService(context).showSnackbar(notSupport, _scaffoldKey, type: SnackBarType.ERROR);
+      return;
+    }
+  }
 }

@@ -8,6 +8,7 @@ import 'package:simplechat/models/story_model.dart';
 import 'package:simplechat/screens/post/comment_screen.dart';
 import 'package:simplechat/screens/post/follow_screen.dart';
 import 'package:simplechat/screens/post/post_detail_screen.dart';
+import 'package:simplechat/screens/post/review_screen.dart';
 import 'package:simplechat/screens/setting/user_screen.dart';
 import 'package:simplechat/services/dialog_service.dart';
 import 'package:simplechat/services/navigator_service.dart';
@@ -165,6 +166,11 @@ class _PostScreenState extends State<PostScreen> {
                 for (var post in posts)
                   post.item(
                       toUserDtail: () {
+                        if (post.user.id == currentUser.id) {
+                          DialogService(context).showSnackbar('This is a your account. You can check the status on setting.',
+                              _scaffoldKey, type: SnackBarType.WARING);
+                          return;
+                        }
                         NavigatorService(context)
                             .pushToWidget(screen: UserScreen(user: post.user));
                       },
@@ -176,7 +182,9 @@ class _PostScreenState extends State<PostScreen> {
                           }
                         );
                       },
-                      toLike: () {},
+                      toLike: () {
+                        NavigatorService(context).pushToWidget(screen: ReviewScreen(postid: post.post.id));
+                      },
                       toComment: () {
                         NavigatorService(context).pushToWidget(
                             screen: CommentScreen(model: post,),
@@ -190,7 +198,7 @@ class _PostScreenState extends State<PostScreen> {
                         );
                       },
                       setLike: (offset) {
-                        DialogService(context).showPopupMenu(
+                        DialogService(context).showLikePopupMenu(
                             offset,
                           setLike: (value) async {
                             Navigator.of(context).pop();
