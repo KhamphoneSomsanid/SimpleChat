@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:simplechat/models/review_model.dart';
+import 'package:simplechat/services/string_service.dart';
 import 'package:simplechat/utils/colors.dart';
 import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
+import 'package:simplechat/utils/themes.dart';
 
 class CircleAvatarWidget extends StatelessWidget {
   final String headurl;
@@ -79,6 +82,72 @@ class CircleIconWidget extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(size / 2)),
       ),
       child: icon,
+    );
+  }
+}
+
+class ReviewGroupWidget extends StatelessWidget {
+  final List<ReviewModel> reviews;
+  final Function() toLike;
+  final Color titleColor;
+
+  const ReviewGroupWidget({
+    Key key,
+    @required this.reviews,
+    this.toLike,
+    this.titleColor = Colors.black,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    List<String> reviewTypes = ['0'];
+    List<String> icons = [reviewIcons[0]];
+    if (reviews != null) {
+      reviewTypes.clear();
+      icons.clear();
+      for (var review in reviews) {
+        if (!reviewTypes.contains(review.type)) {
+          reviewTypes.add(review.type);
+        }
+      }
+      if (reviewTypes.isEmpty) {
+        reviewTypes.add('0');
+        icons.add(reviewIcons[0]);
+      }
+      for (var type in reviewTypes) {
+        icons.add(reviewIcons[int.parse(type)]);
+      }
+    }
+
+    return InkWell(
+      onTap: () {
+        if (toLike != null) toLike();
+      },
+      child: Row(
+        children: [
+          Stack(
+            children: [
+              for (var iconName in icons)
+                Container(
+                    margin: EdgeInsets.only(
+                        left: 15 *
+                            double.parse(
+                                '${icons.indexOf(iconName)}')),
+                    child: Image.asset(
+                      iconName,
+                      width: 24.0,
+                    )),
+            ],
+          ),
+          SizedBox(
+            width: offsetSm,
+          ),
+          Text(
+            StringService.getCountValue(reviews.length),
+            style: mediumText.copyWith(fontSize: fontBase, color: titleColor),
+          ),
+        ],
+      ),
     );
   }
 

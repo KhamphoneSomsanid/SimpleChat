@@ -8,8 +8,7 @@ const String avatarUrl = 'https://' + DOMAIN + '/uploads/ic_avatar.png';
 const appSettingInfo = {
   'isNearby': false,
   'isVideoStory': false,
-  'isChat': false,
-  'isApp': false,
+  'isReplyComment': false,
 };
 
 final tagMask = new MaskTextInputFormatter(

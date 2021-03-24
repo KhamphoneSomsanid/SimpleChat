@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simplechat/utils/colors.dart';
+import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/themes.dart';
 import 'package:simplechat/widgets/common_widget.dart';
@@ -147,6 +148,39 @@ class DialogService {
               ),
             ));
   }
+
+  Future<void> showPopupMenu(Offset offset, {Function(int) setLike}) async {
+    double top = offset.dy;
+    await showMenu(
+        context: context,
+        position: RelativeRect.fromLTRB(0, top, 0, 0),
+        items: [
+          PopupMenuItem(
+            value: 1,
+            child: Row(
+              children: [
+                for (var likeItem in reviewIcons)
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onTap: () async {
+                          if (setLike != null) setLike(reviewIcons.indexOf(likeItem));
+                        },
+                        child: Image.asset(
+                          likeItem,
+                          width: 36,
+                          height: 36,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ]);
+  }
+
 }
 
 enum SnackBarType { SUCCESS, WARING, INFO, ERROR }
