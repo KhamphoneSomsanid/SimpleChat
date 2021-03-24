@@ -53,7 +53,7 @@ class DialogService {
     GlobalKey<ScaffoldState> _scaffoldKey, {
     SnackBarType type = SnackBarType.SUCCESS,
     Function() dismiss,
-    int microseconds = 1500,
+    int milliseconds = 2000,
   }) {
     var backgroundColor = Colors.white;
     switch (type) {
@@ -91,7 +91,7 @@ class DialogService {
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,
-          duration: Duration(microseconds: 1500),
+          duration: Duration(milliseconds: milliseconds),
         ))
         .closed
         .then((value) {
@@ -99,7 +99,7 @@ class DialogService {
     });
   }
 
-  Future<dynamic> showCustomDialog ({
+  Future<dynamic> showCustomDialog({
     @required Widget titleWidget,
     @required Widget bodyWidget,
     @required Widget bottomWidget,
@@ -107,44 +107,45 @@ class DialogService {
     return await showDialog<dynamic>(
         context: context,
         builder: (context) => GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Scaffold(
-            backgroundColor: Colors.transparent,
-            body: Container(
-              padding: EdgeInsets.all(offsetBase),
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                        width: double.infinity,
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.all(offsetBase),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(offsetBase), topRight: Radius.circular(offsetBase)),
-                        ),
-                        child: titleWidget
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: Scaffold(
+                backgroundColor: Colors.transparent,
+                body: Container(
+                  padding: EdgeInsets.all(offsetBase),
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                            width: double.infinity,
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.all(offsetBase),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(offsetBase),
+                                  topRight: Radius.circular(offsetBase)),
+                            ),
+                            child: titleWidget),
+                        DividerWidget(),
+                        bodyWidget,
+                        DividerWidget(),
+                        Container(
+                            width: double.infinity,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(offsetBase),
+                                  bottomRight: Radius.circular(offsetBase)),
+                            ),
+                            child: bottomWidget)
+                      ],
                     ),
-                    DividerWidget(),
-                    bodyWidget,
-                    DividerWidget(),
-                    Container(
-                        width: double.infinity,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(offsetBase), bottomRight: Radius.circular(offsetBase)),
-                        ),
-                        child: bottomWidget
-                    )
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
-        )
-    );
+            ));
   }
 }
 

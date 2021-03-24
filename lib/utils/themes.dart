@@ -65,3 +65,16 @@ TextStyle titleText = TextStyle(
     fontWeight: FontWeight.w500,
     fontStyle: FontStyle.normal,
     color: blackColor);
+
+BoxShadow containerShadow({
+  double offsetX = 2.0,
+  double offsetY = 2.0,
+  double blurRadius = 3.0,
+  Color shadowColor = shadowColor,
+}) {
+  return BoxShadow(
+    color: shadowColor,
+    blurRadius: blurRadius,
+    offset: Offset(offsetX, offsetY), // changes position of shadow
+  );
+}
