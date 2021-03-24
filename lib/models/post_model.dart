@@ -12,7 +12,6 @@ import 'package:simplechat/services/dialog_service.dart';
 import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/services/string_service.dart';
 import 'package:simplechat/utils/colors.dart';
-import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/params.dart';
 import 'package:simplechat/utils/themes.dart';
@@ -168,24 +167,6 @@ class ExtraPostModel {
     Function() setFollow,
   }) {
     List<String> tags = post.tag.split(',');
-    List<String> reviewTypes = ['0'];
-    List<String> icons = [reviewIcons[0]];
-    if (reviews != null) {
-      reviewTypes.clear();
-      icons.clear();
-      for (var review in reviews) {
-        if (!reviewTypes.contains(review.type)) {
-          reviewTypes.add(review.type);
-        }
-      }
-      if (reviewTypes.isEmpty) {
-        reviewTypes.add('0');
-        icons.add(reviewIcons[0]);
-      }
-      for (var type in reviewTypes) {
-        icons.add(reviewIcons[int.parse(type)]);
-      }
-    }
     return InkWell(
       onTap: () {
         toDtail();
@@ -456,35 +437,9 @@ class ExtraPostModel {
                   horizontal: offsetBase, vertical: offsetBase),
               child: Row(
                 children: [
-                  InkWell(
-                    onTap: () {
-                      toLike();
-                    },
-                    child: Row(
-                      children: [
-                        Stack(
-                          children: [
-                            for (var iconName in icons)
-                              Container(
-                                  margin: EdgeInsets.only(
-                                      left: 15 *
-                                          double.parse(
-                                              '${icons.indexOf(iconName)}')),
-                                  child: Image.asset(
-                                    iconName,
-                                    width: 24.0,
-                                  )),
-                          ],
-                        ),
-                        SizedBox(
-                          width: offsetSm,
-                        ),
-                        Text(
-                          StringService.getCountValue(reviews.length),
-                          style: mediumText.copyWith(fontSize: fontBase),
-                        ),
-                      ],
-                    ),
+                  ReviewGroupWidget(
+                    reviews: reviews,
+                    toLike: toLike,
                   ),
                   Spacer(),
                   InkWell(

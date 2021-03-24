@@ -5,18 +5,21 @@ import 'package:flutter_svg/svg.dart';
 import 'package:page_view_indicators/circle_page_indicator.dart';
 import 'package:simplechat/models/media_model.dart';
 import 'package:simplechat/models/post_model.dart';
+import 'package:simplechat/screens/post/comment_screen.dart';
+import 'package:simplechat/services/dialog_service.dart';
+import 'package:simplechat/services/navigator_service.dart';
+import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/services/string_service.dart';
 import 'package:simplechat/utils/colors.dart';
-import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/themes.dart';
 import 'package:simplechat/widgets/common_widget.dart';
 import 'package:simplechat/widgets/image_widget.dart';
 
 class PostDetailScreen extends StatefulWidget {
-  final ExtraPostModel model;
+  final ExtraPostModel post;
 
-  const PostDetailScreen({Key key, @required this.model}) : super(key: key);
+  const PostDetailScreen({Key key, @required this.post}) : super(key: key);
 
   @override
   _PostDetailScreenState createState() => _PostDetailScreenState();
@@ -31,22 +34,31 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   var selectedItem;
   final _currentPageNotifier = ValueNotifier<int>(0);
 
+  ExtraPostModel model;
+
   @override
   void initState() {
     super.initState();
 
-    for (var item in widget.model.list) {
+    model = widget.post;
+    initContent();
+
+    selectedItem = model.list[0];
+  }
+
+  void initContent() {
+    contents.clear();
+    for (var item in model.list) {
       contents.add(_getContent(item));
     }
-
-    selectedItem = widget.model.list[0];
+    setState(() {});
   }
 
   _buildCircleIndicator() {
     return CirclePageIndicator(
       size: 18.0,
       selectedSize: 24.0,
-      itemCount: widget.model.list.length,
+      itemCount: model.list.length,
       currentPageNotifier: _currentPageNotifier,
       dotColor: Colors.white,
       borderColor: primaryColor,
@@ -54,6 +66,18 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       selectedBorderColor: Colors.white,
       borderWidth: 3,
     );
+  }
+
+  void _getData() async {
+    var param = {
+      'postid' : model.post.id,
+    };
+    var resp = await NetworkService(context)
+        .ajax('chat_post_id', param, isProgress: true);
+    if (resp['ret'] == 10000) {
+      model = ExtraPostModel.fromMap(resp['result']);
+      initContent();
+    }
   }
 
   Widget _getContent(MediaModel item) {
@@ -98,7 +122,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   void pageChanged(index) {
     setState(() {
       pageIndex = index;
-      selectedItem = widget.model.list[pageIndex];
+      selectedItem = model.list[pageIndex];
     });
   }
 
@@ -131,7 +155,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             Container(
               margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
               height: 66.0,
-              color: Colors.black.withOpacity(0.7),
+              color: Colors.black.withOpacity(0.5),
               padding: EdgeInsets.symmetric(
                   vertical: offsetSm, horizontal: offsetBase),
               child: Row(
@@ -150,7 +174,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                         )),
                   ),
                   CircleAvatarWidget(
-                    headurl: widget.model.user.imgurl,
+                    headurl: model.user.imgurl,
                     size: 44,
                   ),
                   SizedBox(
@@ -162,7 +186,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          widget.model.user.username,
+                          model.user.username,
                           style: semiBold.copyWith(
                               fontSize: fontBase, color: Colors.white),
                         ),
@@ -171,9 +195,9 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                         ),
                         Text(
                           StringService.getCurrentTimeValue(
-                              widget.model.post.regdate),
+                              model.post.regdate),
                           style: mediumText.copyWith(
-                              fontSize: fontSm, color: Colors.grey),
+                              fontSize: fontSm, color: Colors.white),
                         ),
                       ],
                     ),
@@ -186,58 +210,46 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
               child: Container(
                 padding: EdgeInsets.all(offsetBase),
                 height: 120,
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.black.withOpacity(0.5),
                 child: Column(
                   children: [
                     Row(
                       children: [
-                        Row(
-                          children: [
-                            Stack(
-                              children: [
-                                for (var iconName in reviewIcons)
-                                  Container(
-                                      margin: EdgeInsets.only(
-                                          left: 15 *
-                                              double.parse(
-                                                  '${reviewIcons.indexOf(iconName)}')),
-                                      child: Image.asset(
-                                        iconName,
-                                        width: 24.0,
-                                      )),
-                              ],
-                            ),
-                            SizedBox(
-                              width: offsetSm,
-                            ),
-                            Text(
-                              '1.3 K',
-                              style: mediumText.copyWith(
-                                  fontSize: fontBase, color: Colors.white),
-                            ),
-                          ],
+                        ReviewGroupWidget(
+                          reviews: model.reviews,
+                          titleColor: Colors.white,
                         ),
                         Spacer(),
-                        Row(
-                          children: [
-                            CircleIconWidget(
-                                size: 28.0,
-                                padding: offsetSm,
-                                color: Colors.white,
-                                icon: SvgPicture.asset(
-                                  'assets/icons/ic_chat.svg',
-                                  width: 12,
+                        InkWell(
+                          onTap: () {
+                            NavigatorService(context).pushToWidget(
+                                screen: CommentScreen(model: model),
+                                pop: (val) {
+                                  _getData();
+                                }
+                            );
+                          },
+                          child: Row(
+                            children: [
+                              CircleIconWidget(
+                                  size: 28.0,
+                                  padding: offsetSm,
                                   color: Colors.white,
-                                )),
-                            SizedBox(
-                              width: offsetSm,
-                            ),
-                            Text(
-                              '1.3 K',
-                              style: mediumText.copyWith(
-                                  fontSize: fontBase, color: Colors.white),
-                            ),
-                          ],
+                                  icon: SvgPicture.asset(
+                                    'assets/icons/ic_chat.svg',
+                                    width: 12,
+                                    color: Colors.white,
+                                  )),
+                              SizedBox(
+                                width: offsetSm,
+                              ),
+                              Text(
+                                StringService.getCountValue(model.comments.length),
+                                style: mediumText.copyWith(
+                                    fontSize: fontBase, color: Colors.white),
+                              ),
+                            ],
+                          ),
                         ),
                         SizedBox(
                           width: offsetBase,
@@ -257,7 +269,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                               width: offsetSm,
                             ),
                             Text(
-                              '1.3 K',
+                                StringService.getCountValue(model.follows.length),
                               style: mediumText.copyWith(
                                   fontSize: fontBase, color: Colors.white),
                             ),
@@ -272,9 +284,16 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                       children: [
                         Expanded(
                           child: Center(
-                            child: InkWell(
-                              onTap: () {
-                                // setLike();
+                            child: GestureDetector(
+                              onTapDown: (details) {
+                                DialogService(context).showPopupMenu(
+                                  details.globalPosition,
+                                  setLike: (val) async {
+                                    Navigator.of(context).pop();
+                                    await model.setLike(context, _scaffoldKey, val);
+                                    _getData();
+                                  }
+                                );
                               },
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -308,7 +327,12 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                           child: Center(
                             child: InkWell(
                               onTap: () {
-                                // setComment();
+                                NavigatorService(context).pushToWidget(
+                                    screen: CommentScreen(model: model),
+                                  pop: (val) {
+                                      _getData();
+                                  }
+                                );
                               },
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -342,7 +366,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                           child: Center(
                             child: InkWell(
                               onTap: () {
-                                widget.model.setFollow(context, _scaffoldKey);
+                                model.setFollow(context, _scaffoldKey);
                               },
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,

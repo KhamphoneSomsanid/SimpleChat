@@ -27,7 +27,7 @@ class EmptyWidget extends StatelessWidget {
           SizedBox(height: offsetXLg,),
           Text(title,
             textAlign: TextAlign.center,
-            style: semiBold.copyWith(fontSize: fontLg),),
+            style: semiBold.copyWith(fontSize: fontMd),),
           Spacer(),
         ],
       ),
