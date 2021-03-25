@@ -59,7 +59,7 @@ class _VoiceRequestScreenState extends State<VoiceRequestScreen> {
             SizedBox(height: offsetXLg * 2,),
             Text('Voice Calling', style: boldText.copyWith(fontSize: fontXLg),),
             SizedBox(height: offsetXLg, width: double.infinity,),
-            CircleAvatarWidget(headurl: widget.data['type']),
+            CircleAvatarWidget(headurl: widget.data['text']),
             SizedBox(height: offsetXLg,),
             Text(widget.data['username'], style: semiBold.copyWith(fontSize: fontMd),),
             Spacer(),

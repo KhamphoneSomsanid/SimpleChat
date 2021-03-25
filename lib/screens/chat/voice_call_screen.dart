@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:simplechat/main.dart';
@@ -28,7 +29,6 @@ class _VoiceCallScreenState extends State<VoiceCallScreen> {
   StreamSubscription _audioStream;
 
   bool isRecording = false;
-  bool isPlaying = false;
 
   @override
   void initState() {
@@ -41,11 +41,20 @@ class _VoiceCallScreenState extends State<VoiceCallScreen> {
   }
 
   void close(dynamic value) {
+    _recorderStatus?.cancel();
+    _playerStatus?.cancel();
+    _audioStream?.cancel();
+
+    _recorder.stop();
+    _player.stop();
+
     Navigator.of(context).pop(false);
   }
 
   void stream(dynamic value) {
-
+    List<int> list = value['text'].codeUnits;
+    Uint8List bytes = Uint8List.fromList(list);
+    _player.writeChunk(bytes);
   }
 
   Future<void> initAudio() async {
@@ -60,10 +69,7 @@ class _VoiceCallScreenState extends State<VoiceCallScreen> {
     });
 
     _audioStream = _recorder.audioStream.listen((data) {
-      if (isPlaying) {
-        _player.writeChunk(data);
-        socketService.sendCallStream(widget.data['id'], data.toString());
-      }
+      socketService.sendCallStream(widget.data['id'], String.fromCharCodes(data));
     });
 
     _playerStatus = _player.status.listen((status) async {
@@ -71,23 +77,19 @@ class _VoiceCallScreenState extends State<VoiceCallScreen> {
       if (isRecording && status == SoundStreamStatus.Initialized) {
         await _player.start();
       }
-      if (status == SoundStreamStatus.Playing) {
-        isPlaying = true;
-      }
     });
 
-    await _recorder.initialize();
-    await _player.initialize();
+    await _recorder.initialize(sampleRate: 4000);
+    await _player.initialize(sampleRate: 4000);
   }
 
   @override
   void dispose() {
-    _recorderStatus?.cancel();
-    _playerStatus?.cancel();
-    _audioStream?.cancel();
+    // if (_recorder != null) _recorder.dispose();
+    // if (_player != null) _player.dispose();
+
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -99,12 +101,19 @@ class _VoiceCallScreenState extends State<VoiceCallScreen> {
             SizedBox(height: offsetXLg * 2,),
             Text('Voice Calling', style: boldText.copyWith(fontSize: fontXLg),),
             SizedBox(height: offsetXLg, width: double.infinity,),
-            CircleAvatarWidget(headurl: widget.data['type']),
+            CircleAvatarWidget(headurl: widget.data['text']),
             SizedBox(height: offsetXLg,),
             Text(widget.data['username'], style: semiBold.copyWith(fontSize: fontMd),),
             Spacer(),
             InkWell(
               onTap: () {
+                _recorderStatus?.cancel();
+                _playerStatus?.cancel();
+                _audioStream?.cancel();
+
+                _recorder.stop();
+                _player.stop();
+
                 socketService.sendCallClose(widget.data['id']);
                 Navigator.of(context).pop(true);
               },

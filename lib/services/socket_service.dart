@@ -10,7 +10,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 class SocketService {
   IO.Socket socket;
 
-  createSocketConnection() {
+  createSocketConnection({Function(dynamic) request}) {
     socket = IO.io(SOCKET, <String, dynamic>{
       'transports': ['websocket'],
     });
@@ -19,11 +19,22 @@ class SocketService {
     socket.onConnect((_) async {
       print('socket connected');
 
-      var param = {
+      var paramSelf = {
         'id': 'user' + currentUser.id,
         'username': currentUser.username,
       };
-      socket.emit('self', param);
+      socket.emit('self', paramSelf);
+
+      var paramCall = {
+        'id': 'call' + currentUser.id,
+        'username': currentUser.username,
+      };
+      socket.emit('call', paramCall);
+
+      this.socket.on("call_request", (value) async {
+        print("[receiver] calling request ===> ${value.toString()}");
+        request(value);
+      });
     });
 
     this.socket.on("disconnect", (_) => print('Disconnected'));
@@ -125,21 +136,6 @@ class SocketService {
       joinChat(value);
     });
   }
-
-  void callInit({
-    @required Function(dynamic) request,
-  }) {
-    var param = {
-      'id': 'call' + currentUser.id,
-      'username': currentUser.username,
-    };
-    socket.emit('call', param);
-
-    this.socket.on("call_request", (value) async {
-      print("[receiver] calling request ===> ${value.toString()}");
-      request(value);
-    });
-  }
   
   void callRequest({
     @required Function(dynamic) accept,
@@ -166,7 +162,7 @@ class SocketService {
     });
 
     this.socket.on("call_stream", (value) async {
-      print("[receiver] calling stream ===> ${value.toString()}");
+      print("[receiver] calling stream");
       stream(value);
     });
   }
@@ -212,7 +208,6 @@ class SocketService {
   }
 
   void sendCallStream(String userid, String stream) {
-    print('[send] send call stream');
     var param = {
       'userid': 'call' + userid,
       'stream' : stream,
@@ -221,12 +216,13 @@ class SocketService {
     socket.emit('call_stream', param);
   }
 
-  void leaveChat(String roomId, String userRoom, String userid) {
+  void leaveChat(String roomId, String userRoom, String userid, String status) {
     var param = {
       'userid' : 'user${currentUser.id}',
       'room': 'room$roomId',
       'userRoom': 'room$userRoom',
       'toid': 'user$userid',
+      'status': status,
       'timestamp': DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now().toUtc()),
     };
     print("[send] leave chat send");

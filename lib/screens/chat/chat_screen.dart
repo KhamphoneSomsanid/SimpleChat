@@ -89,7 +89,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   _leaveRoom(dynamic value) {
-    activeController.add('AWAY');
+    activeController.add(value['text']);
   }
 
   _joinChat(dynamic value) {
@@ -104,6 +104,7 @@ class _ChatScreenState extends State<ChatScreen> {
     var param = {
       'id' : currentUser.id,
       'roomid' : widget.room.id,
+      'status' : 'AWAY',
     };
     await NetworkService(context).ajax('chat_leave', param, isProgress: false);
     String userRoom = '';
@@ -115,7 +116,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
     for (var user in roomUsers) {
       if (user.user.id != currentUser.id) {
-        socketService.leaveChat(userRoom, user.roomid, user.user.id);
+        socketService.leaveChat(userRoom, user.roomid, user.user.id, 'AWAY');
       }
     }
   }
@@ -364,7 +365,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   }
                   var data = {
                     'id' : selUser.id,
-                    'type' : selUser.imgurl,
+                    'text' : selUser.imgurl,
                     'username' : selUser.username,
                   };
                   socketService.sendCallRequest(selUser.id, 'voice');
