@@ -33,6 +33,7 @@ dependencies:
   socket_io_client: ^0.9.4
   flutter_simple_dependency_injection: ^1.0.1
   flutter_local_notifications: ^4.0.1+2
+  sound_stream: ^0.2.0
 
   intl: ^0.17.0
   flutter_localizations:

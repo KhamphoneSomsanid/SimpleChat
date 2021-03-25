@@ -58,7 +58,10 @@ class MessageModel {
     };
   }
 
-  Widget cell({Function() resend}) {
+  Widget cell({
+    Function() resend,
+    Function() callRequest,
+  }) {
     var corner = 8.0;
     var paddingHorizontal = offsetBase;
     var paddingVertical = offsetSm + offsetXSm;
@@ -116,9 +119,14 @@ class MessageModel {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatarWidget(
-                headurl: imgurl,
-                size: 36.0,
+              InkWell(
+                onTap: () {
+                  callRequest();
+                },
+                child: CircleAvatarWidget(
+                  headurl: imgurl,
+                  size: 36.0,
+                ),
               ),
               SizedBox(width: offsetSm,),
               Expanded(

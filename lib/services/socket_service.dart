@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:simplechat/services/notification_service.dart';
 import 'package:simplechat/services/pref_service.dart';
+import 'package:simplechat/services/string_service.dart';
 import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/params.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -123,6 +124,101 @@ class SocketService {
       print("[receiver] joinChat ===> ${value.toString()}");
       joinChat(value);
     });
+  }
+
+  void callInit({
+    @required Function(dynamic) request,
+  }) {
+    var param = {
+      'id': 'call' + currentUser.id,
+      'username': currentUser.username,
+    };
+    socket.emit('call', param);
+
+    this.socket.on("call_request", (value) async {
+      print("[receiver] calling request ===> ${value.toString()}");
+      request(value);
+    });
+  }
+  
+  void callRequest({
+    @required Function(dynamic) accept,
+    @required Function(dynamic) decline,
+  }) {
+    this.socket.on("call_accept", (value) async {
+      print("[receiver] calling accept ===> ${value.toString()}");
+      accept(value);
+    });
+
+    this.socket.on("call_decline", (value) async {
+      print("[receiver] calling decline ===> ${value.toString()}");
+      decline(value);
+    });
+  }
+  
+  void callStream({
+    @required Function(dynamic) close,
+    @required Function(dynamic) stream,
+  }) {
+    this.socket.on("call_close", (value) async {
+      print("[receiver] calling close ===> ${value.toString()}");
+      close(value);
+    });
+
+    this.socket.on("call_stream", (value) async {
+      print("[receiver] calling stream ===> ${value.toString()}");
+      stream(value);
+    });
+  }
+
+  void sendCallRequest(String userid, String type) {
+    print('[send] send call request');
+    var param = {
+      'userid': 'call' + userid,
+      'id' : currentUser.id,
+      'username': currentUser.username,
+      'imgurl': currentUser.imgurl,
+      'type': type,
+      'datetime': StringService.getCurrentUTCTime(),
+    };
+    socket.emit('call_request', param);
+  }
+
+  void sendCallDecline(String userid) {
+    print('[send] send call decline');
+    var param = {
+      'userid': 'call' + userid,
+      'datetime': StringService.getCurrentUTCTime(),
+    };
+    socket.emit('call_decline', param);
+  }
+
+  void sendCallAccept(String userid) {
+    print('[send] send call accept');
+    var param = {
+      'userid': 'call' + userid,
+      'datetime': StringService.getCurrentUTCTime(),
+    };
+    socket.emit('call_accept', param);
+  }
+
+  void sendCallClose(String userid) {
+    print('[send] send call close');
+    var param = {
+      'userid': 'call' + userid,
+      'datetime': StringService.getCurrentUTCTime(),
+    };
+    socket.emit('call_close', param);
+  }
+
+  void sendCallStream(String userid, String stream) {
+    print('[send] send call stream');
+    var param = {
+      'userid': 'call' + userid,
+      'stream' : stream,
+      'datetime': StringService.getCurrentUTCTime(),
+    };
+    socket.emit('call_stream', param);
   }
 
   void leaveChat(String roomId, String userRoom, String userid) {

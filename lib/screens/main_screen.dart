@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:simplechat/main.dart';
+import 'package:simplechat/models/room_model.dart';
+import 'package:simplechat/screens/chat/voice_request_screen.dart';
 import 'package:simplechat/screens/main/chat_list_screen.dart';
 import 'package:simplechat/screens/main/nearby_screen.dart';
 import 'package:simplechat/screens/main/noti_screen.dart';
@@ -10,10 +14,12 @@ import 'package:simplechat/screens/main/setting_screen.dart';
 import 'package:simplechat/screens/post/add_post_screen.dart';
 import 'package:simplechat/screens/setting/invite_screen.dart';
 import 'package:simplechat/services/navigator_service.dart';
+import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/services/notification_service.dart';
 import 'package:simplechat/services/socket_service.dart';
 import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
+import 'package:simplechat/utils/params.dart';
 import 'package:simplechat/utils/themes.dart';
 
 class MainScreen extends StatefulWidget {
@@ -23,6 +29,8 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  List<RoomModel> rooms = [];
 
   @override
   void initState() {
@@ -34,6 +42,25 @@ class _MainScreenState extends State<MainScreen> {
     socketService.createSocketConnection();
 
     initInAppPurchase();
+
+    Timer.run(() {
+      _initCallService();
+    });
+  }
+
+  _initCallService() async {
+    socketService.callInit(
+        request: request,
+    );
+  }
+  
+  void request(dynamic value) {
+    NavigatorService(context).pushToWidget(
+      screen: VoiceRequestScreen(data: value),
+      pop: (val) {
+        setState(() {});
+      }
+    );
   }
 
   initInAppPurchase() async {
