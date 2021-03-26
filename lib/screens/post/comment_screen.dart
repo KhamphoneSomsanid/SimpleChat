@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:simplechat/models/comment_model.dart';
 import 'package:simplechat/models/post_model.dart';
+import 'package:simplechat/screens/post/review_screen.dart';
 import 'package:simplechat/services/dialog_service.dart';
+import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/services/string_service.dart';
 import 'package:simplechat/utils/colors.dart';
@@ -73,7 +75,13 @@ class _CommentScreenState extends State<CommentScreen> {
       ),
       child: Row(
         children: [
-          ReviewGroupWidget(reviews: widget.model.reviews),
+          ReviewGroupWidget(
+            reviews: widget.model.reviews,
+            titleColor: Colors.white,
+            toLike: () {
+              NavigatorService(context).pushToWidget(screen: ReviewScreen(postid: widget.model.post.id));
+            },
+          ),
           Spacer(),
           Icon(Icons.arrow_right, color: Colors.green,),
         ],
@@ -88,7 +96,7 @@ class _CommentScreenState extends State<CommentScreen> {
       child: Scaffold(
         key: _scaffoldKey,
         appBar: MainBarWidget(
-          titleString: 'Comment',
+          titleString: 'Comment (${comments.length})',
         ),
         body: SafeArea(
           child: Column(
@@ -104,7 +112,18 @@ class _CommentScreenState extends State<CommentScreen> {
                   shrinkWrap: true,
                   itemCount: comments.length,
                   itemBuilder: (context, i) {
-                    return comments[i].getWidget();
+                    return comments[i].getWidget(
+                      setLike: (offset) {
+                        DialogService(context).showLikePopupMenu(
+                          offset,
+                          setLike: (index) async {
+                            Navigator.of(context).pop();
+                            var isUpdate = await comments[i].setLike(context, _scaffoldKey, index);
+                            if (isUpdate) _getData();
+                          }
+                        );
+                      }
+                    );
                   }
                 ),
               ),

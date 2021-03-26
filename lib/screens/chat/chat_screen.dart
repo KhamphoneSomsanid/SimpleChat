@@ -5,6 +5,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:simplechat/main.dart';
 import 'package:simplechat/models/chat_user_model.dart';
 import 'package:simplechat/models/message_model.dart';
+import 'package:simplechat/screens/chat/voice_request_screen.dart';
+import 'package:simplechat/services/dialog_service.dart';
+import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/services/string_service.dart';
 import 'package:simplechat/utils/colors.dart';
@@ -86,7 +89,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   _leaveRoom(dynamic value) {
-    activeController.add('AWAY');
+    activeController.add(value['text']);
   }
 
   _joinChat(dynamic value) {
@@ -101,6 +104,7 @@ class _ChatScreenState extends State<ChatScreen> {
     var param = {
       'id' : currentUser.id,
       'roomid' : widget.room.id,
+      'status' : 'AWAY',
     };
     await NetworkService(context).ajax('chat_leave', param, isProgress: false);
     String userRoom = '';
@@ -112,7 +116,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
     for (var user in roomUsers) {
       if (user.user.id != currentUser.id) {
-        socketService.leaveChat(userRoom, user.roomid, user.user.id);
+        socketService.leaveChat(userRoom, user.roomid, user.user.id, 'AWAY');
       }
     }
   }
@@ -225,6 +229,9 @@ class _ChatScreenState extends State<ChatScreen> {
                                 var msgData = snapshot.data[i];
                                 msgData.isError = false;
                                 send(msgData);
+                              },
+                              callRequest: () {
+                                onCallRequest();
                               }
                             );
                           }
@@ -334,6 +341,60 @@ class _ChatScreenState extends State<ChatScreen> {
       bottomOffset,
       duration: Duration(milliseconds: 1000),
       curve: Curves.easeInOut,
+    );
+  }
+
+  void onCallRequest() {
+    DialogService(context).showCustomModalBottomSheet(
+        titleWidget: Container(
+          padding: EdgeInsets.all(offsetBase),
+            child: Text('Call Method', style: semiBold.copyWith(fontSize: fontMd),)),
+        bodyWidget: Container(
+          padding: EdgeInsets.all(offsetBase),
+          child: Column(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).pop();
+                  var selUser;
+                  for (var user in roomUsers) {
+                    if (user.user.id != currentUser.id) {
+                      selUser = user.user;
+                      break;
+                    }
+                  }
+                  var data = {
+                    'id' : selUser.id,
+                    'text' : selUser.imgurl,
+                    'username' : selUser.username,
+                  };
+                  socketService.sendCallRequest(selUser.id, 'voice');
+                  NavigatorService(context).pushToWidget(screen: VoiceRequestScreen(
+                    data: data,
+                    isCall: true,
+                  ));
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.call, color: blueColor,),
+                    SizedBox(width: offsetBase,),
+                    Text('Voice Call', style: mediumText.copyWith(fontSize: fontBase),)
+                  ],
+                ),
+              ),
+              SizedBox(height: offsetBase,),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.videocam, color: primaryColor,),
+                  SizedBox(width: offsetBase,),
+                  Text('Video Call', style: mediumText.copyWith(fontSize: fontBase),)
+                ],
+              ),
+            ],
+          ),
+        )
     );
   }
 

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:simplechat/main.dart';
+import 'package:simplechat/models/room_model.dart';
+import 'package:simplechat/screens/chat/voice_request_screen.dart';
 import 'package:simplechat/screens/main/chat_list_screen.dart';
 import 'package:simplechat/screens/main/nearby_screen.dart';
 import 'package:simplechat/screens/main/noti_screen.dart';
@@ -10,10 +12,13 @@ import 'package:simplechat/screens/main/setting_screen.dart';
 import 'package:simplechat/screens/post/add_post_screen.dart';
 import 'package:simplechat/screens/setting/invite_screen.dart';
 import 'package:simplechat/services/navigator_service.dart';
+import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/services/notification_service.dart';
+import 'package:simplechat/services/pref_service.dart';
 import 'package:simplechat/services/socket_service.dart';
 import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
+import 'package:simplechat/utils/params.dart';
 import 'package:simplechat/utils/themes.dart';
 
 class MainScreen extends StatefulWidget {
@@ -21,8 +26,10 @@ class MainScreen extends StatefulWidget {
   _MainScreenState createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  List<RoomModel> rooms = [];
 
   @override
   void initState() {
@@ -31,9 +38,59 @@ class _MainScreenState extends State<MainScreen> {
     NotificationService(context).init();
 
     socketService = injector.get<SocketService>();
-    socketService.createSocketConnection();
+    socketService.createSocketConnection(
+      request: request,
+    );
 
     initInAppPurchase();
+
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        print("-----\napp in resumed-------");
+        await _enterApp();
+        break;
+      case AppLifecycleState.inactive:
+        print("-----\napp in inactive-----");
+        await _leaveApp();
+        break;
+      case AppLifecycleState.paused:
+        print("-----\napp in paused-----");
+        await PreferenceService().setCurrentUser();
+        break;
+      case AppLifecycleState.detached:
+        print("-----\napp in detached-----");
+        break;
+    }
+  }
+
+  void _leaveApp() async {
+    await PreferenceService().setCurrentUser();
+    var param = {
+      'id' : currentUser.id,
+    };
+    await NetworkService(context).ajax('chat_leave_app', param, isProgress: false);
+  }
+
+  void _enterApp() async {
+    if (currentUser == null) currentUser = await PreferenceService().getCurrentUser();
+    var param = {
+      'id' : currentUser.id,
+    };
+    await NetworkService(context).ajax('chat_enter_app', param, isProgress: false);
+  }
+  
+  void request(dynamic value) {
+    NavigatorService(context).pushToWidget(
+      screen: VoiceRequestScreen(data: value),
+      pop: (val) {
+        setState(() {});
+      }
+    );
   }
 
   initInAppPurchase() async {
@@ -48,6 +105,7 @@ class _MainScreenState extends State<MainScreen> {
     3: () => appSettingInfo['isNearby'] ? NearByScreen() : NotiScreen(),
     4: () => SettingScreen(),
   };
+
   var bottomItems = [
     {
       'icon': 'assets/icons/ic_post.svg',

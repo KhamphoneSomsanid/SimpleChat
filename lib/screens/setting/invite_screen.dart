@@ -163,12 +163,7 @@ class _InviteScreenState extends State<InviteScreen> {
   }
 
   void _request(dynamic user) async {
-    var param = {
-      'id' : currentUser.id,
-      'userid' : user.id,
-    };
-    var resp = await NetworkService(context)
-        .ajax('chat_send_request', param, isProgress: true);
+    var resp = await user.request(context);
     if (resp['ret'] == 10000) {
       DialogService(context).showSnackbar(resp['msg'], _scaffoldKey);
       socketService.sendRequest(user.id);
@@ -180,4 +175,5 @@ class _InviteScreenState extends State<InviteScreen> {
       DialogService(context).showSnackbar(resp['msg'], _scaffoldKey, type: SnackBarType.WARING);
     }
   }
+
 }

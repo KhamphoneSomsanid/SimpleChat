@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:simplechat/services/network_service.dart';
 
 import 'package:simplechat/utils/colors.dart';
 import 'package:simplechat/utils/dimens.dart';
+import 'package:simplechat/utils/params.dart';
 import 'package:simplechat/utils/themes.dart';
 import 'package:simplechat/widgets/image_widget.dart';
 
@@ -125,6 +127,39 @@ class UserModel {
             Icon(
               Icons.arrow_right_outlined,
               color: primaryColor,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget itemSentWidget() {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(offsetBase),
+      ),
+      child: Container(
+        padding:
+        EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetBase),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
+          gradient: getGradientColor(color: Colors.grey),
+        ),
+        child: Row(
+          children: [
+            CircleAvatarWidget(
+              headurl: imgurl,
+              size: 36.0,
+            ),
+            SizedBox(
+              width: offsetBase,
+            ),
+            Expanded(
+              child: Text(
+                username,
+                style: semiBold.copyWith(fontSize: fontMd),
+              ),
             ),
           ],
         ),
@@ -394,4 +429,29 @@ class UserModel {
   }
 
   String toJson() => json.encode(toMap());
+
+  Future<Map<String, dynamic>> request(BuildContext context) async {
+    var param = {
+      'id' : currentUser.id,
+      'userid' : id,
+    };
+    var resp = await NetworkService(context)
+        .ajax('chat_send_request', param, isProgress: true);
+    return resp;
+  }
+}
+
+class FollowUserModel {
+  UserModel user;
+  String status;
+
+  FollowUserModel({this.user, this.status});
+
+  factory FollowUserModel.fromMap(Map<String, dynamic> map) {
+    return new FollowUserModel(
+      user: UserModel.fromMap(map['user']),
+      status: map['status'] as String,
+    );
+  }
+
 }

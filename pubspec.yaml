@@ -3,7 +3,7 @@ description: A new Flutter application.
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+2
+version: 1.0.0+5
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -33,6 +33,7 @@ dependencies:
   socket_io_client: ^0.9.4
   flutter_simple_dependency_injection: ^1.0.1
   flutter_local_notifications: ^4.0.1+2
+  sound_stream: ^0.2.0
 
   intl: ^0.17.0
   flutter_localizations:

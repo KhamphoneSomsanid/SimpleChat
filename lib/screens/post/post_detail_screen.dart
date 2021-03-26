@@ -6,6 +6,8 @@ import 'package:page_view_indicators/circle_page_indicator.dart';
 import 'package:simplechat/models/media_model.dart';
 import 'package:simplechat/models/post_model.dart';
 import 'package:simplechat/screens/post/comment_screen.dart';
+import 'package:simplechat/screens/post/follow_screen.dart';
+import 'package:simplechat/screens/post/review_screen.dart';
 import 'package:simplechat/services/dialog_service.dart';
 import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/network_service.dart';
@@ -208,6 +210,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
+                margin: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
                 padding: EdgeInsets.all(offsetBase),
                 height: 120,
                 color: Colors.black.withOpacity(0.5),
@@ -218,6 +221,9 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                         ReviewGroupWidget(
                           reviews: model.reviews,
                           titleColor: Colors.white,
+                          toLike: () {
+                            NavigatorService(context).pushToWidget(screen: ReviewScreen(postid: widget.post.post.id));
+                          },
                         ),
                         Spacer(),
                         InkWell(
@@ -254,26 +260,31 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                         SizedBox(
                           width: offsetBase,
                         ),
-                        Row(
-                          children: [
-                            CircleIconWidget(
-                                size: 28.0,
-                                padding: offsetSm,
-                                color: Colors.white,
-                                icon: SvgPicture.asset(
-                                  'assets/icons/ic_follow.svg',
-                                  width: 12,
+                        InkWell(
+                          onTap: () {
+                            NavigatorService(context).pushToWidget(screen: FollowScreen(postid: model.post.id));
+                          },
+                          child: Row(
+                            children: [
+                              CircleIconWidget(
+                                  size: 28.0,
+                                  padding: offsetSm,
                                   color: Colors.white,
-                                )),
-                            SizedBox(
-                              width: offsetSm,
-                            ),
-                            Text(
-                                StringService.getCountValue(model.follows.length),
-                              style: mediumText.copyWith(
-                                  fontSize: fontBase, color: Colors.white),
-                            ),
-                          ],
+                                  icon: SvgPicture.asset(
+                                    'assets/icons/ic_follow.svg',
+                                    width: 12,
+                                    color: Colors.white,
+                                  )),
+                              SizedBox(
+                                width: offsetSm,
+                              ),
+                              Text(
+                                  StringService.getCountValue(model.follows.length),
+                                style: mediumText.copyWith(
+                                    fontSize: fontBase, color: Colors.white),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -286,7 +297,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                           child: Center(
                             child: GestureDetector(
                               onTapDown: (details) {
-                                DialogService(context).showPopupMenu(
+                                DialogService(context).showLikePopupMenu(
                                   details.globalPosition,
                                   setLike: (val) async {
                                     Navigator.of(context).pop();

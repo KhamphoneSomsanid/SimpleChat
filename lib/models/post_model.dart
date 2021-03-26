@@ -283,34 +283,62 @@ class ExtraPostModel {
                           ],
                         )
                       : list.length == 3
-                          ? Column(
+                          ? Row(
                               children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: list[0].cellMediaWidget(type: 0),
-                                    ),
-                                    SizedBox(
-                                      width: 1.0,
-                                    ),
-                                    Expanded(
-                                      child: list[1].cellMediaWidget(type: 1),
-                                    ),
-                                  ],
+                                Expanded(
+                                  child: list[0].cellMediaWidget(type: 4),
                                 ),
                                 SizedBox(
-                                  height: 1.0,
+                                  width: 1.0,
                                 ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: list[2].cellMediaWidget(type: 2),
-                                    ),
-                                    SizedBox(
-                                      width: 1.0,
-                                    ),
-                                    Expanded(child: Container()),
-                                  ],
+                                Expanded(
+                                  child: Stack(
+                                    children: [
+                                      list[1].cellMediaWidget(type: 5),
+                                      AspectRatio(
+                                        aspectRatio: 1.0,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.black
+                                                  .withOpacity(0.7),
+                                              borderRadius:
+                                              BorderRadius.only(
+                                                  topLeft: Radius
+                                                      .circular(
+                                                      offsetBase),
+                                                  bottomLeft: Radius
+                                                      .circular(
+                                                      offsetBase))),
+                                          child: Center(
+                                            child: Column(
+                                              mainAxisSize:
+                                              MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  'See More',
+                                                  style:
+                                                  boldText.copyWith(
+                                                      fontSize:
+                                                      fontLg,
+                                                      color: Colors
+                                                          .white),
+                                                ),
+                                                Text(
+                                                  '+ 1',
+                                                  style:
+                                                  boldText.copyWith(
+                                                      fontSize:
+                                                      fontLg,
+                                                      color: Colors
+                                                          .white),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             )

@@ -4,10 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:simplechat/models/review_model.dart';
 import 'package:simplechat/models/user_model.dart';
+import 'package:simplechat/services/dialog_service.dart';
 import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/services/string_service.dart';
 import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
+import 'package:simplechat/utils/params.dart';
 import 'package:simplechat/utils/themes.dart';
 import 'package:simplechat/widgets/image_widget.dart';
 
@@ -88,7 +90,7 @@ class ExtraCommentModel {
     );
   }
 
-  Widget getWidget() {
+  Widget getWidget({Function(Offset) setLike}) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetSm),
       child: Row(
@@ -119,7 +121,12 @@ class ExtraCommentModel {
                         style: mediumText.copyWith(fontSize: fontSm),
                       ),
                       SizedBox(width: offsetLg,),
-                      ReviewGroupWidget(reviews: reviews),
+                      GestureDetector(
+                        onTapDown: (details) {
+                          if (setLike != null) setLike(details.globalPosition);
+                        },
+                          child: ReviewGroupWidget(reviews: reviews)
+                      ),
                       if (appSettingInfo['isReplyComment']) Row(
                         children: [
                           SizedBox(width: offsetLg,),
@@ -141,6 +148,30 @@ class ExtraCommentModel {
         ],
       ),
     );
+  }
+
+  Future<bool> setLike(BuildContext context, GlobalKey<ScaffoldState> scaffoldKey,
+      int type) async {
+    if (user.id == currentUser.id) {
+      DialogService(context).showSnackbar(
+          'This comment is yours. You can\'t follow it.', scaffoldKey,
+          type: SnackBarType.WARING);
+      return false;
+    }
+    var param = {
+      'userid': currentUser.id,
+      'postid': comment.id,
+      'type': '$type',
+    };
+
+    var resp = await NetworkService(context)
+        .ajax('chat_add_review_comment', param, isProgress: true);
+    if (resp['ret'] == 10000) {
+      DialogService(context).showSnackbar(resp['msg'], scaffoldKey);
+      return true;
+    }
+    return false;
+
   }
 
 }

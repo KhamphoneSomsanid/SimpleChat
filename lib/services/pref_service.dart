@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simplechat/models/post_model.dart';
 import 'package:simplechat/models/room_model.dart';
 import 'package:simplechat/models/story_model.dart';
+import 'package:simplechat/models/user_model.dart';
+import 'package:simplechat/utils/params.dart';
 
 class PreferenceService {
   static const keyEmail = 'email';
@@ -16,6 +18,7 @@ class PreferenceService {
   static const keyStoryData = 'story_data';
   static const keyPostData = 'post_data';
   static const keyRoomData = 'room_data';
+  static const keyCurrentUser = 'current_user';
 
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
@@ -93,6 +96,11 @@ class PreferenceService {
     await prefs.setString(keyRoomData, json.encode(listMap));
   }
 
+  Future<void> setCurrentUser() async {
+    final SharedPreferences prefs = await _prefs;
+    await prefs.setString(keyCurrentUser, currentUser.toJson());
+  }
+
   Future<String> getEmail() async {
     final SharedPreferences prefs = await _prefs;
     return prefs.getString(keyEmail);
@@ -163,6 +171,12 @@ class PreferenceService {
       rooms.add(model);
     }
     return rooms;
+  }
+
+  Future<UserModel> getCurrentUser() async {
+    final SharedPreferences prefs = await _prefs;
+    String jsonData = prefs.getString(keyCurrentUser) ?? null;
+    return UserModel.fromJson(jsonData);
   }
 
   Future<bool> checkKey(String key) async {

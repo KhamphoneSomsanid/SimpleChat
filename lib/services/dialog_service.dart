@@ -149,11 +149,11 @@ class DialogService {
             ));
   }
 
-  Future<void> showPopupMenu(Offset offset, {Function(int) setLike}) async {
+  Future<void> showLikePopupMenu(Offset offset, {Function(int) setLike}) async {
     double top = offset.dy;
     await showMenu(
         context: context,
-        position: RelativeRect.fromLTRB(0, top, 0, 0),
+        position: RelativeRect.fromLTRB(0, top - offsetBase, 0, 0),
         items: [
           PopupMenuItem(
             value: 1,
@@ -179,6 +179,15 @@ class DialogService {
             ),
           ),
         ]);
+  }
+
+  Future<void> showPopupMenu(Offset offset, {List<PopupMenuItem> items}) async {
+    double top = offset.dy;
+    await showMenu(
+        context: context,
+        position: RelativeRect.fromLTRB(0, top - offsetBase, 0, 0),
+        items: items,
+    );
   }
 
 }
