@@ -4,11 +4,14 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:simplechat/main.dart';
 import 'package:simplechat/models/media_model.dart';
 import 'package:simplechat/models/post_model.dart';
+import 'package:simplechat/models/user_model.dart';
 import 'package:simplechat/services/dialog_service.dart';
 import 'package:simplechat/services/image_service.dart';
 import 'package:simplechat/services/load_service.dart';
+import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/services/string_service.dart';
 import 'package:simplechat/utils/colors.dart';
 import 'package:simplechat/utils/constants.dart';
@@ -33,10 +36,27 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   List<MediaModel> models = [];
   List<String> tags = [];
+  List<UserModel> users = [];
 
   @override
   void initState() {
     super.initState();
+
+    _getData();
+  }
+
+  void _getData() async {
+    var param = {
+      'userid' : currentUser.id,
+    };
+    var resp = await NetworkService(context).ajax('chat_follow_user', param, isProgress: false);
+    if (resp['ret'] == 10000) {
+      users.clear();
+      for (var json in resp['result']) {
+        UserModel userModel = UserModel.fromMap(json);
+        users.add(userModel);
+      }
+    }
   }
 
   _imgPicker(ImageSource source) async {
@@ -151,6 +171,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
     }
 
     LoadService().hideLoading(context);
+
+    for (var user in users) {
+      socketService.addPost(user.id);
+    }
 
     DialogService(context).showSnackbar('Successful upload post', _scaffoldKey,
         dismiss: () {

@@ -1,8 +1,8 @@
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 const String DOMAIN = 'simplechat.laodev.info';
-const String SOCKET = 'ws://192.168.1.2:8222';
-// const String SOCKET = 'ws://54.36.110.237:8222';
+// const String SOCKET = 'ws://192.168.1.2:8222';
+const String SOCKET = 'ws://54.36.110.237:8222';
 
 const String avatarUrl = 'https://' + DOMAIN + '/uploads/ic_avatar.png';
 

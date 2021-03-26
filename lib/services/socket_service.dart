@@ -58,6 +58,21 @@ class SocketService {
       await PreferenceService().setRoomBadge(value['id'], badge + 1);
       NotificationService.showNotification('Message', '${value['username']}\n${value['text']}', NotificationService.keyMessageChannel);
     });
+
+    this.socket.on("addPost", (value) async {
+      print("[receiver] add post ===> ${value.toString()}");
+      NotificationService.showNotification('Add Post', '${value['username']} just posted a feed.', NotificationService.keyMessageChannel);
+    });
+  }
+
+  void addPost(String userid) {
+    print('[send] add post');
+    var param = {
+      'id': 'user' + currentUser.id,
+      'username': currentUser.username,
+      'userid': 'user' + userid,
+    };
+    socket.emit('addPost', param);
   }
 
   void sendRequest(String userid) {
