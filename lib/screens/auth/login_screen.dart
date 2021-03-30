@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:simplechat/models/user_model.dart';
+import 'package:simplechat/screens/auth/forgot_screen.dart';
 import 'package:simplechat/screens/main_screen.dart';
 import 'package:simplechat/screens/auth/register_screen.dart';
 import 'package:simplechat/screens/auth/verify_screen.dart';
@@ -9,6 +12,7 @@ import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/services/pref_service.dart';
 import 'package:simplechat/utils/colors.dart';
+import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/params.dart';
 import 'package:simplechat/utils/themes.dart';
@@ -43,6 +47,24 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     initData();
+
+    Timer.run(() {
+      _getData();
+    });
+  }
+
+  void _getData() async {
+    var resp = await NetworkService(context)
+        .ajax('chat_status', null, isProgress: true);
+    if (resp['ret'] == 10000) {
+      appSettingInfo['isNearby'] = resp['result']['nearby'] == '1';
+      appSettingInfo['isVideoStory'] = resp['result']['videostory'] == '1';
+      appSettingInfo['isReplyComment'] = resp['result']['replycomment'] == '1';
+      appSettingInfo['isVoiceCall'] = resp['result']['voicecall'] == '1';
+      appSettingInfo['isVideoCall'] = resp['result']['videocall'] == '1';
+
+      print('appSettingInfo ===> ${appSettingInfo.toString()}');
+    }
   }
 
   Future<void> initData() async {
@@ -94,7 +116,12 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             children: [
               Spacer(),
-              Image.asset('assets/icons/ic_logo.png', color: primaryColor, width: 180, fit: BoxFit.fitWidth,),
+              Image.asset(
+                'assets/icons/ic_logo.png',
+                color: primaryColor,
+                width: 180,
+                fit: BoxFit.fitWidth,
+              ),
               Spacer(),
               UnderLineTextField(
                 controller: emailController,
@@ -147,14 +174,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         Text(
                           'Remember me',
-                          style: semiBold.copyWith(fontSize: fontBase, color: primaryColor),
+                          style: semiBold.copyWith(
+                              fontSize: fontBase, color: primaryColor),
                         ),
                       ],
                     ),
                   ),
                   InkWell(
                       onTap: () {
-                        // NavigateToRouter(context, ForgotPasswordScreen());
+                        NavigatorService(context)
+                            .pushToWidget(screen: ForgotPassScreen());
                       },
                       child: Text(
                         'Forgot Pass?',

@@ -16,7 +16,10 @@ class MemberShipScreen extends StatefulWidget {
 
 class _MemberShipScreenState extends State<MemberShipScreen> {
   StreamSubscription _conectionSubscription;
-  final List<String> _productLists = ['com.laodev.simplechat.membership'];
+  final List<String> _productLists = [
+    'com.laodev.simplechat.membership',
+    'com.laodev.simplechat.jobpost'
+  ];
   List<IAPItem> _items = [];
   // List<PurchasedItem> _purchases = [];
 
