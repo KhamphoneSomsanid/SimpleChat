@@ -7,11 +7,11 @@ const String SOCKET = 'ws://172.20.10.3:8222';
 
 const String avatarUrl = 'https://' + DOMAIN + '/uploads/ic_avatar.png';
 
-const appSettingInfo = {
+var appSettingInfo = {
   'isNearby': true,
   'isVideoStory': false,
   'isReplyComment': false,
-  'isVoiceCall': false,
+  'isVoiceCall': true,
   'isVideoCall': false,
 };
 
@@ -23,9 +23,9 @@ final phoneMask = new MaskTextInputFormatter(
 final expiryDateMask = new MaskTextInputFormatter(
     mask: '##/####', filter: {"#": RegExp(r'[0-9]')});
 final digits4Mask =
-new MaskTextInputFormatter(mask: '####', filter: {"#": RegExp(r'[0-9]')});
+    new MaskTextInputFormatter(mask: '####', filter: {"#": RegExp(r'[0-9]')});
 final cvvMask =
-new MaskTextInputFormatter(mask: '###', filter: {"#": RegExp(r'[0-9]')});
+    new MaskTextInputFormatter(mask: '###', filter: {"#": RegExp(r'[0-9]')});
 
 const List<String> reviewIcons = [
   'assets/icons/ic_review_like.png',

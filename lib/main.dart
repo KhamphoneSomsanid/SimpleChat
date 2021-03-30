@@ -5,6 +5,7 @@ import 'package:simplechat/generated/l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:simplechat/screens/auth/login_screen.dart';
+import 'package:simplechat/screens/auth/splash_screen.dart';
 import 'package:simplechat/services/inject_service.dart';
 import 'package:simplechat/services/socket_service.dart';
 
@@ -19,7 +20,6 @@ class MyHttpOverrides extends HttpOverrides {
           (X509Certificate cert, String host, int port) => true;
   }
 }
-
 
 Future<void> main() async {
   InjectionService().initialise(Injector.getInjector());
@@ -37,14 +37,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Simple Chat',
       theme: ThemeData(
-        primarySwatch: Colors.green,
-        primaryTextTheme: TextTheme(
-            headline6: TextStyle(
-                color: Colors.green
-            )
-        )
+          primarySwatch: Colors.green,
+          primaryTextTheme:
+              TextTheme(headline6: TextStyle(color: Colors.green))),
+      debugShowCheckedModeBanner: false,
+      home: SplashScreen(
+        homeWidget: LoginScreen(),
       ),
-      home: LoginScreen(),
       localizationsDelegates: [
         S.delegate,
         GlobalMaterialLocalizations.delegate,

@@ -3426,3 +3426,7 @@ build/ios/iphoneos/Runner.app/Frameworks/flutter_inapp_purchase.framework/_CodeS
 /build/sound_stream/tmp/kotlin-classes/release/vn/casperpas/sound_stream/SoundStreamPlugin.class
 /build/sound_stream/tmp/kotlin-classes/release/vn/casperpas/sound_stream/SoundStreamPluginKt.class
 /build/sound_stream/tmp/kotlin-classes/release/vn/casperpas/sound_stream/SoundStreamStatus.class
+pubspec.yaml
+build/ios/Debug-iphoneos/App.framework/flutter_assets/assets/images/logo.png
+build/ios/Debug-iphoneos/Runner.app/Frameworks/App.framework/flutter_assets/assets/images/logo.png
+build/ios/iphoneos/Runner.app/Frameworks/App.framework/flutter_assets/assets/images/logo.png
