@@ -380,7 +380,7 @@ class ExtraPostModel {
                                     ),
                                   ],
                                 )
-                              : Column(
+                              : list.length > 4? Column(
                                   children: [
                                     Row(
                                       children: [
@@ -458,7 +458,7 @@ class ExtraPostModel {
                                       ],
                                     ),
                                   ],
-                                ),
+                                ) : Container(),
             ),
             Container(
               padding: EdgeInsets.symmetric(

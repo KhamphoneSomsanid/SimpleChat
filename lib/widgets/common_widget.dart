@@ -78,10 +78,11 @@ class SettingCellWidget extends StatelessWidget {
               style: semiBold.copyWith(fontSize: fontBase, color: Colors.white),
             ),
             Spacer(),
-            Text(
-              detail,
-              style: mediumText.copyWith(fontSize: fontSm, color: textColor),
-            ),
+            if (detail != null)
+              Text(
+                detail,
+                style: mediumText.copyWith(fontSize: fontSm, color: textColor),
+              ),
             Icon(
               Icons.arrow_right_outlined,
               color: textColor,
