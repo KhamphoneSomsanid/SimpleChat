@@ -52,11 +52,11 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     switch (state) {
       case AppLifecycleState.resumed:
         print("-----\napp in resumed-------");
-        await _enterApp();
+        _enterApp();
         break;
       case AppLifecycleState.inactive:
         print("-----\napp in inactive-----");
-        await _leaveApp();
+        _leaveApp();
         break;
       case AppLifecycleState.paused:
         print("-----\napp in paused-----");
@@ -71,26 +71,28 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   void _leaveApp() async {
     await PreferenceService().setCurrentUser();
     var param = {
-      'id' : currentUser.id,
+      'id': currentUser.id,
     };
-    await NetworkService(context).ajax('chat_leave_app', param, isProgress: false);
+    await NetworkService(context)
+        .ajax('chat_leave_app', param, isProgress: false);
   }
 
   void _enterApp() async {
-    if (currentUser == null) currentUser = await PreferenceService().getCurrentUser();
+    if (currentUser == null)
+      currentUser = await PreferenceService().getCurrentUser();
     var param = {
-      'id' : currentUser.id,
+      'id': currentUser.id,
     };
-    await NetworkService(context).ajax('chat_enter_app', param, isProgress: false);
+    await NetworkService(context)
+        .ajax('chat_enter_app', param, isProgress: false);
   }
-  
+
   void request(dynamic value) {
     NavigatorService(context).pushToWidget(
-      screen: VoiceRequestScreen(data: value),
-      pop: (val) {
-        setState(() {});
-      }
-    );
+        screen: VoiceRequestScreen(data: value),
+        pop: (val) {
+          setState(() {});
+        });
   }
 
   initInAppPurchase() async {
@@ -149,7 +151,9 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
       case 1:
         return Icon(Icons.add);
       case 3:
-        return appSettingInfo['isNearby']? Icon(Icons.add) : Icon(Icons.admin_panel_settings_outlined);
+        return appSettingInfo['isNearby']
+            ? Icon(Icons.add)
+            : Icon(Icons.admin_panel_settings_outlined);
       case 4:
         return Icon(Icons.admin_panel_settings_outlined);
     }
@@ -217,8 +221,9 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
           shape: CircularNotchedRectangle(),
           notchMargin: 8.0,
         ),
-        floatingActionButton:
-            FloatingActionButton(child: getIcon(), onPressed: () {
+        floatingActionButton: FloatingActionButton(
+            child: getIcon(),
+            onPressed: () {
               switch (selectedIndex) {
                 case 0:
                   NavigatorService(context).pushToWidget(
@@ -227,8 +232,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                         if (value != null) {
                           setState(() {});
                         }
-                      }
-                  );
+                      });
                   break;
                 case 1:
                   NavigatorService(context).pushToWidget(
@@ -237,8 +241,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                         if (value != null) {
                           setState(() {});
                         }
-                      }
-                  );
+                      });
                   break;
               }
             }),

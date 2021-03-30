@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:simplechat/generated/l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
-import 'package:simplechat/screens/login_screen.dart';
+import 'package:simplechat/screens/auth/login_screen.dart';
 import 'package:simplechat/services/inject_service.dart';
 import 'package:simplechat/services/socket_service.dart';
 

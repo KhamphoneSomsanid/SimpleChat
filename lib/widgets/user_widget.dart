@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:simplechat/utils/colors.dart';
-import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/themes.dart';
 
@@ -44,17 +43,26 @@ class UserReviewCell extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              width: iconSize, height: iconSize,
+              width: iconSize,
+              height: iconSize,
               padding: EdgeInsets.all(offsetSize),
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.3),
                 border: Border.all(color: Colors.white, width: 1),
                 borderRadius: BorderRadius.all(Radius.circular(iconSize / 2)),
               ),
-              child: SvgPicture.asset(icon, color: color,),
+              child: SvgPicture.asset(
+                icon,
+                color: color,
+              ),
             ),
-            SizedBox(height: offsetSm,),
-            Text(value, style: mediumText.copyWith(fontSize: fontSm, color: Colors.white),),
+            SizedBox(
+              height: offsetSm,
+            ),
+            Text(
+              value,
+              style: mediumText.copyWith(fontSize: fontSm, color: Colors.white),
+            ),
           ],
         ),
       ),

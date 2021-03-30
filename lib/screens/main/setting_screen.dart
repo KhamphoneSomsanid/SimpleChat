@@ -1,10 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:simplechat/screens/login_screen.dart';
+import 'package:simplechat/screens/auth/login_screen.dart';
 import 'package:simplechat/screens/setting/membership_screen.dart';
 import 'package:simplechat/screens/setting/profile_screen.dart';
 import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/network_service.dart';
+import 'package:simplechat/services/string_service.dart';
 import 'package:simplechat/utils/colors.dart';
 import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
@@ -19,9 +22,31 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
+  var postCount = 0;
+  var roomCount = 0;
+  var friendCount = 0;
+
   @override
   void initState() {
     super.initState();
+    Timer.run(() {
+      _getData();
+    });
+  }
+
+  void _getData() async {
+    var param = {
+      'id': currentUser.id,
+    };
+    var resp = await NetworkService(null)
+        .ajax('chat_setting', param, isProgress: true);
+    if (resp['ret'] == 10000) {
+      postCount = resp['result']['posts'];
+      roomCount = resp['result']['rooms'];
+      friendCount = resp['result']['friends'];
+
+      setState(() {});
+    }
   }
 
   @override
@@ -92,7 +117,15 @@ class _SettingScreenState extends State<SettingScreen> {
               SettingCellWidget(
                 icon: 'assets/icons/ic_post.svg',
                 title: 'Posts',
-                detail: '11',
+                detail: StringService.getCountValue(postCount),
+                textColor: blueColor,
+              ),
+              SizedBox(
+                height: offsetSm,
+              ),
+              SettingCellWidget(
+                icon: 'assets/icons/ic_post.svg',
+                title: 'Follow/Followed Post(s)',
                 textColor: blueColor,
               ),
               SizedBox(
@@ -108,7 +141,7 @@ class _SettingScreenState extends State<SettingScreen> {
               SettingCellWidget(
                 icon: 'assets/icons/ic_chat.svg',
                 title: 'Chat',
-                detail: '11',
+                detail: StringService.getCountValue(roomCount),
                 textColor: Colors.deepPurpleAccent,
               ),
               SizedBox(
@@ -117,7 +150,7 @@ class _SettingScreenState extends State<SettingScreen> {
               SettingCellWidget(
                 icon: 'assets/icons/ic_friend.svg',
                 title: 'Friends',
-                detail: '11',
+                detail: StringService.getCountValue(friendCount),
                 textColor: Colors.deepPurpleAccent,
               ),
               SizedBox(
@@ -125,6 +158,7 @@ class _SettingScreenState extends State<SettingScreen> {
               ),
               if (appSettingInfo['isNearby'])
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     OutLineLabel(
                       title: 'Nearby managment',
@@ -135,8 +169,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     SettingCellWidget(
                       icon: 'assets/icons/ic_post.svg',
-                      title: 'Posts',
-                      detail: '11',
+                      title: 'Nearby',
                       textColor: Colors.red,
                     ),
                     SizedBox(

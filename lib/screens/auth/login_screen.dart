@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:simplechat/models/user_model.dart';
 import 'package:simplechat/screens/main_screen.dart';
-import 'package:simplechat/screens/register_screen.dart';
-import 'package:simplechat/screens/verify_screen.dart';
+import 'package:simplechat/screens/auth/register_screen.dart';
+import 'package:simplechat/screens/auth/verify_screen.dart';
 import 'package:simplechat/services/common_service.dart';
 import 'package:simplechat/services/dialog_service.dart';
 import 'package:simplechat/services/navigator_service.dart';
