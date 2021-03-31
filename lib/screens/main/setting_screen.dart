@@ -142,7 +142,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 },
                 child: SettingCellWidget(
                   icon: 'assets/icons/ic_post.svg',
-                  title: 'My Posts',
+                  title: 'My Post(s)',
                   detail: StringService.getCountValue(postCount),
                   textColor: blueColor,
                 ),
@@ -152,7 +152,7 @@ class _SettingScreenState extends State<SettingScreen> {
               ),
               SettingCellWidget(
                 icon: 'assets/icons/ic_post.svg',
-                title: 'Follow/Followed Post(s)',
+                title: 'Follow Post(s)',
                 textColor: blueColor,
               ),
               SizedBox(
@@ -176,7 +176,7 @@ class _SettingScreenState extends State<SettingScreen> {
               ),
               SettingCellWidget(
                 icon: 'assets/icons/ic_friend.svg',
-                title: 'Friends',
+                title: 'Friend(s)',
                 detail: StringService.getCountValue(friendCount),
                 textColor: Colors.deepPurpleAccent,
               ),

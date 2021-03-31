@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:simplechat/models/post_model.dart';
+import 'package:simplechat/screens/post/post_detail_screen.dart';
+import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/params.dart';
@@ -102,9 +104,12 @@ class _MyPostScreenState extends State<MyPostScreen> {
                         crossAxisCount: 2,
                         crossAxisSpacing: offsetXSm,
                         mainAxisSpacing: offsetXSm,
-                        childAspectRatio: 6 / 7,
+                        childAspectRatio: 4 / 5,
                         children: List<Widget>.generate(posts.length, (index) {
-                          return posts[index].myItem();
+                          return posts[index].myItem(action: () {
+                            NavigatorService(context).pushToWidget(
+                                screen: PostDetailScreen(post: posts[index]));
+                          });
                         }),
                       ),
               )

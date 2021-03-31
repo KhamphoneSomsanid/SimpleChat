@@ -636,77 +636,165 @@ class ExtraPostModel {
     );
   }
 
-  Widget myItem() {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(offsetBase),
-      ),
-      elevation: 2.0,
-      child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              child: AspectRatio(
-                aspectRatio: 3 / 2,
-                child: list.isEmpty
-                    ? Container()
-                    : Image.network(
-                        list.first.thumbnail,
-                        fit: BoxFit.cover,
-                      ),
+  Widget myItem({Function() action}) {
+    return InkWell(
+      onTap: () {
+        action();
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(offsetBase),
+        ),
+        elevation: 2.0,
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                child: AspectRatio(
+                  aspectRatio: 3 / 2,
+                  child: list.isEmpty
+                      ? Container(
+                          child: Center(
+                            child: Text(
+                              'No Media',
+                              style: semiBold.copyWith(fontSize: fontBase),
+                            ),
+                          ),
+                        )
+                      : Stack(
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              height: double.infinity,
+                              child: Image.network(
+                                list.first.thumbnail,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            if (list.length > 1)
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Container(
+                                  width: 48,
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.5),
+                                    borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(40)),
+                                  ),
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          bottom: offsetXSm, left: offsetXSm),
+                                      child: Text(
+                                        '+ ${list.length - 1}',
+                                        style: semiBold.copyWith(
+                                            fontSize: fontBase,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                          ],
+                        ),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                post.content.isEmpty ? 'No Content' : post.content,
-                style: mediumText.copyWith(fontSize: fontSm),
-                maxLines: 2,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  post.content.isEmpty ? 'No Content' : post.content,
+                  style: mediumText.copyWith(fontSize: fontSm),
+                  maxLines: 2,
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: offsetSm, right: offsetSm, bottom: offsetSm),
-              child: Row(
-                children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/icons/ic_chat.svg',
-                        width: 18.0,
-                        height: 18.0,
-                      ),
-                      SizedBox(
-                        width: offsetXSm,
-                      ),
-                      Text(
-                        StringService.getCountValue(reviews.length) == 'Not now'
-                            ? '0'
-                            : StringService.getCountValue(reviews.length),
-                        style: mediumText.copyWith(fontSize: fontSm),
-                      ),
-                    ],
-                  ),
-                ],
+              Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: offsetSm, right: offsetSm, bottom: offsetSm),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SvgPicture.asset(
+                          'assets/icons/ic_chat.svg',
+                          width: 14.0,
+                          height: 14.0,
+                        ),
+                        SizedBox(
+                          width: offsetXSm,
+                        ),
+                        Text(
+                          StringService.getCountValue(comments.length) ==
+                                  'Not now'
+                              ? '0'
+                              : StringService.getCountValue(comments.length),
+                          style: mediumText.copyWith(fontSize: fontSm),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SvgPicture.asset(
+                          'assets/icons/ic_like.svg',
+                          width: 14.0,
+                          height: 14.0,
+                        ),
+                        SizedBox(
+                          width: offsetXSm,
+                        ),
+                        Text(
+                          StringService.getCountValue(reviews.length) ==
+                                  'Not now'
+                              ? '0'
+                              : StringService.getCountValue(reviews.length),
+                          style: mediumText.copyWith(fontSize: fontSm),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SvgPicture.asset(
+                          'assets/icons/ic_follow.svg',
+                          width: 14.0,
+                          height: 14.0,
+                        ),
+                        SizedBox(
+                          width: offsetXSm,
+                        ),
+                        Text(
+                          StringService.getCountValue(follows.length) ==
+                                  'Not now'
+                              ? '0'
+                              : StringService.getCountValue(follows.length),
+                          style: mediumText.copyWith(fontSize: fontSm),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Spacer(),
-            Padding(
-              padding: const EdgeInsets.only(right: offsetSm, bottom: offsetSm),
-              child: Row(
-                children: [
-                  Spacer(),
-                  Text(
-                    StringService.getCurrentTimeValue(post.regdate),
-                    style: lightText.copyWith(fontSize: fontSm),
-                  ),
-                ],
-              ),
-            )
-          ],
+              Padding(
+                padding:
+                    const EdgeInsets.only(right: offsetBase, bottom: offsetSm),
+                child: Row(
+                  children: [
+                    Spacer(),
+                    Text(
+                      StringService.getCurrentTimeValue(post.regdate),
+                      style: mediumText.copyWith(fontSize: fontXSm),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
