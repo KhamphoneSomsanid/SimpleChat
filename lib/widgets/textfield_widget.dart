@@ -24,7 +24,7 @@ class UnderLineTextField extends TextFormField {
     this.controller,
     this.label,
     this.hint,
-    this.fontSize = fontMd,
+    this.fontSize = fontBase,
     this.sufficIcon,
     this.keyboardType = TextInputType.text,
     this.onEnterTrigger,
@@ -32,42 +32,41 @@ class UnderLineTextField extends TextFormField {
     this.isPassword = false,
     this.onTap,
   }) : super(
-          key: key,
-          controller: controller,
-          keyboardType: keyboardType,
-          textInputAction: onEnterTrigger != null ? TextInputAction.go : null,
-          obscureText: isPassword,
-          onFieldSubmitted: (value) {
-            if (onEnterTrigger != null) {
-              onEnterTrigger(value);
-            }
-          },
-          readOnly: isReadOnly,
-          decoration: InputDecoration(
-            enabled: !isDisable,
-            labelText: label,
-            labelStyle: semiBold.copyWith(fontSize: fontSize),
-            hintText: hint,
-            hintStyle: semiBold.copyWith(fontSize: fontSize),
-            focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: primaryColor)),
-            border: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.blueGrey)),
-            errorBorder:
-                UnderlineInputBorder(borderSide: BorderSide(color: Colors.red)),
-            suffixIcon: sufficIcon,
-            suffixIconConstraints: BoxConstraints(
-              maxWidth: 24,
-              maxHeight: 24,
-              minHeight: 24,
-              minWidth: 24,
+            key: key,
+            controller: controller,
+            keyboardType: keyboardType,
+            textInputAction: onEnterTrigger != null ? TextInputAction.go : null,
+            obscureText: isPassword,
+            onFieldSubmitted: (value) {
+              if (onEnterTrigger != null) {
+                onEnterTrigger(value);
+              }
+            },
+            readOnly: isReadOnly,
+            decoration: InputDecoration(
+              enabled: !isDisable,
+              labelText: label,
+              labelStyle: semiBold.copyWith(fontSize: fontSize),
+              hintText: hint,
+              hintStyle: semiBold.copyWith(fontSize: fontSize),
+              focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: primaryColor)),
+              border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blueGrey)),
+              errorBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.red)),
+              suffixIcon: sufficIcon,
+              suffixIconConstraints: BoxConstraints(
+                maxWidth: 24,
+                maxHeight: 24,
+                minHeight: 24,
+                minWidth: 24,
+              ),
+              errorText: errorText,
+              errorStyle:
+                  semiBold.copyWith(fontSize: fontSize, color: Colors.red),
             ),
-            errorText: errorText,
-            errorStyle:
-                semiBold.copyWith(fontSize: fontSize, color: Colors.red),
-          ),
-          onTap: onTap
-        );
+            onTap: onTap);
 }
 
 class SearchWidget extends StatelessWidget {

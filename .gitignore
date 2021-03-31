@@ -3430,3 +3430,17 @@ pubspec.yaml
 build/ios/Debug-iphoneos/App.framework/flutter_assets/assets/images/logo.png
 build/ios/Debug-iphoneos/Runner.app/Frameworks/App.framework/flutter_assets/assets/images/logo.png
 build/ios/iphoneos/Runner.app/Frameworks/App.framework/flutter_assets/assets/images/logo.png
+build/ios/Debug-iphoneos/Runner.app/Frameworks/package_info.framework/Info.plist
+build/ios/Debug-iphoneos/Runner.app/Frameworks/package_info.framework/package_info
+build/ios/Debug-iphoneos/Runner.app/Frameworks/package_info.framework/_CodeSignature/CodeResources
+build/ios/Debug-iphoneos/package_info/package_info.framework/Info.plist
+build/ios/Debug-iphoneos/package_info/package_info.framework/package_info
+build/ios/Debug-iphoneos/package_info/package_info.framework/Headers/FLTPackageInfoPlugin.h
+build/ios/Debug-iphoneos/package_info/package_info.framework/Headers/package_info-umbrella.h
+build/ios/Debug-iphoneos/package_info/package_info.framework/Modules/module.modulemap
+build/ios/iphoneos/Runner.app/Frameworks/package_info.framework/Info.plist
+build/ios/iphoneos/Runner.app/Frameworks/package_info.framework/package_info
+build/ios/iphoneos/Runner.app/Frameworks/package_info.framework/_CodeSignature/CodeResources
+ios/Podfile.lock
+ios/Podfile.lock
+ios/Podfile.lock
