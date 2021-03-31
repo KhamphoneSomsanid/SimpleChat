@@ -47,9 +47,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   void _getData() async {
     var param = {
-      'userid' : currentUser.id,
+      'userid': currentUser.id,
     };
-    var resp = await NetworkService(context).ajax('chat_follow_user', param, isProgress: false);
+    var resp = await NetworkService(context)
+        .ajax('chat_follow_user', param, isProgress: false);
     if (resp['ret'] == 10000) {
       users.clear();
       for (var json in resp['result']) {

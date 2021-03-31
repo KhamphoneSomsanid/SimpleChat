@@ -14,6 +14,10 @@ import 'package:simplechat/widgets/button_widget.dart';
 import 'package:simplechat/widgets/textfield_widget.dart';
 
 class ForgotPassScreen extends StatefulWidget {
+  final String title;
+
+  const ForgotPassScreen({Key key, this.title}) : super(key: key);
+
   @override
   _ForgotPassScreenState createState() => _ForgotPassScreenState();
 }
@@ -61,7 +65,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
       child: Scaffold(
         key: _scaffoldKey,
         appBar: MainBarWidget(
-          titleString: 'Forgot Password',
+          titleString: widget.title == null ? 'Forgot Password' : widget.title,
         ),
         body: Container(
           padding:

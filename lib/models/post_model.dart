@@ -156,6 +156,18 @@ class ExtraPostModel {
 
   String toJson() => json.encode(toMap());
 
+  bool isContainKey(String key) {
+    if (user.isContainKey(key)) return true;
+    if (post.content != null) {
+      if (post.content.contains(key)) return true;
+    }
+    if (post.regdate.contains(key)) return true;
+    if (post.tag != null) {
+      if (post.tag.contains(key)) return true;
+    }
+    return false;
+  }
+
   Widget item({
     Function() toUserDtail,
     Function() toDtail,
@@ -299,38 +311,28 @@ class ExtraPostModel {
                                         aspectRatio: 1.0,
                                         child: Container(
                                           decoration: BoxDecoration(
-                                              color: Colors.black
-                                                  .withOpacity(0.7),
-                                              borderRadius:
-                                              BorderRadius.only(
-                                                  topLeft: Radius
-                                                      .circular(
+                                              color:
+                                                  Colors.black.withOpacity(0.7),
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(
                                                       offsetBase),
-                                                  bottomLeft: Radius
-                                                      .circular(
+                                                  bottomLeft: Radius.circular(
                                                       offsetBase))),
                                           child: Center(
                                             child: Column(
-                                              mainAxisSize:
-                                              MainAxisSize.min,
+                                              mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 Text(
                                                   'See More',
-                                                  style:
-                                                  boldText.copyWith(
-                                                      fontSize:
-                                                      fontLg,
-                                                      color: Colors
-                                                          .white),
+                                                  style: boldText.copyWith(
+                                                      fontSize: fontLg,
+                                                      color: Colors.white),
                                                 ),
                                                 Text(
                                                   '+ 1',
-                                                  style:
-                                                  boldText.copyWith(
-                                                      fontSize:
-                                                      fontLg,
-                                                      color: Colors
-                                                          .white),
+                                                  style: boldText.copyWith(
+                                                      fontSize: fontLg,
+                                                      color: Colors.white),
                                                 )
                                               ],
                                             ),
@@ -380,85 +382,88 @@ class ExtraPostModel {
                                     ),
                                   ],
                                 )
-                              : list.length > 4? Column(
-                                  children: [
-                                    Row(
+                              : list.length > 4
+                                  ? Column(
                                       children: [
-                                        Expanded(
-                                          child:
-                                              list[0].cellMediaWidget(type: 0),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: list[0]
+                                                  .cellMediaWidget(type: 0),
+                                            ),
+                                            SizedBox(
+                                              width: 1.0,
+                                            ),
+                                            Expanded(
+                                              child: list[1]
+                                                  .cellMediaWidget(type: 1),
+                                            ),
+                                          ],
                                         ),
                                         SizedBox(
-                                          width: 1.0,
+                                          height: 1.0,
                                         ),
-                                        Expanded(
-                                          child:
-                                              list[1].cellMediaWidget(type: 1),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 1.0,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child:
-                                              list[2].cellMediaWidget(type: 2),
-                                        ),
-                                        SizedBox(
-                                          width: 1.0,
-                                        ),
-                                        Expanded(
-                                          child: Stack(
-                                            children: [
-                                              list[3].cellMediaWidget(type: 3),
-                                              AspectRatio(
-                                                aspectRatio: 1.0,
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.black
-                                                          .withOpacity(0.7),
-                                                      borderRadius:
-                                                          BorderRadius.only(
-                                                              topLeft: Radius
-                                                                  .circular(
-                                                                      offsetBase))),
-                                                  child: Center(
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        Text(
-                                                          'See More',
-                                                          style:
-                                                              boldText.copyWith(
-                                                                  fontSize:
-                                                                      fontLg,
-                                                                  color: Colors
-                                                                      .white),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: list[2]
+                                                  .cellMediaWidget(type: 2),
+                                            ),
+                                            SizedBox(
+                                              width: 1.0,
+                                            ),
+                                            Expanded(
+                                              child: Stack(
+                                                children: [
+                                                  list[3]
+                                                      .cellMediaWidget(type: 3),
+                                                  AspectRatio(
+                                                    aspectRatio: 1.0,
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.black
+                                                              .withOpacity(0.7),
+                                                          borderRadius:
+                                                              BorderRadius.only(
+                                                                  topLeft: Radius
+                                                                      .circular(
+                                                                          offsetBase))),
+                                                      child: Center(
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            Text(
+                                                              'See More',
+                                                              style: boldText
+                                                                  .copyWith(
+                                                                      fontSize:
+                                                                          fontLg,
+                                                                      color: Colors
+                                                                          .white),
+                                                            ),
+                                                            Text(
+                                                              '+ ${list.length - 4}',
+                                                              style: boldText
+                                                                  .copyWith(
+                                                                      fontSize:
+                                                                          fontLg,
+                                                                      color: Colors
+                                                                          .white),
+                                                            )
+                                                          ],
                                                         ),
-                                                        Text(
-                                                          '+ ${list.length - 4}',
-                                                          style:
-                                                              boldText.copyWith(
-                                                                  fontSize:
-                                                                      fontLg,
-                                                                  color: Colors
-                                                                      .white),
-                                                        )
-                                                      ],
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
                                       ],
-                                    ),
-                                  ],
-                                ) : Container(),
+                                    )
+                                  : Container(),
             ),
             Container(
               padding: EdgeInsets.symmetric(
@@ -621,6 +626,82 @@ class ExtraPostModel {
                       ),
                     ),
                     flex: 2,
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget myItem() {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(offsetBase),
+      ),
+      elevation: 2.0,
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              child: AspectRatio(
+                aspectRatio: 3 / 2,
+                child: list.isEmpty
+                    ? Container()
+                    : Image.network(
+                        list.first.thumbnail,
+                        fit: BoxFit.cover,
+                      ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                post.content.isEmpty ? 'No Content' : post.content,
+                style: mediumText.copyWith(fontSize: fontSm),
+                maxLines: 2,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: offsetSm, right: offsetSm, bottom: offsetSm),
+              child: Row(
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/ic_chat.svg',
+                        width: 18.0,
+                        height: 18.0,
+                      ),
+                      SizedBox(
+                        width: offsetXSm,
+                      ),
+                      Text(
+                        StringService.getCountValue(reviews.length) == 'Not now'
+                            ? '0'
+                            : StringService.getCountValue(reviews.length),
+                        style: mediumText.copyWith(fontSize: fontSm),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Spacer(),
+            Padding(
+              padding: const EdgeInsets.only(right: offsetSm, bottom: offsetSm),
+              child: Row(
+                children: [
+                  Spacer(),
+                  Text(
+                    StringService.getCurrentTimeValue(post.regdate),
+                    style: lightText.copyWith(fontSize: fontSm),
                   ),
                 ],
               ),

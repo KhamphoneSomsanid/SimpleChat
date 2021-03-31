@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:simplechat/screens/auth/forgot_screen.dart';
 import 'package:simplechat/screens/auth/login_screen.dart';
 import 'package:simplechat/screens/setting/membership_screen.dart';
+import 'package:simplechat/screens/setting/my_post_screen.dart';
 import 'package:simplechat/screens/setting/profile_screen.dart';
 import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/network_service.dart';
@@ -86,24 +88,43 @@ class _SettingScreenState extends State<SettingScreen> {
                         .pushToWidget(screen: ProfileScreen());
                   },
                   child: currentUser.itemSettingWidget()),
-              if (appSettingInfo['isNearby']) SizedBox(
+              SizedBox(
                 height: offsetSm,
               ),
-              if (appSettingInfo['isNearby']) InkWell(
+              InkWell(
                 onTap: () {
                   NavigatorService(context).pushToWidget(
-                      screen: MemberShipScreen(),
-                      pop: (value) {
-                        setState(() {});
-                      });
+                    screen: ForgotPassScreen(
+                      title: 'Change Password',
+                    ),
+                  );
                 },
                 child: SettingCellWidget(
-                  icon: 'assets/icons/ic_membership.svg',
-                  title: 'Membership',
-                  detail: currentUser.expiredate.split(' ')[0],
+                  icon: 'assets/icons/ic_secret.svg',
+                  title: 'Change Password',
                   textColor: primaryColor,
                 ),
               ),
+              if (appSettingInfo['isNearby'])
+                SizedBox(
+                  height: offsetSm,
+                ),
+              if (appSettingInfo['isNearby'])
+                InkWell(
+                  onTap: () {
+                    NavigatorService(context).pushToWidget(
+                        screen: MemberShipScreen(),
+                        pop: (value) {
+                          setState(() {});
+                        });
+                  },
+                  child: SettingCellWidget(
+                    icon: 'assets/icons/ic_membership.svg',
+                    title: 'Membership',
+                    detail: currentUser.expiredate.split(' ')[0],
+                    textColor: primaryColor,
+                  ),
+                ),
               SizedBox(
                 height: offsetBase,
               ),
@@ -114,11 +135,17 @@ class _SettingScreenState extends State<SettingScreen> {
               SizedBox(
                 height: offsetSm,
               ),
-              SettingCellWidget(
-                icon: 'assets/icons/ic_post.svg',
-                title: 'Posts',
-                detail: StringService.getCountValue(postCount),
-                textColor: blueColor,
+              InkWell(
+                onTap: () {
+                  NavigatorService(context)
+                      .pushToWidget(screen: MyPostScreen());
+                },
+                child: SettingCellWidget(
+                  icon: 'assets/icons/ic_post.svg',
+                  title: 'My Posts',
+                  detail: StringService.getCountValue(postCount),
+                  textColor: blueColor,
+                ),
               ),
               SizedBox(
                 height: offsetSm,

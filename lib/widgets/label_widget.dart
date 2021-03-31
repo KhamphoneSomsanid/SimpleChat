@@ -15,7 +15,7 @@ class OutLineLabel extends StatelessWidget {
       @required this.title,
       this.titleColor = primaryColor,
       this.fontSize = fontBase,
-      this.margin = EdgeInsets.zero,
+      this.margin = const EdgeInsets.only(left: offsetBase),
       this.padding = const EdgeInsets.symmetric(
           horizontal: offsetBase, vertical: offsetXSm)})
       : super(key: key);
