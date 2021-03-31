@@ -13,6 +13,9 @@ var appSettingInfo = {
   'isReplyComment': false,
   'isVoiceCall': true,
   'isVideoCall': false,
+  'isAppVersion': false,
+  'contactEmail': 'bgold1118@gmail.com',
+  'contactPhone': '+8562096227257',
 };
 
 final tagMask = new MaskTextInputFormatter(

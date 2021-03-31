@@ -86,10 +86,10 @@ class _SettingScreenState extends State<SettingScreen> {
                         .pushToWidget(screen: ProfileScreen());
                   },
                   child: currentUser.itemSettingWidget()),
-              SizedBox(
+              if (appSettingInfo['isNearby']) SizedBox(
                 height: offsetSm,
               ),
-              InkWell(
+              if (appSettingInfo['isNearby']) InkWell(
                 onTap: () {
                   NavigatorService(context).pushToWidget(
                       screen: MemberShipScreen(),

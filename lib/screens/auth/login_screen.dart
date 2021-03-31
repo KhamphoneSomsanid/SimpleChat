@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 import 'package:simplechat/models/user_model.dart';
 import 'package:simplechat/screens/auth/forgot_screen.dart';
 import 'package:simplechat/screens/main_screen.dart';
@@ -35,6 +36,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   var pref = PreferenceService();
 
+  PackageInfo _packageInfo = PackageInfo(
+    appName: 'Unknown',
+    packageName: 'Unknown',
+    version: 'Unknown',
+    buildNumber: 'Unknown',
+  );
+
   @override
   void initState() {
     super.initState();
@@ -54,6 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _getData() async {
+    await _initPackageInfo();
     var resp = await NetworkService(context)
         .ajax('chat_status', null, isProgress: true);
     if (resp['ret'] == 10000) {
@@ -62,9 +71,38 @@ class _LoginScreenState extends State<LoginScreen> {
       appSettingInfo['isReplyComment'] = resp['result']['replycomment'] == '1';
       appSettingInfo['isVoiceCall'] = resp['result']['voicecall'] == '1';
       appSettingInfo['isVideoCall'] = resp['result']['videocall'] == '1';
+      appSettingInfo['isAppVersion'] =
+          checkVersion(resp['result']['appversion']);
+      appSettingInfo['contactEmail'] = resp['result']['email'];
+      appSettingInfo['contactPhone'] = resp['result']['phone'];
 
       print('appSettingInfo ===> ${appSettingInfo.toString()}');
     }
+  }
+
+  Future<void> _initPackageInfo() async {
+    final PackageInfo info = await PackageInfo.fromPlatform();
+    setState(() {
+      _packageInfo = info;
+    });
+  }
+
+  bool checkVersion(String appVersion) {
+    var currentVersions = _packageInfo.version.split('.');
+    var difVersions = appVersion.split('.');
+
+    var cValue = 0;
+    var dValue = 0;
+
+    for (var index = 0; index < currentVersions.length; index++) {
+      var current = int.tryParse(currentVersions[index]);
+      cValue = cValue * 10 + current;
+
+      var dif = int.tryParse(difVersions[index]);
+      dValue = dValue * 10 + dif;
+    }
+    print('cValue dValue ===> $cValue $dValue');
+    return !(dValue > cValue);
   }
 
   Future<void> initData() async {
@@ -239,6 +277,12 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   _onLoginEvent(String email, String pass) async {
+    if (!appSettingInfo['isAppVersion']) {
+      DialogService(context).showSnackbar(
+          'Your app version is so low. Please update it.', _scaffoldKey,
+          type: SnackBarType.WARING);
+      return;
+    }
     FocusScope.of(context).unfocus();
 
     String deviceID = await getId();

@@ -12,7 +12,7 @@ class FullWidthButton extends FlatButton {
     void Function() action,
     Color textColor = Colors.white,
     double buttonRadius = 12.0,
-    double height = 44.0,
+    double height = 40.0,
   }) : super(
           key: key,
           child: Container(
@@ -24,8 +24,8 @@ class FullWidthButton extends FlatButton {
                 ? Text(
                     title,
                     textAlign: TextAlign.center,
-                    style: semiBold.copyWith(
-                        color: textColor ?? Colors.white, fontSize: fontLg),
+                    style: mediumText.copyWith(
+                        color: textColor ?? Colors.white, fontSize: fontMd),
                   )
                 : customTitleWidget,
           ),
