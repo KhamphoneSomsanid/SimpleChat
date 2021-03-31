@@ -54,7 +54,7 @@ class _ChnagePassScreenState extends State<ChnagePassScreen> {
       child: Scaffold(
         key: _scaffoldKey,
         appBar: MainBarWidget(
-          titleString: 'Change Password',
+          titleString: 'New Password',
           actions: [
             IconButton(
                 icon: Icon(Icons.help_outline),
@@ -143,7 +143,7 @@ class _ChnagePassScreenState extends State<ChnagePassScreen> {
         titleWidget: Container(
             padding: EdgeInsets.all(offsetBase),
             child: Text(
-              'Change Password',
+              'New Password',
               style: semiBold.copyWith(fontSize: fontMd),
             )),
         bodyWidget: Container(

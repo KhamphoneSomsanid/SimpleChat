@@ -141,7 +141,7 @@ class UserModel {
       ),
       child: Container(
         padding:
-        EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetBase),
+            EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetBase),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
           gradient: getGradientColor(color: Colors.grey),
@@ -357,7 +357,7 @@ class UserModel {
                 ),
               ),
               SizedBox(
-                width: offsetBase,
+                width: offsetSm,
               ),
               InkWell(
                 onTap: () {
@@ -380,7 +380,7 @@ class UserModel {
                 ),
               ),
               SizedBox(
-                width: offsetBase,
+                width: offsetSm,
               ),
               InkWell(
                 onTap: () {
@@ -432,8 +432,8 @@ class UserModel {
 
   Future<Map<String, dynamic>> request(BuildContext context) async {
     var param = {
-      'id' : currentUser.id,
-      'userid' : id,
+      'id': currentUser.id,
+      'userid': id,
     };
     var resp = await NetworkService(context)
         .ajax('chat_send_request', param, isProgress: true);
@@ -453,5 +453,4 @@ class FollowUserModel {
       status: map['status'] as String,
     );
   }
-
 }
