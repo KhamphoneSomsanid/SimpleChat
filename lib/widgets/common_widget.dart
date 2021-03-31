@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:simplechat/utils/colors.dart';
@@ -122,6 +123,58 @@ class UpdateWidget extends StatelessWidget {
           style: semiBold.copyWith(fontSize: fontSm, color: Colors.white),
         ),
       ),
+    );
+  }
+}
+
+class CustomSwitchWidget extends StatelessWidget {
+  final String title;
+  final String description;
+  final bool switchValue;
+  final Function() action;
+
+  const CustomSwitchWidget(
+      {Key key,
+      @required this.title,
+      this.description,
+      @required this.switchValue,
+      @required this.action})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: semiBold.copyWith(fontSize: fontBase),
+              ),
+              if (description != null)
+                SizedBox(
+                  height: offsetSm,
+                ),
+              if (description != null)
+                Text(
+                  description,
+                  style: mediumText.copyWith(fontSize: fontSm),
+                ),
+            ],
+          ),
+        ),
+        SizedBox(
+          width: offsetSm,
+        ),
+        CupertinoSwitch(
+          value: switchValue,
+          onChanged: (value) {
+            action();
+          },
+        ),
+      ],
     );
   }
 }

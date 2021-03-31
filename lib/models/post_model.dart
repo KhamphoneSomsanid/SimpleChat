@@ -159,11 +159,11 @@ class ExtraPostModel {
   bool isContainKey(String key) {
     if (user.isContainKey(key)) return true;
     if (post.content != null) {
-      if (post.content.contains(key)) return true;
+      if (post.content.toLowerCase().contains(key.toLowerCase())) return true;
     }
-    if (post.regdate.contains(key)) return true;
+    if (post.regdate.toLowerCase().contains(key.toLowerCase())) return true;
     if (post.tag != null) {
-      if (post.tag.contains(key)) return true;
+      if (post.tag.toLowerCase().contains(key.toLowerCase())) return true;
     }
     return false;
   }
@@ -793,6 +793,121 @@ class ExtraPostModel {
                   ],
                 ),
               )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget followItem({Function() action}) {
+    return InkWell(
+      onTap: () {
+        action();
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(offsetBase),
+        ),
+        elevation: 2.0,
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                child: AspectRatio(
+                  aspectRatio: 3 / 2,
+                  child: list.isEmpty
+                      ? Container(
+                          child: Center(
+                            child: Text(
+                              'No Media',
+                              style: semiBold.copyWith(fontSize: fontBase),
+                            ),
+                          ),
+                        )
+                      : Stack(
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              height: double.infinity,
+                              child: Image.network(
+                                list.first.thumbnail,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            if (list.length > 1)
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Container(
+                                  width: 48,
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.5),
+                                    borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(40)),
+                                  ),
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          bottom: offsetXSm, left: offsetXSm),
+                                      child: Text(
+                                        '+ ${list.length - 1}',
+                                        style: semiBold.copyWith(
+                                            fontSize: fontBase,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                          ],
+                        ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  post.content.isEmpty ? 'No Content' : post.content,
+                  style: mediumText.copyWith(fontSize: fontSm),
+                  maxLines: 2,
+                ),
+              ),
+              Spacer(),
+              Container(
+                padding: EdgeInsets.all(offsetSm),
+                child: Row(
+                  children: [
+                    CircleAvatarWidget(
+                      headurl: user.imgurl,
+                      size: 32.0,
+                    ),
+                    SizedBox(
+                      width: offsetSm,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            user.username,
+                            style: semiBold.copyWith(fontSize: fontSm),
+                            maxLines: 1,
+                          ),
+                          SizedBox(
+                            height: offsetXSm,
+                          ),
+                          Text(
+                            StringService.getCurrentTimeValue(user.regdate),
+                            style: mediumText.copyWith(fontSize: fontXSm),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

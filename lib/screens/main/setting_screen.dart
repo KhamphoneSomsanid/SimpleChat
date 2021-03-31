@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:simplechat/screens/auth/forgot_screen.dart';
 import 'package:simplechat/screens/auth/login_screen.dart';
+import 'package:simplechat/screens/post/follow_post_screen.dart';
+import 'package:simplechat/screens/setting/chat_setting_screen.dart';
 import 'package:simplechat/screens/setting/membership_screen.dart';
 import 'package:simplechat/screens/setting/my_post_screen.dart';
 import 'package:simplechat/screens/setting/profile_screen.dart';
@@ -150,10 +152,16 @@ class _SettingScreenState extends State<SettingScreen> {
               SizedBox(
                 height: offsetSm,
               ),
-              SettingCellWidget(
-                icon: 'assets/icons/ic_post.svg',
-                title: 'Follow Post(s)',
-                textColor: blueColor,
+              InkWell(
+                onTap: () {
+                  NavigatorService(context)
+                      .pushToWidget(screen: FollowPostScreen());
+                },
+                child: SettingCellWidget(
+                  icon: 'assets/icons/ic_post.svg',
+                  title: 'Follow Post(s)',
+                  textColor: blueColor,
+                ),
               ),
               SizedBox(
                 height: offsetBase,
@@ -165,11 +173,17 @@ class _SettingScreenState extends State<SettingScreen> {
               SizedBox(
                 height: offsetSm,
               ),
-              SettingCellWidget(
-                icon: 'assets/icons/ic_chat.svg',
-                title: 'Chat',
-                detail: StringService.getCountValue(roomCount),
-                textColor: Colors.deepPurpleAccent,
+              InkWell(
+                onTap: () {
+                  NavigatorService(context)
+                      .pushToWidget(screen: ChatSettingScreen());
+                },
+                child: SettingCellWidget(
+                  icon: 'assets/icons/ic_chat.svg',
+                  title: 'Chat',
+                  detail: StringService.getCountValue(roomCount),
+                  textColor: Colors.deepPurpleAccent,
+                ),
               ),
               SizedBox(
                 height: offsetSm,

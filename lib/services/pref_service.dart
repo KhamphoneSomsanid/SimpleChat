@@ -19,6 +19,8 @@ class PreferenceService {
   static const keyPostData = 'post_data';
   static const keyRoomData = 'room_data';
   static const keyCurrentUser = 'current_user';
+  static const keyChatNotification = 'chat_notification';
+  static const keyChatBadge = 'chat_badge';
 
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
@@ -101,6 +103,16 @@ class PreferenceService {
     await prefs.setString(keyCurrentUser, currentUser.toJson());
   }
 
+  Future<void> setChatNotification(bool flag) async {
+    final SharedPreferences prefs = await _prefs;
+    await prefs.setBool(keyChatNotification, flag);
+  }
+
+  Future<void> setChatBadge(bool flag) async {
+    final SharedPreferences prefs = await _prefs;
+    await prefs.setBool(keyChatBadge, flag);
+  }
+
   Future<String> getEmail() async {
     final SharedPreferences prefs = await _prefs;
     return prefs.getString(keyEmail);
@@ -177,6 +189,16 @@ class PreferenceService {
     final SharedPreferences prefs = await _prefs;
     String jsonData = prefs.getString(keyCurrentUser) ?? null;
     return UserModel.fromJson(jsonData);
+  }
+
+  Future<bool> getChatNotification() async {
+    final SharedPreferences prefs = await _prefs;
+    return prefs.getBool(keyChatNotification) ?? true;
+  }
+
+  Future<bool> getChatBadge() async {
+    final SharedPreferences prefs = await _prefs;
+    return prefs.getBool(keyChatBadge) ?? true;
   }
 
   Future<bool> checkKey(String key) async {
