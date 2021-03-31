@@ -35,6 +35,14 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
     });
   }
 
+  @override
+  void dispose() {
+    emailController.dispose();
+    codeController.dispose();
+
+    super.dispose();
+  }
+
   void onTextChangeListener() {
     String email = emailController.text;
     setState(() {
@@ -49,6 +57,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: _scaffoldKey,
         appBar: MainBarWidget(
@@ -92,7 +101,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
                 title: isVerified ? 'Submit' : 'Send Code',
                 action: isEnabled
                     ? () {
-                        isVerified ? _sendCode() : _submit();
+                        !isVerified ? _sendCode() : _submit();
                       }
                     : null,
               ),
@@ -117,7 +126,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
                 ),
               ),
               SizedBox(
-                height: offsetLg,
+                height: offsetBase,
               ),
             ],
           ),
@@ -127,6 +136,8 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
   }
 
   void _sendCode() async {
+    FocusScope.of(context).unfocus();
+
     String email = emailController.text;
     var param = {
       'email': email,
@@ -150,6 +161,8 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
   }
 
   void _submit() async {
+    FocusScope.of(context).unfocus();
+
     String email = emailController.text;
     String code = codeController.text;
     String deviceid = await getId();
@@ -163,7 +176,8 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
         .ajax('chat_confirm_code', param, isProgress: true);
     if (resp['ret'] == 10000) {
       currentUser = UserModel.fromMap(resp['result']);
-      DialogService(context).showSnackbar('content', _scaffoldKey, dismiss: () {
+      DialogService(context).showSnackbar(
+          'Successfully your email verify.', _scaffoldKey, dismiss: () {
         NavigatorService(context).pushToWidget(
             screen: ChnagePassScreen(
               email: email,
