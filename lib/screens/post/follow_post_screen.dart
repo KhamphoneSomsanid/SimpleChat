@@ -11,12 +11,12 @@ import 'package:simplechat/widgets/appbar_widget.dart';
 import 'package:simplechat/widgets/empty_widget.dart';
 import 'package:simplechat/widgets/textfield_widget.dart';
 
-class MyPostScreen extends StatefulWidget {
+class FollowPostScreen extends StatefulWidget {
   @override
-  _MyPostScreenState createState() => _MyPostScreenState();
+  _FollowPostScreenState createState() => _FollowPostScreenState();
 }
 
-class _MyPostScreenState extends State<MyPostScreen> {
+class _FollowPostScreenState extends State<FollowPostScreen> {
   var searchController = TextEditingController();
 
   List<ExtraPostModel> posts = [];
@@ -41,7 +41,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
       'limit': '20',
     };
     var resp = await NetworkService(context)
-        .ajax('chat_my_post', param, isProgress: true);
+        .ajax('chat_follow_post', param, isProgress: true);
     if (resp['ret'] == 10000) {
       posts.clear();
       for (var postJson in resp['result']) {
@@ -77,7 +77,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: MainBarWidget(
-          titleString: 'My Posts',
+          titleString: 'Follow Posts',
         ),
         body: Container(
           padding:
@@ -111,7 +111,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                         childAspectRatio: 4 / 5,
                         children:
                             List<Widget>.generate(showPosts.length, (index) {
-                          return showPosts[index].myItem(action: () {
+                          return showPosts[index].followItem(action: () {
                             NavigatorService(context).pushToWidget(
                                 screen:
                                     PostDetailScreen(post: showPosts[index]));
