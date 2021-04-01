@@ -21,6 +21,10 @@ class PreferenceService {
   static const keyCurrentUser = 'current_user';
   static const keyChatNotification = 'chat_notification';
   static const keyChatBadge = 'chat_badge';
+  static const keyFriendNotification = 'friend_notification';
+  static const keyRequestNotification = 'request_notification';
+  static const keyPostNotification = 'post_notification';
+  static const keyJobNotification = 'job_notification';
 
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
@@ -113,6 +117,26 @@ class PreferenceService {
     await prefs.setBool(keyChatBadge, flag);
   }
 
+  Future<void> setFriendNotification(bool flag) async {
+    final SharedPreferences prefs = await _prefs;
+    await prefs.setBool(keyFriendNotification, flag);
+  }
+
+  Future<void> setRequestNotification(bool flag) async {
+    final SharedPreferences prefs = await _prefs;
+    await prefs.setBool(keyRequestNotification, flag);
+  }
+
+  Future<void> setPostNotification(bool flag) async {
+    final SharedPreferences prefs = await _prefs;
+    await prefs.setBool(keyPostNotification, flag);
+  }
+
+  Future<void> setJobNotification(bool flag) async {
+    final SharedPreferences prefs = await _prefs;
+    await prefs.setBool(keyJobNotification, flag);
+  }
+
   Future<String> getEmail() async {
     final SharedPreferences prefs = await _prefs;
     return prefs.getString(keyEmail);
@@ -199,6 +223,26 @@ class PreferenceService {
   Future<bool> getChatBadge() async {
     final SharedPreferences prefs = await _prefs;
     return prefs.getBool(keyChatBadge) ?? true;
+  }
+
+  Future<bool> getFriendNotification() async {
+    final SharedPreferences prefs = await _prefs;
+    return prefs.getBool(keyFriendNotification) ?? true;
+  }
+
+  Future<bool> getRequestNotification() async {
+    final SharedPreferences prefs = await _prefs;
+    return prefs.getBool(keyRequestNotification) ?? true;
+  }
+
+  Future<bool> getPostNotification() async {
+    final SharedPreferences prefs = await _prefs;
+    return prefs.getBool(keyPostNotification) ?? true;
+  }
+
+  Future<bool> getJobNotification() async {
+    final SharedPreferences prefs = await _prefs;
+    return prefs.getBool(keyJobNotification) ?? true;
   }
 
   Future<bool> checkKey(String key) async {
