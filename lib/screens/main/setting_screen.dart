@@ -2,16 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:simplechat/datas/setting_data.dart';
 import 'package:simplechat/screens/auth/forgot_screen.dart';
 import 'package:simplechat/screens/auth/login_screen.dart';
-import 'package:simplechat/screens/post/follow_post_screen.dart';
-import 'package:simplechat/screens/setting/chat_setting_screen.dart';
 import 'package:simplechat/screens/setting/membership_screen.dart';
-import 'package:simplechat/screens/setting/my_post_screen.dart';
 import 'package:simplechat/screens/setting/profile_screen.dart';
 import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/network_service.dart';
-import 'package:simplechat/services/string_service.dart';
 import 'package:simplechat/utils/colors.dart';
 import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
@@ -80,151 +77,96 @@ class _SettingScreenState extends State<SettingScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              OutLineLabel(title: 'User managment'),
-              SizedBox(
-                height: offsetSm,
-              ),
-              InkWell(
-                  onTap: () {
-                    NavigatorService(context)
-                        .pushToWidget(screen: ProfileScreen());
-                  },
-                  child: currentUser.itemSettingWidget()),
-              SizedBox(
-                height: offsetSm,
-              ),
-              InkWell(
-                onTap: () {
-                  NavigatorService(context).pushToWidget(
-                    screen: ForgotPassScreen(
-                      title: 'Change Password',
-                    ),
-                  );
-                },
-                child: SettingCellWidget(
-                  icon: 'assets/icons/ic_secret.svg',
-                  title: 'Change Password',
-                  textColor: primaryColor,
-                ),
-              ),
-              if (appSettingInfo['isNearby'])
-                SizedBox(
-                  height: offsetSm,
-                ),
-              if (appSettingInfo['isNearby'])
-                InkWell(
-                  onTap: () {
-                    NavigatorService(context).pushToWidget(
-                        screen: MemberShipScreen(),
-                        pop: (value) {
-                          setState(() {});
-                        });
-                  },
-                  child: SettingCellWidget(
-                    icon: 'assets/icons/ic_membership.svg',
-                    title: 'Membership',
-                    detail: currentUser.expiredate.split(' ')[0],
-                    textColor: primaryColor,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  OutLineLabel(title: 'User managment'),
+                  SizedBox(
+                    height: offsetSm,
                   ),
-                ),
-              SizedBox(
-                height: offsetBase,
-              ),
-              OutLineLabel(
-                title: 'Posts managment',
-                titleColor: blueColor,
-              ),
-              SizedBox(
-                height: offsetSm,
-              ),
-              InkWell(
-                onTap: () {
-                  NavigatorService(context)
-                      .pushToWidget(screen: MyPostScreen());
-                },
-                child: SettingCellWidget(
-                  icon: 'assets/icons/ic_post.svg',
-                  title: 'My Post(s)',
-                  detail: StringService.getCountValue(postCount),
-                  textColor: blueColor,
-                ),
-              ),
-              SizedBox(
-                height: offsetSm,
-              ),
-              InkWell(
-                onTap: () {
-                  NavigatorService(context)
-                      .pushToWidget(screen: FollowPostScreen());
-                },
-                child: SettingCellWidget(
-                  icon: 'assets/icons/ic_post.svg',
-                  title: 'Follow Post(s)',
-                  textColor: blueColor,
-                ),
-              ),
-              SizedBox(
-                height: offsetBase,
-              ),
-              OutLineLabel(
-                title: 'Chat managment',
-                titleColor: Colors.deepPurpleAccent,
-              ),
-              SizedBox(
-                height: offsetSm,
-              ),
-              InkWell(
-                onTap: () {
-                  NavigatorService(context)
-                      .pushToWidget(screen: ChatSettingScreen());
-                },
-                child: SettingCellWidget(
-                  icon: 'assets/icons/ic_chat.svg',
-                  title: 'Chat',
-                  detail: StringService.getCountValue(roomCount),
-                  textColor: Colors.deepPurpleAccent,
-                ),
-              ),
-              SizedBox(
-                height: offsetSm,
-              ),
-              SettingCellWidget(
-                icon: 'assets/icons/ic_friend.svg',
-                title: 'Friend(s)',
-                detail: StringService.getCountValue(friendCount),
-                textColor: Colors.deepPurpleAccent,
-              ),
-              SizedBox(
-                height: offsetBase,
-              ),
-              if (appSettingInfo['isNearby'])
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    OutLineLabel(
-                      title: 'Nearby managment',
-                      titleColor: Colors.red,
+                  InkWell(
+                      onTap: () {
+                        NavigatorService(context)
+                            .pushToWidget(screen: ProfileScreen());
+                      },
+                      child: currentUser.itemSettingWidget()),
+                  SizedBox(
+                    height: offsetSm,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      NavigatorService(context).pushToWidget(
+                        screen: ForgotPassScreen(
+                          title: 'Change Password',
+                        ),
+                      );
+                    },
+                    child: SettingCellWidget(
+                      icon: 'assets/icons/ic_secret.svg',
+                      title: 'Change Password',
+                      textColor: primaryColor,
                     ),
+                  ),
+                  if (appSettingInfo['isNearby'])
                     SizedBox(
                       height: offsetSm,
                     ),
-                    SettingCellWidget(
-                      icon: 'assets/icons/ic_post.svg',
-                      title: 'Nearby',
-                      textColor: Colors.red,
+                  if (appSettingInfo['isNearby'])
+                    InkWell(
+                      onTap: () {
+                        NavigatorService(context).pushToWidget(
+                            screen: MemberShipScreen(),
+                            pop: (value) {
+                              setState(() {});
+                            });
+                      },
+                      child: SettingCellWidget(
+                        icon: 'assets/icons/ic_membership.svg',
+                        title: 'Membership',
+                        detail: currentUser.expiredate.split(' ')[0],
+                        textColor: primaryColor,
+                      ),
                     ),
-                    SizedBox(
-                      height: offsetBase,
-                    ),
-                  ],
-                ),
-              OutLineLabel(
-                title: 'App management',
-                titleColor: Colors.orange,
+                  SizedBox(
+                    height: offsetBase,
+                  ),
+                ],
               ),
-              SizedBox(
-                height: offsetSm,
-              ),
+              for (var settingMenu in settingMenuData)
+                if (settingMenu['visible'])
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      OutLineLabel(
+                        title: settingMenu['title'],
+                        titleColor: settingMenu['color'],
+                      ),
+                      for (var button in settingMenu['buttons'])
+                        Column(
+                          children: [
+                            SizedBox(
+                              height: offsetSm,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                if (button['actionWidget'] != null) {
+                                  NavigatorService(context).pushToWidget(
+                                      screen: button['actionWidget']);
+                                }
+                              },
+                              child: SettingCellWidget(
+                                icon: button['icon'],
+                                title: button['title'],
+                                textColor: settingMenu['color'],
+                              ),
+                            ),
+                          ],
+                        ),
+                      SizedBox(
+                        height: offsetBase,
+                      ),
+                    ],
+                  ),
             ],
           ),
         ),
