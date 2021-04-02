@@ -66,5 +66,10 @@
     <string>This app needs to be able to access your motion use</string>
     <key>NSSpeechRecognitionUsageDescription</key>
     <string>This app needs to be able to access your recognize speech use</string>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>https</string>
+      <string>http</string>
+    </array>
 </dict>
 </plist>

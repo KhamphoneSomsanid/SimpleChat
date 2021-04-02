@@ -8,6 +8,7 @@ import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/themes.dart';
 import 'package:simplechat/widgets/image_widget.dart';
 import 'package:page_view_indicators/circle_page_indicator.dart';
+import 'package:video_player/video_player.dart';
 
 class StoryDetailScreen extends StatefulWidget {
   final List<dynamic> list;
@@ -25,29 +26,80 @@ class StoryDetailScreen extends StatefulWidget {
 
 class _StoryDetailScreenState extends State<StoryDetailScreen> {
   final PageController controller = PageController(initialPage: 0);
+  VideoPlayerController _videoController;
 
   List<Widget> contents = [];
   var pageIndex = 0;
   var selectedItem;
   Timer timer;
   final _currentPageNotifier = ValueNotifier<int>(0);
+  int animationTime = 5000;
+  double percent = 0.0;
+
+  bool isLoading = true;
+  bool isAnimation = false;
 
   @override
   void initState() {
     super.initState();
 
-    for (var item in widget.list) {
-      contents.add(_getContent(item));
-    }
+    _addContent();
+  }
 
-    selectedItem = widget.list[0];
-    _startTimer();
+  void _addContent() async {
+    for (var item in widget.list) {
+      contents.add(await _getContent(item));
+    }
+    pageChanged(0);
+  }
+
+  Future<void> _playVideo(String url) async {
+    if (url.isNotEmpty && mounted) {
+      _videoController = VideoPlayerController.network(url);
+      _videoController.addListener(() {checkVideo();});
+
+      await _videoController.initialize();
+      await _videoController.play();
+      setState(() {
+        isAnimation = false;
+        animationTime = _videoController.value.duration.inMilliseconds;
+        isLoading = false;
+      });
+    }
+  }
+
+  void checkVideo() {
+    if(_videoController.value.position == _videoController.value.duration) {
+      pageChangeToNext();
+    } else {
+      setState(() {
+        percent = _videoController.value.position.inMilliseconds / _videoController.value.duration.inMilliseconds;
+      });
+    }
+  }
+
+  Widget previewVideo() {
+    return Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: Colors.grey,
+      ),
+      child: AspectRatio(
+        aspectRatio: _videoController.value.aspectRatio,
+        child: VideoPlayer(_videoController),
+      ),
+    );
   }
 
   void _startTimer() {
     if (timer != null) {
       timer.cancel();
     }
+    setState(() {
+      isLoading = false;
+      isAnimation = true;
+      animationTime = 5000;
+    });
     timer = Timer(const Duration(seconds: 5), () {
       pageChangeToNext();
     });
@@ -67,7 +119,7 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
     );
   }
 
-  Widget _getContent(dynamic item) {
+  Future<Widget> _getContent(dynamic item) async {
     switch (item.type) {
       case 'TEXT':
         return Container(
@@ -103,12 +155,15 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
             ),
           ],
         );
+      case 'VIDEO':
+        await _playVideo(item.url);
+        return previewVideo();
     }
     return Container();
   }
 
   void pageChanged(index) {
-    if (!timer.isActive) {
+    if (widget.list[index].type != 'VIDEO') {
       _startTimer();
     }
     setState(() {
@@ -119,6 +174,7 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
 
   void pageChangeByIndex(int index) {
     setState(() {
+      isLoading = true;
       pageIndex = index;
       controller.animateToPage(index,
           duration: Duration(milliseconds: 500), curve: Curves.ease);
@@ -135,8 +191,9 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
 
   @override
   void dispose() {
-    controller.dispose();
-    timer.cancel();
+    if (controller != null) controller.dispose();
+    if (_videoController != null) _videoController.dispose();
+    if (timer != null) timer.cancel();
 
     super.dispose();
   }
@@ -157,7 +214,7 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
           ),
           child: Stack(
             children: [
-              PageView(
+              if (contents.isNotEmpty) PageView(
                 scrollDirection: Axis.horizontal,
                 onPageChanged: (index) {
                   _currentPageNotifier.value = index;
@@ -188,15 +245,19 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
                           Icons.close,
                           color: Colors.white,
                         )),
-                        CircularPercentIndicator(
+                        if (!isLoading) CircularPercentIndicator(
                           radius: 48.0,
                           lineWidth: 3.0,
-                          animationDuration: 5000,
-                          percent: 1.0,
-                          animation: true,
-                          restartAnimation: true,
+                          animationDuration: animationTime,
+                          percent: isAnimation? 1.0 : percent,
+                          animation: isAnimation,
                           progressColor: primaryColor,
                           backgroundColor: Colors.white,
+                          onAnimationEnd: () {
+                            setState(() {
+                              isLoading = true;
+                            });
+                          },
                         ),
                       ],
                     ),
@@ -229,12 +290,12 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
                           children: [
                             Text(
                               StringService.getCurrentTimeValue(
-                                  selectedItem.regdate),
+                                  selectedItem == null? '' : selectedItem.regdate),
                               style: semiBold.copyWith(
                                   fontSize: fontMd, color: Colors.white),
                             ),
                             Text(
-                              selectedItem.content,
+                              selectedItem == null? '' : selectedItem.content,
                               style: semiBold.copyWith(
                                   fontSize: fontMd, color: Colors.white),
                               maxLines: 1,

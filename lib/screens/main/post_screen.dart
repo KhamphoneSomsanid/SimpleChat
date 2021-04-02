@@ -99,7 +99,10 @@ class _PostScreenState extends State<PostScreen> {
     posts.sort((b, a) => a.post.regdate.compareTo(b.post.regdate));
     await PreferenceService().setPostData(posts);
 
-    if (_refreshController != null) _refreshController.refreshCompleted();
+    if (_refreshController != null) {
+      _refreshController.refreshCompleted();
+      _refreshController.loadComplete();
+    }
 
     setState(() {
       isFriendMenu = false;
@@ -123,9 +126,14 @@ class _PostScreenState extends State<PostScreen> {
       ),
       body: SmartRefresher(
         enablePullDown: true,
+        enablePullUp: true,
         header: WaterDropHeader(),
         controller: _refreshController,
         onRefresh: _getData,
+        onLoading: () {
+          if (limitCount == posts.length) limitCount = limitCount + 10;
+          _getData();
+        },
         child: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.symmetric(vertical: offsetXSm),
@@ -175,6 +183,11 @@ class _PostScreenState extends State<PostScreen> {
                             .pushToWidget(screen: UserScreen(user: post.user));
                       },
                       toDtail: () {
+                        if (post.list.isEmpty) {
+                          DialogService(context).showSnackbar('This is a text feed so that you can\'t see detail.',
+                              _scaffoldKey, type: SnackBarType.WARING);
+                          return;
+                        }
                         NavigatorService(context)
                             .pushToWidget(screen: PostDetailScreen(post: post),
                           pop: (val) {

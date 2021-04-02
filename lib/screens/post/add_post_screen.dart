@@ -148,6 +148,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
   }
 
   void upload() async {
+    // String resp = await FileService().uploadImageHTTP(models[0].file, 'url');
+    // print('resp ===> $resp');
+    // return;
     String comment = _commentController.text;
     if (comment.isEmpty && models.isEmpty) {
       DialogService(context).showSnackbar(

@@ -9,7 +9,7 @@ const String avatarUrl = 'https://' + DOMAIN + '/uploads/ic_avatar.png';
 
 var appSettingInfo = {
   'isNearby': true,
-  'isVideoStory': false,
+  'isVideoStory': true,
   'isReplyComment': false,
   'isVoiceCall': true,
   'isVideoCall': false,

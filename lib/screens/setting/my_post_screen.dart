@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:simplechat/models/post_model.dart';
 import 'package:simplechat/screens/post/post_detail_screen.dart';
+import 'package:simplechat/services/dialog_service.dart';
 import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/utils/dimens.dart';
@@ -17,6 +18,8 @@ class MyPostScreen extends StatefulWidget {
 }
 
 class _MyPostScreenState extends State<MyPostScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   var searchController = TextEditingController();
 
   List<ExtraPostModel> posts = [];
@@ -76,6 +79,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
+        key: _scaffoldKey,
         appBar: MainBarWidget(
           titleString: 'My Posts',
         ),
@@ -104,7 +108,6 @@ class _MyPostScreenState extends State<MyPostScreen> {
                       )
                     : GridView.count(
                         shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
                         crossAxisCount: 2,
                         crossAxisSpacing: offsetXSm,
                         mainAxisSpacing: offsetXSm,
@@ -112,6 +115,11 @@ class _MyPostScreenState extends State<MyPostScreen> {
                         children:
                             List<Widget>.generate(showPosts.length, (index) {
                           return showPosts[index].myItem(action: () {
+                            if (showPosts[index].list.isEmpty) {
+                              DialogService(context).showSnackbar('This is a text feed so that you can\'t see detail.',
+                                  _scaffoldKey, type: SnackBarType.WARING);
+                              return;
+                            }
                             NavigatorService(context).pushToWidget(
                                 screen:
                                     PostDetailScreen(post: showPosts[index]));
