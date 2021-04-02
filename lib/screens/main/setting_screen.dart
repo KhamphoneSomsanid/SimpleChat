@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:simplechat/screens/auth/forgot_screen.dart';
 import 'package:simplechat/screens/auth/login_screen.dart';
 import 'package:simplechat/screens/post/follow_post_screen.dart';
+import 'package:simplechat/screens/setting/app_info_screen.dart';
 import 'package:simplechat/screens/setting/app_notification_screen.dart';
 import 'package:simplechat/screens/setting/chat_setting_screen.dart';
 import 'package:simplechat/screens/setting/friend_setting_screen.dart';
@@ -83,14 +84,9 @@ class _SettingScreenState extends State<SettingScreen> {
           'actionWidget': AppNotificationScreen(),
         },
         {
-          'icon': 'assets/icons/ic_rating.svg',
-          'title': 'App Rating',
-          'actionWidget': null,
-        },
-        {
           'icon': 'assets/icons/ic_support.svg',
           'title': 'App Informaiton',
-          'actionWidget': null,
+          'actionWidget': AppInfoScreen(),
         },
       ],
     },
@@ -123,7 +119,7 @@ class _SettingScreenState extends State<SettingScreen> {
       ),
       body: Container(
         padding:
-            EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetBase),
+            EdgeInsets.symmetric(horizontal: offsetBase),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,6 +127,9 @@ class _SettingScreenState extends State<SettingScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(
+                    height: offsetBase,
+                  ),
                   OutLineLabel(title: 'User managment'),
                   SizedBox(
                     height: offsetSm,

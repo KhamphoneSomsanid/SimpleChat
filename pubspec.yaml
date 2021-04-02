@@ -31,6 +31,8 @@ dependencies:
   pull_to_refresh: ^1.6.3
   custom_splash: ^0.0.2
   package_info: ^0.4.3+4
+  in_app_review: ^1.0.4
+  url_launcher: ^5.6.0
 
   socket_io_client: ^0.9.4
   flutter_simple_dependency_injection: ^1.0.1

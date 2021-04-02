@@ -104,7 +104,6 @@ class _MyPostScreenState extends State<MyPostScreen> {
                       )
                     : GridView.count(
                         shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
                         crossAxisCount: 2,
                         crossAxisSpacing: offsetXSm,
                         mainAxisSpacing: offsetXSm,
