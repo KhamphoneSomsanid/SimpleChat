@@ -1,9 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/services/string_service.dart';
+import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
+import 'package:http/http.dart' as http;
 
 class MediaModel {
   String id;
@@ -132,13 +135,27 @@ class MediaModel {
   }
 
   Future<dynamic> upload() async {
-    var param = toMap();
+    String url = 'https://' + DOMAIN + '/Backend/chat_upload';
+    var request = http.MultipartRequest("POST", Uri.parse(url));
+
+    request.fields['userid'] = userid;
+    request.fields['mediaid'] = mediaid;
+    request.fields['content'] = content;
+    request.fields['kind'] = kind;
+    request.fields['type'] = type;
+    request.fields['regdate'] = regdate;
+
     if (file != null) {
-      param['base64'] = StringService.getBase64FromFile(file);
-      param['thumbnail'] = thumbnail;
+      request.fields['thumbnail'] = thumbnail;
+
+      var pic = await http.MultipartFile.fromPath("image", file.path);
+      request.files.add(pic);
     }
-    var resp = await NetworkService(null)
-        .ajax('chat_upload', param, isProgress: false);
-    return resp;
+
+    var response = await request.send();
+    var responseData = await response.stream.toBytes();
+    var responseString = String.fromCharCodes(responseData);
+
+    return json.decode(responseString);
   }
 }

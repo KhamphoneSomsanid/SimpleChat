@@ -175,6 +175,11 @@ class _PostScreenState extends State<PostScreen> {
                             .pushToWidget(screen: UserScreen(user: post.user));
                       },
                       toDtail: () {
+                        if (post.list.isEmpty) {
+                          DialogService(context).showSnackbar('This is a text feed so that you can\'t see detail.',
+                              _scaffoldKey, type: SnackBarType.WARING);
+                          return;
+                        }
                         NavigatorService(context)
                             .pushToWidget(screen: PostDetailScreen(post: post),
                           pop: (val) {
