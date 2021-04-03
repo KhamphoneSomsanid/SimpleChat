@@ -9,9 +9,11 @@ import 'package:simplechat/main.dart';
 import 'package:simplechat/models/media_model.dart';
 import 'package:simplechat/models/post_model.dart';
 import 'package:simplechat/models/user_model.dart';
+import 'package:simplechat/screens/post/post_feed_screen.dart';
 import 'package:simplechat/services/dialog_service.dart';
 import 'package:simplechat/services/image_service.dart';
 import 'package:simplechat/services/load_service.dart';
+import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/services/string_service.dart';
 import 'package:simplechat/utils/colors.dart';
@@ -402,7 +404,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: offsetBase),
                   child: Text(
-                    'Add Media',
+                    'Add Feeds',
                     style: semiBold.copyWith(fontSize: fontMd),
                   ),
                 ),
@@ -416,8 +418,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     crossAxisCount: 3,
-                    crossAxisSpacing: offsetXSm,
-                    mainAxisSpacing: offsetXSm,
+                    crossAxisSpacing: offsetSm,
+                    mainAxisSpacing: offsetSm,
                     children: List<Widget>.generate(9, (index) {
                       return (index == models.length && models.length < 9)
                           ? InkWell(
@@ -426,14 +428,20 @@ class _AddPostScreenState extends State<AddPostScreen> {
                               },
                               child: addMedalWidget())
                           : (index < models.length)
-                              ? models[index].mediaWidget(
-                                  models[index].type == 'IMAGE' || models[index].type == 'VIDEO'
-                                      ? previewImage(models[index].thumbnail)
-                                      : Container(), remove: () {
-                                  setState(() {
-                                    models.removeAt(index);
-                                  });
-                                })
+                              ? InkWell(
+                                onTap: () {
+                                  NavigatorService(context).pushToWidget(screen: PostFeedScreen(
+                                    data: models[index].file, type: models[index].type,));
+                                },
+                                child: models[index].mediaWidget(
+                                    models[index].type == 'IMAGE' || models[index].type == 'VIDEO'
+                                        ? previewMedia(models[index])
+                                        : Container(), remove: () {
+                                    setState(() {
+                                      models.removeAt(index);
+                                    });
+                                  }),
+                              )
                               : Container();
                     }),
                   ),
@@ -446,12 +454,28 @@ class _AddPostScreenState extends State<AddPostScreen> {
     );
   }
 
-  Widget previewImage(_image) {
+  Widget previewMedia(item) {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      child: Image.memory(base64.decode(_image),
-        fit: BoxFit.cover,
+      child: Stack(
+        children: [
+          Center(
+            child: Image.memory(base64.decode(item.thumbnail),
+              fit: BoxFit.cover,
+            ),
+          ),
+          if (item.type == 'VIDEO') Center(
+            child: Container(
+              width: 36, height: 36,
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.5),
+                borderRadius: BorderRadius.all(Radius.circular(36 / 2)),
+              ),
+              child: Icon(Icons.play_arrow, color: Colors.white, size: 36 / 2,),
+            ),
+          ),
+        ],
       ),
     );
   }

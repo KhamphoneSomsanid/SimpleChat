@@ -1,12 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class ImageFeedWidget extends StatelessWidget {
   final dynamic feed;
+  final File file;
   final Function() loaded;
 
   const ImageFeedWidget({
     Key key,
-    @required this.feed,
+    this.feed,
+    this.file,
     this.loaded,
   }) : super(key: key);
 
@@ -15,11 +19,16 @@ class ImageFeedWidget extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      child: Image.network(
+      child: feed == null
+          ? Image.file(
+          file,
+          fit: BoxFit.cover,
+        )
+          : Image.network(
         feed.url,
         fit: BoxFit.cover,
         loadingBuilder: (context, widget, event) {
-          if (event == null) loaded();
+          if (event == null && loaded != null) loaded();
           return event == null
               ? widget
               : Center(

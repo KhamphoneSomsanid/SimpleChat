@@ -79,6 +79,7 @@ class _StoryWidgetState extends State<StoryWidget> {
   Widget _getContent(story) {
     switch (story.list.last.type) {
       case 'IMAGE':
+      case 'VIDEO':
         return Container(
           width: double.infinity,
           height: double.infinity,

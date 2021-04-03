@@ -252,24 +252,28 @@ class DialogService {
                     onTap: types[2]['action'],
                     child: getTypeWidget(types[2], (MediaQuery.of(context).size.width / 5 - offsetMd))
                 ),
-                Container(),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(),
                 InkWell(
                     onTap: types[3]['action'],
                     child: getTypeWidget(types[3], (MediaQuery.of(context).size.width / 5 - offsetMd))
                 ),
-                InkWell(
-                    onTap: types[4]['action'],
-                    child: getTypeWidget(types[4], (MediaQuery.of(context).size.width / 5 - offsetMd))
-                ),
                 Container(),
               ],
             ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Container(),
+            //     InkWell(
+            //         onTap: types[3]['action'],
+            //         child: getTypeWidget(types[3], (MediaQuery.of(context).size.width / 5 - offsetMd))
+            //     ),
+            //     InkWell(
+            //         onTap: types[4]['action'],
+            //         child: getTypeWidget(types[4], (MediaQuery.of(context).size.width / 5 - offsetMd))
+            //     ),
+            //     Container(),
+            //   ],
+            // ),
           ],
         ),
       ),

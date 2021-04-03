@@ -143,7 +143,6 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
   void pageChangeToNext() {
     if (widget.list.length == pageIndex + 1) {
       Navigator.of(context).pop();
-      print('Navigator Pop ==> Run');
       return;
     }
     pageChangeByIndex(pageIndex + 1);
@@ -187,7 +186,6 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
                 child: InkWell(
                   onTap: () {
                     Navigator.of(context).pop();
-                    print('Navigator Pop ==> Run');
                   },
                   child: Container(
                     margin:

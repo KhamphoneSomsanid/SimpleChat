@@ -16,6 +16,8 @@ import 'package:simplechat/utils/colors.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/themes.dart';
 import 'package:simplechat/widgets/common_widget.dart';
+import 'package:simplechat/widgets/feed/image_feed_widget.dart';
+import 'package:simplechat/widgets/feed/video_feed_widget.dart';
 import 'package:simplechat/widgets/image_widget.dart';
 
 class PostDetailScreen extends StatefulWidget {
@@ -85,30 +87,9 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   Widget _getContent(MediaModel item) {
     switch (item.type) {
       case 'IMAGE':
-        return Stack(
-          children: [
-            Container(
-              width: double.infinity,
-              height: double.infinity,
-              child: Image.network(
-                item.url,
-                fit: BoxFit.contain,
-                loadingBuilder: (context, widget, event) {
-                  return event == null
-                      ? widget
-                      : Center(
-                          child: Image.asset(
-                            'assets/icons/ic_logo.png',
-                            color: Colors.white,
-                            width: 120,
-                            fit: BoxFit.fitWidth,
-                          ),
-                        );
-                },
-              ),
-            ),
-          ],
-        );
+        return ImageFeedWidget(feed: item,);
+      case 'VIDEO':
+        return VideoFeedWidget(feed: item,);
     }
     return Container();
   }

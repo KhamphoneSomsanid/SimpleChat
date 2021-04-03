@@ -1,15 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoFeedWidget extends StatefulWidget {
   final dynamic feed;
+  final File file;
   final Function() loaded;
   final Function(double) loading;
   final Function(int) willPlay;
 
   const VideoFeedWidget({
     Key key,
-    @required this.feed,
+    this.feed,
+    this.file,
     this.loaded,
     this.loading,
     this.willPlay,
@@ -26,7 +30,7 @@ class _VideoFeedWidgetState extends State<VideoFeedWidget> {
   void initState() {
     super.initState();
 
-    _playVideo(widget.feed.url);
+    widget.feed == null? _playVideoFromFile(widget.file) : _playVideoFromUrl(widget.feed.url);
   }
 
   @override
@@ -35,24 +39,36 @@ class _VideoFeedWidgetState extends State<VideoFeedWidget> {
     super.dispose();
   }
 
-  Future<void> _playVideo(String url) async {
+  Future<void> _playVideoFromFile(File file) async {
+    if (file != null && mounted) {
+      _videoController = VideoPlayerController.file(file);
+      _videoController.addListener(() {checkVideo();});
+
+      await _videoController.initialize();
+      await _videoController.play();
+      if (widget.willPlay != null ) widget.willPlay(_videoController.value.duration.inMilliseconds);
+      setState(() {});
+    }
+  }
+
+  Future<void> _playVideoFromUrl(String url) async {
     if (url.isNotEmpty && mounted) {
       _videoController = VideoPlayerController.network(url);
       _videoController.addListener(() {checkVideo();});
 
       await _videoController.initialize();
       await _videoController.play();
-      widget.willPlay(_videoController.value.duration.inMilliseconds);
+      if (widget.willPlay != null ) widget.willPlay(_videoController.value.duration.inMilliseconds);
       setState(() {});
     }
   }
 
   void checkVideo() {
     if(_videoController.value.position == _videoController.value.duration) {
-      widget.loaded();
+      if (widget.loaded != null ) widget.loaded();
     } else {
       double percent = _videoController.value.position.inMilliseconds / _videoController.value.duration.inMilliseconds;
-      widget.loading(percent);
+      if (widget.loading != null ) widget.loading(percent);
     }
   }
 
@@ -67,9 +83,16 @@ class _VideoFeedWidgetState extends State<VideoFeedWidget> {
       decoration: BoxDecoration(
         color: Colors.grey,
       ),
-      child: AspectRatio(
-        aspectRatio: _videoController.value.aspectRatio,
-        child: VideoPlayer(_videoController),
+      child: Column(
+        children: [
+          if (widget.feed == null) VideoProgressIndicator(_videoController, allowScrubbing: true),
+          Expanded(
+            child: AspectRatio(
+              aspectRatio: _videoController.value.aspectRatio,
+              child: VideoPlayer(_videoController),
+            ),
+          ),
+        ],
       ),
     );
   }
