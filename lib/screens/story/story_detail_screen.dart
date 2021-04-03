@@ -6,9 +6,11 @@ import 'package:simplechat/services/string_service.dart';
 import 'package:simplechat/utils/colors.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/themes.dart';
+import 'package:simplechat/widgets/feed/image_feed_widget.dart';
+import 'package:simplechat/widgets/feed/text_feed_widget.dart';
+import 'package:simplechat/widgets/feed/video_feed_widget.dart';
 import 'package:simplechat/widgets/image_widget.dart';
 import 'package:page_view_indicators/circle_page_indicator.dart';
-import 'package:video_player/video_player.dart';
 
 class StoryDetailScreen extends StatefulWidget {
   final List<dynamic> list;
@@ -26,7 +28,6 @@ class StoryDetailScreen extends StatefulWidget {
 
 class _StoryDetailScreenState extends State<StoryDetailScreen> {
   final PageController controller = PageController(initialPage: 0);
-  VideoPlayerController _videoController;
 
   List<Widget> contents = [];
   var pageIndex = 0;
@@ -51,44 +52,6 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
       contents.add(await _getContent(item));
     }
     pageChanged(0);
-  }
-
-  Future<void> _playVideo(String url) async {
-    if (url.isNotEmpty && mounted) {
-      _videoController = VideoPlayerController.network(url);
-      _videoController.addListener(() {checkVideo();});
-
-      await _videoController.initialize();
-      await _videoController.play();
-      setState(() {
-        isAnimation = false;
-        animationTime = _videoController.value.duration.inMilliseconds;
-        isLoading = false;
-      });
-    }
-  }
-
-  void checkVideo() {
-    if(_videoController.value.position == _videoController.value.duration) {
-      pageChangeToNext();
-    } else {
-      setState(() {
-        percent = _videoController.value.position.inMilliseconds / _videoController.value.duration.inMilliseconds;
-      });
-    }
-  }
-
-  Widget previewVideo() {
-    return Container(
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: Colors.grey,
-      ),
-      child: AspectRatio(
-        aspectRatio: _videoController.value.aspectRatio,
-        child: VideoPlayer(_videoController),
-      ),
-    );
   }
 
   void _startTimer() {
@@ -122,42 +85,38 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
   Future<Widget> _getContent(dynamic item) async {
     switch (item.type) {
       case 'TEXT':
-        return Container(
-          child: Center(
-            child: Text(
-              item.content,
-              style: semiBold.copyWith(fontSize: fontLg, color: Colors.white),
-            ),
-          ),
+        return TextFeedWidget(
+          feed: item,
+          loaded: () {
+              // _startTimer();
+          },
         );
       case 'IMAGE':
-        return Stack(
-          children: [
-            Container(
-              width: double.infinity,
-              height: double.infinity,
-              child: Image.network(
-                item.url,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, widget, event) {
-                  return event == null
-                      ? widget
-                      : Center(
-                          child: Image.asset(
-                            'assets/icons/ic_logo.png',
-                            color: Colors.white,
-                            width: 120,
-                            fit: BoxFit.fitWidth,
-                          ),
-                        );
-                },
-              ),
-            ),
-          ],
+        return ImageFeedWidget(
+          feed: item,
+          loaded: () {
+              // _startTimer();
+          },
         );
       case 'VIDEO':
-        await _playVideo(item.url);
-        return previewVideo();
+        return VideoFeedWidget(
+            feed: item,
+          loaded: () {
+            pageChangeToNext();
+          },
+          loading: (value) {
+            setState(() {
+              percent = value;
+            });
+          },
+          willPlay: (value) {
+            setState(() {
+              isAnimation = false;
+              animationTime = value;
+              isLoading = false;
+            });
+          },
+        );
     }
     return Container();
   }
@@ -184,6 +143,7 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
   void pageChangeToNext() {
     if (widget.list.length == pageIndex + 1) {
       Navigator.of(context).pop();
+      print('Navigator Pop ==> Run');
       return;
     }
     pageChangeByIndex(pageIndex + 1);
@@ -192,7 +152,6 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
   @override
   void dispose() {
     if (controller != null) controller.dispose();
-    if (_videoController != null) _videoController.dispose();
     if (timer != null) timer.cancel();
 
     super.dispose();
@@ -228,6 +187,7 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
                 child: InkWell(
                   onTap: () {
                     Navigator.of(context).pop();
+                    print('Navigator Pop ==> Run');
                   },
                   child: Container(
                     margin:
