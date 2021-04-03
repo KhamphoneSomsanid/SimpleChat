@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
@@ -19,6 +20,7 @@ import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/params.dart';
 import 'package:simplechat/utils/themes.dart';
 import 'package:simplechat/widgets/appbar_widget.dart';
+import 'package:simplechat/widgets/common_widget.dart';
 import 'package:simplechat/widgets/label_widget.dart';
 import 'package:video_player/video_player.dart';
 
@@ -37,6 +39,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
   List<MediaModel> models = [];
   List<String> tags = [];
   List<UserModel> users = [];
+
 
   @override
   void initState() {
@@ -64,15 +67,35 @@ class _AddPostScreenState extends State<AddPostScreen> {
     PickedFile image = await ImagePicker().getImage(
         source: source, imageQuality: 50, maxWidth: 4000, maxHeight: 4000);
 
-    String base64Thumnbail = await ImageService()
+    String base64Thumbnail = await ImageService()
         .getThumbnailBase64FromImage(File(image.path), width: 320, height: 320);
 
     MediaModel mediaModel = MediaModel(
       userid: currentUser.id,
       kind: 'POST',
       type: 'IMAGE',
-      thumbnail: base64Thumnbail,
+      thumbnail: base64Thumbnail,
       file: File(image.path),
+      other: '',
+    );
+
+    setState(() {
+      models.add(mediaModel);
+    });
+  }
+
+  _vidPicker(ImageSource source) async {
+    PickedFile video = await ImagePicker().getVideo(source: source);
+
+    String base64Thumbnail = await ImageService()
+        .getThumbnailBase64FromVideo(File(video.path), width: 320, height: 320);
+
+    MediaModel mediaModel = MediaModel(
+      userid: currentUser.id,
+      kind: 'POST',
+      type: 'VIDEO',
+      thumbnail: base64Thumbnail,
+      file: File(video.path),
       other: '',
     );
 
@@ -148,9 +171,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
   }
 
   void upload() async {
-    // String resp = await FileService().uploadImageHTTP(models[0].file, 'url');
-    // print('resp ===> $resp');
-    // return;
     String comment = _commentController.text;
     if (comment.isEmpty && models.isEmpty) {
       DialogService(context).showSnackbar(
@@ -369,41 +389,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 Wrap(
                   children: [
                     for (var tag in tags)
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: 4.0, vertical: 2.0),
-                        padding: EdgeInsets.symmetric(
-                            horizontal: offsetSm, vertical: 2),
-                        decoration: BoxDecoration(
-                            color: blueColor.withOpacity(0.5),
-                            border: Border.all(color: blueColor),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(offsetBase))),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              tag,
-                              style: boldText.copyWith(
-                                  fontSize: fontMd, color: Colors.white),
-                            ),
-                            SizedBox(
-                              width: offsetXSm,
-                            ),
-                            InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    tags.remove(tag);
-                                  });
-                                },
-                                child: Icon(
-                                  Icons.cancel,
-                                  color: Colors.white,
-                                  size: offsetBase,
-                                )),
-                          ],
-                        ),
-                      ),
+                      tagWidget(tag, isDelete: true, delete: () {
+                        setState(() {
+                          tags.remove(tag);
+                        });
+                      }),
                   ],
                 ),
                 SizedBox(
@@ -432,14 +422,14 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       return (index == models.length && models.length < 9)
                           ? InkWell(
                               onTap: () {
-                                showPickerDialog();
+                                showTypeDialog();
                               },
                               child: addMedalWidget())
                           : (index < models.length)
                               ? models[index].mediaWidget(
-                                  models[index].type == 'IMAGE'
-                                      ? previewImage(models[index].file)
-                                      : previewVideo(), remove: () {
+                                  models[index].type == 'IMAGE' || models[index].type == 'VIDEO'
+                                      ? previewImage(models[index].thumbnail)
+                                      : Container(), remove: () {
                                   setState(() {
                                     models.removeAt(index);
                                   });
@@ -460,8 +450,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      child: Image.file(
-        File(_image.path),
+      child: Image.memory(base64.decode(_image),
         fit: BoxFit.cover,
       ),
     );
@@ -479,6 +468,31 @@ class _AddPostScreenState extends State<AddPostScreen> {
         aspectRatio: _videoController.value.aspectRatio,
         child: VideoPlayer(_videoController),
       ),
+    );
+  }
+
+  void showTypeDialog() {
+    DialogService(context).showTypeDialog(
+      chooseImage: () {
+        Navigator.of(context).pop();
+        showPickerDialog(isVideo: false);
+      },
+      chooseVideo: () {
+        Navigator.of(context).pop();
+        showPickerDialog(isVideo: true);
+      },
+      chooseDocument: () {
+        Navigator.of(context).pop();
+        DialogService(context).showSnackbar(notSupport, _scaffoldKey, type: SnackBarType.ERROR);
+      },
+      chooseLocation: () {
+        Navigator.of(context).pop();
+        DialogService(context).showSnackbar(notSupport, _scaffoldKey, type: SnackBarType.ERROR);
+      },
+      chooseLink: () {
+        Navigator.of(context).pop();
+        DialogService(context).showSnackbar(notSupport, _scaffoldKey, type: SnackBarType.ERROR);
+      },
     );
   }
 
@@ -543,12 +557,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
                     InkWell(
                       onTap: () {
                         Navigator.of(context).pop();
-                        // if (isVideo) {
-                        //   _videoPicker(data['source']);
-                        // } else {
-                        //   _imgPicker(data['source']);
-                        // }
-                        _imgPicker(data['source']);
+                        if (isVideo) {
+                          _vidPicker(data['source']);
+                        } else {
+                          _imgPicker(data['source']);
+                        }
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(

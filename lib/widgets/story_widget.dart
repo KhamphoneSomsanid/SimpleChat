@@ -83,7 +83,7 @@ class _StoryWidgetState extends State<StoryWidget> {
           width: double.infinity,
           height: double.infinity,
           child: Image.network(
-            story.list.last.thumbnail,
+            story.list.first.thumbnail,
             fit: BoxFit.cover,
             loadingBuilder: (context, widget, event) {
               return event == null
