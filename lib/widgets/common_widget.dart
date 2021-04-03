@@ -178,3 +178,41 @@ class CustomSwitchWidget extends StatelessWidget {
     );
   }
 }
+
+Widget tagWidget(String tag, {bool isDelete = false, Function() delete}) {
+  return Container(
+    margin: EdgeInsets.symmetric(
+        horizontal: offsetXSm, vertical: offsetXSm / 2),
+    padding: EdgeInsets.symmetric(
+        horizontal: offsetSm, vertical: offsetXSm),
+    decoration: BoxDecoration(
+        color: blueColor.withOpacity(0.5),
+        border: Border.all(color: blueColor, width: 0.5),
+        borderRadius:
+        BorderRadius.all(Radius.circular(offsetBase))),
+    child: isDelete? Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          tag,
+          style: mediumText.copyWith(
+              fontSize: fontBase, color: Colors.white),
+        ),
+        SizedBox(
+          width: offsetXSm,
+        ),
+        InkWell(
+            onTap: delete,
+            child: Icon(
+              Icons.cancel,
+              color: Colors.white,
+              size: offsetBase,
+            )),
+      ],
+    ) : Text(
+      tag,
+      style: mediumText.copyWith(
+          fontSize: fontBase, color: Colors.white),
+    ),
+  );
+}

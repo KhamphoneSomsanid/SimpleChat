@@ -11,7 +11,7 @@ class DialogService {
   DialogService(this.context);
 
   Future<dynamic> showCustomModalBottomSheet({
-    @required Widget titleWidget,
+    Widget titleWidget,
     @required Widget bodyWidget,
     bool scrollControl = false,
   }) async {
@@ -36,8 +36,8 @@ class DialogService {
               height: offsetSm,
             ),
             BottomSheetTopStrip(),
-            titleWidget,
-            DividerWidget(),
+            if (titleWidget != null) titleWidget,
+            if (titleWidget != null) DividerWidget(),
             bodyWidget,
             SizedBox(
               height: offsetMd,
@@ -187,6 +187,118 @@ class DialogService {
         context: context,
         position: RelativeRect.fromLTRB(0, top - offsetBase, 0, 0),
         items: items,
+    );
+  }
+
+  Future<void> showTypeDialog({
+    Function() chooseImage,
+    Function() chooseVideo,
+    Function() chooseDocument,
+    Function() chooseLocation,
+    Function() chooseLink,
+  }) {
+    var types = [
+      {
+        'icon': Icons.image,
+        'title': 'Image',
+        'color': primaryColor,
+        'action' : chooseImage,
+      },
+      {
+        'icon': Icons.video_collection_sharp,
+        'title': 'Video',
+        'color': primaryColor,
+        'action' : chooseVideo,
+      },
+      {
+        'icon': Icons.book,
+        'title': 'File',
+        'color': primaryColor,
+        'action' : chooseDocument,
+      },
+      {
+        'icon': Icons.location_history,
+        'title': 'Location',
+        'color': primaryColor,
+        'action' : chooseLocation,
+      },
+      {
+        'icon': Icons.link,
+        'title': 'Link',
+        'color': primaryColor,
+        'action' : chooseLink,
+      },
+    ];
+
+    showCustomModalBottomSheet(
+      bodyWidget: Container(
+        padding: EdgeInsets.all(offsetBase),
+        child: Column(
+          children: [
+            SizedBox(height: offsetSm,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(),
+                InkWell(
+                  onTap: types[0]['action'],
+                  child: getTypeWidget(types[0], (MediaQuery.of(context).size.width / 5 - offsetMd))
+                ),
+                InkWell(
+                    onTap: types[1]['action'],
+                    child: getTypeWidget(types[1], (MediaQuery.of(context).size.width / 5 - offsetMd))
+                ),
+                InkWell(
+                    onTap: types[2]['action'],
+                    child: getTypeWidget(types[2], (MediaQuery.of(context).size.width / 5 - offsetMd))
+                ),
+                InkWell(
+                    onTap: types[3]['action'],
+                    child: getTypeWidget(types[3], (MediaQuery.of(context).size.width / 5 - offsetMd))
+                ),
+                Container(),
+              ],
+            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Container(),
+            //     InkWell(
+            //         onTap: types[3]['action'],
+            //         child: getTypeWidget(types[3], (MediaQuery.of(context).size.width / 5 - offsetMd))
+            //     ),
+            //     InkWell(
+            //         onTap: types[4]['action'],
+            //         child: getTypeWidget(types[4], (MediaQuery.of(context).size.width / 5 - offsetMd))
+            //     ),
+            //     Container(),
+            //   ],
+            // ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Widget getTypeWidget(dynamic type, double size) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetSm),
+      child: Column(
+        children: [
+          Container(
+            width: size, height: size,
+            decoration: BoxDecoration(
+              color: primaryColor,
+              borderRadius: BorderRadius.all(Radius.circular(size / 2)),
+            ),
+            child: Center(
+              child: Icon(type['icon'], color: Colors.white, size: size / 2,),
+            ),
+          ),
+          SizedBox(height: offsetSm,),
+          Text(type['title'], style: semiBold.copyWith(fontSize: fontBase, color: type['color']),),
+        ],
+      ),
     );
   }
 

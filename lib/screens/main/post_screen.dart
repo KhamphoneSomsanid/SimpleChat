@@ -126,7 +126,7 @@ class _PostScreenState extends State<PostScreen> {
       ),
       body: SmartRefresher(
         enablePullDown: true,
-        enablePullUp: true,
+        enablePullUp: posts.length == limitCount,
         header: WaterDropHeader(),
         controller: _refreshController,
         onRefresh: _getData,

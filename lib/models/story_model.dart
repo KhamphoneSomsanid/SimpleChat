@@ -222,7 +222,7 @@ class ExtraStoryModel {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        StringService.getCurrentTimeValue(list.last.regdate),
+                        StringService.getCurrentTimeValue(list.first.regdate),
                         maxLines: 1,
                         style: mediumText.copyWith(
                             fontSize: fontXSm, color: Colors.white),

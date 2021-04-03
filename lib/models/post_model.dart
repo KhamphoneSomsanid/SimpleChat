@@ -257,23 +257,7 @@ class ExtraPostModel {
                     vertical: offsetSm, horizontal: offsetBase),
                 child: Wrap(
                   children: [
-                    for (var stag in tags)
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: 4.0, vertical: 2.0),
-                        padding: EdgeInsets.symmetric(
-                            horizontal: offsetSm, vertical: 2),
-                        decoration: BoxDecoration(
-                            color: blueColor.withOpacity(0.5),
-                            border: Border.all(color: blueColor),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(offsetBase))),
-                        child: Text(
-                          stag,
-                          style: mediumText.copyWith(
-                              fontSize: fontBase, color: Colors.white),
-                        ),
-                      ),
+                    for (var stag in tags) tagWidget(stag),
                   ],
                 ),
               ),

@@ -1,6 +1,9 @@
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:image/image.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 class ImageService {
 
@@ -10,29 +13,31 @@ class ImageService {
     int width = 160,
     int height = 160,
   }) async {
-    print('[MethodChannel] get thumbnail : ${file.path}');
-    String result;
-    if (Platform.isAndroid) {
-      result = await methodThumbnail.invokeMethod('image', [file.path, '$width', '$height']);
+    var image = decodeImage(file.readAsBytesSync());
+    double ratioX = image.width / width;
+    double ratioY = image.height / height;
+    if (ratioX > ratioY) {
+      var thumbnail = copyResize(image, width: width);
+      return base64.encode(encodePng(thumbnail).toList());
     } else {
-      result = await methodThumbnail.invokeMethod('image', [file.readAsBytesSync(), '$width', '$height']);
+      var thumbnail = copyResize(image, height: height);
+      return base64.encode(encodePng(thumbnail).toList());
     }
-
-    return result;
   }
 
   Future<String> getThumbnailBase64FromVideo(File file, {
     int width = 160,
     int height = 160,
   }) async {
-    print('[MethodChannel] get thumbnail : ${file.path}');
-    String result;
-    if (Platform.isAndroid) {
-      result = await methodThumbnail.invokeMethod('video', [file.path, '$width', '$height']);
-    } else {
-      result = await methodThumbnail.invokeMethod('video', [file.readAsBytesSync(), '$width', '$height']);
-    }
-    return result;
+    final uint8list = await VideoThumbnail.thumbnailData(
+      video: file.path,
+      imageFormat: ImageFormat.PNG,
+      maxWidth: width,
+      maxHeight: height,
+      quality: 25,
+    );
+
+    return base64.encode(uint8list);
   }
 
 }

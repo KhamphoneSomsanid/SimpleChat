@@ -79,11 +79,12 @@ class _StoryWidgetState extends State<StoryWidget> {
   Widget _getContent(story) {
     switch (story.list.last.type) {
       case 'IMAGE':
+      case 'VIDEO':
         return Container(
           width: double.infinity,
           height: double.infinity,
           child: Image.network(
-            story.list.last.thumbnail,
+            story.list.first.thumbnail,
             fit: BoxFit.cover,
             loadingBuilder: (context, widget, event) {
               return event == null

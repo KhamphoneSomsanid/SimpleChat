@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:http/http.dart' as http;
+import 'package:simplechat/utils/themes.dart';
 
 class MediaModel {
   String id;
@@ -63,7 +64,10 @@ class MediaModel {
   Widget mediaWidget(Widget preview, {Function() remove}) {
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(offsetBase))),
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
+        boxShadow: [containerShadow(offsetX: 1, offsetY: 1, blurRadius: 2)]
+      ),
       child: Stack(
         children: [
           ClipRRect(
@@ -112,21 +116,38 @@ class MediaModel {
           bottomRight: Radius.circular(
               (isOne == false && (type == 0 || type == 4)) ? offsetBase : 0),
         ),
-        child: Image.network(
-          thumbnail,
-          fit: BoxFit.cover,
-          loadingBuilder: (context, widget, event) {
-            return event == null
-                ? widget
-                : Center(
-                    child: Image.asset(
-                      'assets/icons/ic_logo.png',
-                      color: Colors.grey,
-                      width: 56,
-                      fit: BoxFit.fitWidth,
-                    ),
-                  );
-          },
+        child: Stack(
+          children: [
+            Container(
+              width: double.infinity, height: double.infinity,
+              child: Image.network(
+                thumbnail,
+                fit: BoxFit.fill,
+                loadingBuilder: (context, widget, event) {
+                  return event == null
+                      ? widget
+                      : Center(
+                          child: Image.asset(
+                            'assets/icons/ic_logo.png',
+                            color: Colors.grey,
+                            width: 56,
+                            fit: BoxFit.fitWidth,
+                          ),
+                        );
+                },
+              ),
+            ),
+            if (this.type == 'VIDEO') Center(
+              child: Container(
+                width: 48, height: 48,
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.5),
+                  borderRadius: BorderRadius.all(Radius.circular(48 / 2)),
+                ),
+                child: Icon(Icons.play_arrow, color: Colors.white, size: 48 / 2,),
+              ),
+            ),
+          ],
         ),
       ),
     );
