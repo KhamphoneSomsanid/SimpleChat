@@ -165,7 +165,8 @@ class DialogService {
                       padding: const EdgeInsets.all(8.0),
                       child: InkWell(
                         onTap: () async {
-                          if (setLike != null) setLike(reviewIcons.indexOf(likeItem));
+                          if (setLike != null)
+                            setLike(reviewIcons.indexOf(likeItem));
                         },
                         child: Image.asset(
                           likeItem,
@@ -184,13 +185,13 @@ class DialogService {
   Future<void> showPopupMenu(Offset offset, {List<PopupMenuItem> items}) async {
     double top = offset.dy;
     await showMenu(
-        context: context,
-        position: RelativeRect.fromLTRB(0, top - offsetBase, 0, 0),
-        items: items,
+      context: context,
+      position: RelativeRect.fromLTRB(0, top - offsetBase, 0, 0),
+      items: items,
     );
   }
 
-  Future<void> showTypeDialog({
+  void showTypeDialog({
     Function() chooseImage,
     Function() chooseVideo,
     Function() chooseDocument,
@@ -202,31 +203,31 @@ class DialogService {
         'icon': Icons.image,
         'title': 'Image',
         'color': primaryColor,
-        'action' : chooseImage,
+        'action': chooseImage,
       },
       {
         'icon': Icons.video_collection_sharp,
         'title': 'Video',
         'color': primaryColor,
-        'action' : chooseVideo,
+        'action': chooseVideo,
       },
       {
         'icon': Icons.book,
         'title': 'File',
         'color': primaryColor,
-        'action' : chooseDocument,
+        'action': chooseDocument,
       },
       {
         'icon': Icons.location_history,
         'title': 'Location',
         'color': primaryColor,
-        'action' : chooseLocation,
+        'action': chooseLocation,
       },
       {
         'icon': Icons.link,
         'title': 'Link',
         'color': primaryColor,
-        'action' : chooseLink,
+        'action': chooseLink,
       },
     ];
 
@@ -235,27 +236,29 @@ class DialogService {
         padding: EdgeInsets.all(offsetBase),
         child: Column(
           children: [
-            SizedBox(height: offsetSm,),
+            SizedBox(
+              height: offsetSm,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(),
                 InkWell(
-                  onTap: types[0]['action'],
-                  child: getTypeWidget(types[0], (MediaQuery.of(context).size.width / 5 - offsetMd))
-                ),
+                    onTap: types[0]['action'],
+                    child: getTypeWidget(types[0],
+                        (MediaQuery.of(context).size.width / 5 - offsetMd))),
                 InkWell(
                     onTap: types[1]['action'],
-                    child: getTypeWidget(types[1], (MediaQuery.of(context).size.width / 5 - offsetMd))
-                ),
+                    child: getTypeWidget(types[1],
+                        (MediaQuery.of(context).size.width / 5 - offsetMd))),
                 InkWell(
                     onTap: types[2]['action'],
-                    child: getTypeWidget(types[2], (MediaQuery.of(context).size.width / 5 - offsetMd))
-                ),
+                    child: getTypeWidget(types[2],
+                        (MediaQuery.of(context).size.width / 5 - offsetMd))),
                 InkWell(
                     onTap: types[3]['action'],
-                    child: getTypeWidget(types[3], (MediaQuery.of(context).size.width / 5 - offsetMd))
-                ),
+                    child: getTypeWidget(types[3],
+                        (MediaQuery.of(context).size.width / 5 - offsetMd))),
                 Container(),
               ],
             ),
@@ -279,29 +282,38 @@ class DialogService {
       ),
     );
   }
-  
+
   Widget getTypeWidget(dynamic type, double size) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetSm),
       child: Column(
         children: [
           Container(
-            width: size, height: size,
+            width: size,
+            height: size,
             decoration: BoxDecoration(
               color: primaryColor,
               borderRadius: BorderRadius.all(Radius.circular(size / 2)),
             ),
             child: Center(
-              child: Icon(type['icon'], color: Colors.white, size: size / 2,),
+              child: Icon(
+                type['icon'],
+                color: Colors.white,
+                size: size / 2,
+              ),
             ),
           ),
-          SizedBox(height: offsetSm,),
-          Text(type['title'], style: semiBold.copyWith(fontSize: fontBase, color: type['color']),),
+          SizedBox(
+            height: offsetSm,
+          ),
+          Text(
+            type['title'],
+            style: semiBold.copyWith(fontSize: fontBase, color: type['color']),
+          ),
         ],
       ),
     );
   }
-
 }
 
 enum SnackBarType { SUCCESS, WARING, INFO, ERROR }

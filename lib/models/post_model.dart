@@ -11,7 +11,6 @@ import 'package:simplechat/models/user_model.dart';
 import 'package:simplechat/services/dialog_service.dart';
 import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/services/string_service.dart';
-import 'package:simplechat/utils/colors.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/params.dart';
 import 'package:simplechat/utils/themes.dart';

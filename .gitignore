@@ -4064,3 +4064,15 @@ build/51bcd9355023315736357aa3f0887d3a/gen_localizations.stamp
 /android/.idea/modules/-1054993100/android.contacts_service.iml
 /android/.idea/modules/-1182387899/android.shared_preferences.iml
 /android/.idea/modules/-1841607597/android.sound_stream.iml
+/build/
+/.dart_tool/flutter_build/671adfe462fa52e175811e0c9dcf9ad9/
+.idea/simplechat-client.iml
+ios/Podfile.lock
+.dart_tool/flutter_build/e545496bb6c162275eae5b64313cfce9/.filecache
+.dart_tool/flutter_build/e545496bb6c162275eae5b64313cfce9/app.dill
+.dart_tool/flutter_build/e545496bb6c162275eae5b64313cfce9/debug_android_application.stamp
+.dart_tool/flutter_build/e545496bb6c162275eae5b64313cfce9/flutter_assets.d
+.dart_tool/flutter_build/e545496bb6c162275eae5b64313cfce9/gen_localizations.stamp
+.dart_tool/flutter_build/e545496bb6c162275eae5b64313cfce9/kernel_snapshot.d
+.dart_tool/flutter_build/e545496bb6c162275eae5b64313cfce9/kernel_snapshot.stamp
+.dart_tool/flutter_build/e545496bb6c162275eae5b64313cfce9/outputs.json
