@@ -46,7 +46,8 @@ class _ChatScreenState extends State<ChatScreen> {
   MediaModel mediaModel;
   var msgController = TextEditingController();
 
-  StreamController<List<dynamic>> messageController = new StreamController.broadcast();
+  StreamController<List<dynamic>> messageController =
+      new StreamController.broadcast();
   StreamController<String> activeController = new StreamController.broadcast();
 
   ScrollController _scrollController;
@@ -111,13 +112,9 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  _typing(dynamic value) {
+  _typing(dynamic value) {}
 
-  }
-
-  _untyping(dynamic value) {
-
-  }
+  _untyping(dynamic value) {}
 
   _leaveRoom(dynamic value) {
     activeController.add(value['text']);
@@ -133,9 +130,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   _leaveChat() async {
     var param = {
-      'id' : currentUser.id,
-      'roomid' : widget.room.id,
-      'status' : 'AWAY',
+      'id': currentUser.id,
+      'roomid': widget.room.id,
+      'status': 'AWAY',
     };
     await NetworkService(context).ajax('chat_leave', param, isProgress: false);
     String userRoom = '';
@@ -161,22 +158,25 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> _getData() async {
     var param = {
-      'roomid' : widget.room.id,
-      'userid' : currentUser.id,
+      'roomid': widget.room.id,
+      'userid': currentUser.id,
     };
     var resp = await NetworkService(context)
         .ajax('chat_detail', param, isProgress: true);
     if (resp['ret'] == 10000) {
       roomUsers.clear();
-      roomUsers = (resp['users'].map((item) => ChatUserModel.fromMap(item)).toList());
+      roomUsers =
+          (resp['users'].map((item) => ChatUserModel.fromMap(item)).toList());
 
       messages.clear();
-      messages = (resp['msgs'].map((item) => MessageModel.fromMap(item)).toList());
+      messages =
+          (resp['msgs'].map((item) => MessageModel.fromMap(item)).toList());
       messages.sort((b, a) => a.regdate.compareTo(b.regdate));
 
       for (var user in roomUsers) {
         if (user.user.id == currentUser.id) {
-          socketService.joinRoom(roomId: 'room' + user.roomid,
+          socketService.joinRoom(
+            roomId: 'room' + user.roomid,
             message: _message,
             typing: _typing,
             untyping: _untyping,
@@ -205,34 +205,40 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: [
                   Text(
                     StringService.formatName(widget.room.title),
-                    style: boldText.copyWith(fontSize: fontMd, color: primaryColor),
+                    style: boldText.copyWith(
+                        fontSize: fontMd, color: primaryColor),
                   ),
-                  SizedBox(height: offsetXSm,),
+                  SizedBox(
+                    height: offsetXSm,
+                  ),
                   StreamBuilder(
-                    stream: activeController.stream,
-                    builder: (context, snap) {
-                      var status = USERSTATUS.Online;
-                      var title = 'Active now';
-                      if (snap.data == 'AWAY') {
-                        status = USERSTATUS.Away;
-                        title = 'Away';
-                      }
-                      if (snap.data == 'OFFLINE') {
-                        status = USERSTATUS.Offline;
-                        title = 'Offline';
-                      }
-                      return Row(
-                      children: [
-                        UserStatusWidget(status: status,),
-                        SizedBox(width: offsetSm,),
-                        Text(
-                          title,
-                          style: mediumText.copyWith(fontSize: fontSm),
-                        ),
-                      ],
-                    );
-                    }
-                  )
+                      stream: activeController.stream,
+                      builder: (context, snap) {
+                        var status = USERSTATUS.Online;
+                        var title = 'Active now';
+                        if (snap.data == 'AWAY') {
+                          status = USERSTATUS.Away;
+                          title = 'Away';
+                        }
+                        if (snap.data == 'OFFLINE') {
+                          status = USERSTATUS.Offline;
+                          title = 'Offline';
+                        }
+                        return Row(
+                          children: [
+                            UserStatusWidget(
+                              status: status,
+                            ),
+                            SizedBox(
+                              width: offsetSm,
+                            ),
+                            Text(
+                              title,
+                              style: mediumText.copyWith(fontSize: fontSm),
+                            ),
+                          ],
+                        );
+                      })
                 ],
               ),
             ],
@@ -243,236 +249,277 @@ class _ChatScreenState extends State<ChatScreen> {
             children: [
               Expanded(
                 child: Container(
-                  padding: EdgeInsets.only(top: 0, left: offsetSm, right: offsetSm),
                   color: Colors.grey.withOpacity(0.1),
+                  padding:
+                      EdgeInsets.only(top: 0, left: offsetSm, right: offsetSm),
                   child: StreamBuilder(
                     stream: messageController.stream,
                     builder: (context, snapshot) {
                       return snapshot.data == null
                           ? Container()
                           : ListView.builder(
-                          reverse: true,
-                          controller: _scrollController,
-                          itemCount: snapshot.data.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, i) {
-                            return snapshot.data[i].cell(
-                              resend: () {
-                                var msgData = snapshot.data[i];
-                                msgData.isError = false;
-                                if (msgData.type == 'TEXT' || msgData.type =='LOCATION') {
-                                  send(msgData);
-                                } else {
-                                  sendFeed(msgData);
-                                }
-                              },
-                              detail:  () {
-                                var msgData = snapshot.data[i];
-                                MediaModel mediaModel = MediaModel(
-                                  url: msgData.content,
-                                  type: msgData.type
-                                );
-                                NavigatorService(context).pushToWidget(
-                                    screen: ChatDetailScreen(data: mediaModel));
-                              },
-                              callRequest: () {
-                                onCallRequest();
-                              }
-                            );
-                          }
-                      );
+                              reverse: true,
+                              controller: _scrollController,
+                              itemCount: snapshot.data.length,
+                              shrinkWrap: true,
+                              itemBuilder: (context, i) {
+                                return snapshot.data[i].cell(resend: () {
+                                  var msgData = snapshot.data[i];
+                                  msgData.isError = false;
+                                  if (msgData.type == 'TEXT' ||
+                                      msgData.type == 'LOCATION') {
+                                    send(msgData);
+                                  } else {
+                                    sendFeed(msgData);
+                                  }
+                                }, detail: () {
+                                  var msgData = snapshot.data[i];
+                                  MediaModel mediaModel = MediaModel(
+                                      url: msgData.content, type: msgData.type);
+                                  NavigatorService(context).pushToWidget(
+                                      screen:
+                                          ChatDetailScreen(data: mediaModel));
+                                }, callRequest: () {
+                                  onCallRequest();
+                                });
+                              });
                     },
                   ),
                 ),
               ),
               isAttachment
                   ? Container(
-                width: double.infinity,
-                height: 200,
-                color: Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetSm),
-                child: Row(
-                  children: [
-                    Container(width: 48,),
-                    Spacer(),
-                    Container(
-                      width: 200 - offsetBase, height: 200 - offsetBase,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(offsetBase)),
-                        boxShadow: [containerShadow()],
-                      ),
-                      child: Stack(
-                        children: [
-                          _getMediaWidget(200 - offsetBase,
-                            action: () {
-                              NavigatorService(context).pushToWidget(screen: PostFeedScreen(
-                                data: mediaModel.file, type: mediaModel.type,));
-                            }
-                          ),
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  isAttachment = false;
-                                });
-                              },
-                              child: Container(
-                                margin: EdgeInsets.only(right: offsetXSm, top: offsetSm),
-                                width: 32, height: 32,
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.5),
-                                  borderRadius: BorderRadius.all(Radius.circular(32 / 2.0)),
-                                ),
-                                child: Center(
-                                    child: Icon(Icons.close, color: Colors.white, size: 32 / 2,)),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Spacer(),
-                    InkWell(
-                      onTap: () {
-                        MessageModel model = MessageModel(
-                          userid: currentUser.id,
-                          username: currentUser.username,
-                          imgurl: currentUser.imgurl,
-                          roomid: widget.room.id,
-                          type: mediaModel.type,
-                          regdate: StringService.getCurrentUTCTime(),
-                          file: mediaModel.file,
-                          thumbnail: mediaModel.thumbnail,
-                          isSending: true,
-                        );
-                        sendFeed(model);
-                      },
-                      child: Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: primaryColor,
-                          borderRadius: BorderRadius.all(Radius.circular(48 / 2)),
-                        ),
-                        child: Center(
-                            child: Icon(Icons.send, color: Colors.white, size: 48 / 2,)),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-                  : Container(
-                width: double.infinity,
-                height: 56,
-                color: Colors.white,
-                child: Row(
-                  children: [
-                    SizedBox(width: offsetBase,),
-                    InkWell(
-                      onTap: () {
-                        FocusScope.of(context).unfocus();
-                        if (!appSettingInfo['isChatRecord']) {
-                          DialogService(context).showSnackbar(notSupport, _scaffoldKey, type: SnackBarType.ERROR);
-                          return;
-                        }
-                      },
-                        child: SvgPicture.asset('assets/icons/ic_record.svg')
-                    ),
-                    SizedBox(width: offsetBase,),
-                    Expanded(
-                      child: Stack(
+                      width: double.infinity,
+                      height: 200,
+                      color: Colors.white,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: offsetBase, vertical: offsetSm),
+                      child: Row(
                         children: [
                           Container(
-                            margin: EdgeInsets.symmetric(vertical: offsetSm),
-                            padding: EdgeInsets.symmetric(horizontal: offsetSm),
+                            width: 48,
+                          ),
+                          Spacer(),
+                          Container(
+                            width: 200 - offsetBase,
+                            height: 200 - offsetBase,
                             decoration: BoxDecoration(
-                                color: Colors.grey.withOpacity(0.1),
-                                borderRadius: BorderRadius.all(Radius.circular(8.0))
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(offsetBase)),
+                              boxShadow: [containerShadow()],
+                            ),
+                            child: Stack(
+                              children: [
+                                _getMediaWidget(200 - offsetBase, action: () {
+                                  NavigatorService(context).pushToWidget(
+                                      screen: PostFeedScreen(
+                                    data: mediaModel.file,
+                                    type: mediaModel.type,
+                                  ));
+                                }),
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        isAttachment = false;
+                                      });
+                                    },
+                                    child: Container(
+                                      margin: EdgeInsets.only(
+                                          right: offsetXSm, top: offsetSm),
+                                      width: 32,
+                                      height: 32,
+                                      decoration: BoxDecoration(
+                                        color: Colors.black.withOpacity(0.5),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(32 / 2.0)),
+                                      ),
+                                      child: Center(
+                                          child: Icon(
+                                        Icons.close,
+                                        color: Colors.white,
+                                        size: 32 / 2,
+                                      )),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                            child: TextField(
-                              controller: msgController,
-                              autofocus: true,
-                              textInputAction: TextInputAction.send,
-                              style: mediumText.copyWith(fontSize: fontMd),
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.zero,
-                                border: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                enabledBorder: InputBorder.none,
+                          Spacer(),
+                          InkWell(
+                            onTap: () {
+                              MessageModel model = MessageModel(
+                                userid: currentUser.id,
+                                username: currentUser.username,
+                                imgurl: currentUser.imgurl,
+                                roomid: widget.room.id,
+                                type: mediaModel.type,
+                                regdate: StringService.getCurrentUTCTime(),
+                                file: mediaModel.file,
+                                thumbnail: mediaModel.thumbnail,
+                                isSending: true,
+                              );
+                              sendFeed(model);
+                            },
+                            child: Container(
+                              width: 48,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                color: primaryColor,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(48 / 2)),
                               ),
-                              onSubmitted: (value) {
-                                String msg = msgController.text;
-                                if (msg.isNotEmpty) {
-                                  MessageModel model = MessageModel(
-                                    userid: currentUser.id,
-                                    username: currentUser.username,
-                                    imgurl: currentUser.imgurl,
-                                    roomid: widget.room.id,
-                                    type: 'TEXT',
-                                    regdate: StringService.getCurrentUTCTime(),
-                                    content: msg,
-                                    isSending: true,
-                                  );
-                                  send(model);
-                                }
-                              },
+                              child: Center(
+                                  child: Icon(
+                                Icons.send,
+                                color: Colors.white,
+                                size: 48 / 2,
+                              )),
                             ),
                           ),
                         ],
                       ),
+                    )
+                  : Container(
+                      width: double.infinity,
+                      height: 56,
+                      color: Colors.white,
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: offsetBase,
+                          ),
+                          InkWell(
+                              onTap: () {
+                                FocusScope.of(context).unfocus();
+                                if (!appSettingInfo['isChatRecord']) {
+                                  DialogService(context).showSnackbar(
+                                      notSupport, _scaffoldKey,
+                                      type: SnackBarType.ERROR);
+                                  return;
+                                }
+                              },
+                              child: SvgPicture.asset(
+                                  'assets/icons/ic_record.svg')),
+                          SizedBox(
+                            width: offsetBase,
+                          ),
+                          Expanded(
+                            child: Stack(
+                              children: [
+                                Container(
+                                  margin:
+                                      EdgeInsets.symmetric(vertical: offsetSm),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: offsetSm),
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey.withOpacity(0.1),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(8.0))),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0, vertical: 4.0),
+                                  child: TextField(
+                                    controller: msgController,
+                                    textInputAction: TextInputAction.send,
+                                    style:
+                                        mediumText.copyWith(fontSize: fontMd),
+                                    decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.zero,
+                                      border: InputBorder.none,
+                                      focusedBorder: InputBorder.none,
+                                      enabledBorder: InputBorder.none,
+                                    ),
+                                    onSubmitted: (value) {
+                                      String msg = msgController.text;
+                                      if (msg.isNotEmpty) {
+                                        MessageModel model = MessageModel(
+                                          userid: currentUser.id,
+                                          username: currentUser.username,
+                                          imgurl: currentUser.imgurl,
+                                          roomid: widget.room.id,
+                                          type: 'TEXT',
+                                          regdate:
+                                              StringService.getCurrentUTCTime(),
+                                          content: msg,
+                                          isSending: true,
+                                        );
+                                        send(model);
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: offsetBase,
+                          ),
+                          InkWell(
+                              onTap: () {
+                                FocusScope.of(context).unfocus();
+                                if (!appSettingInfo['isChatEmoji']) {
+                                  DialogService(context).showSnackbar(
+                                      notSupport, _scaffoldKey,
+                                      type: SnackBarType.ERROR);
+                                  return;
+                                }
+                              },
+                              child:
+                                  SvgPicture.asset('assets/icons/ic_emoj.svg')),
+                          SizedBox(
+                            width: offsetBase,
+                          ),
+                          InkWell(
+                              onTap: () {
+                                FocusScope.of(context).unfocus();
+                                if (!appSettingInfo['isChatAdd']) {
+                                  DialogService(context).showSnackbar(
+                                      notSupport, _scaffoldKey,
+                                      type: SnackBarType.ERROR);
+                                  return;
+                                }
+                                DialogService(context).showTypeDialog(
+                                  chooseImage: () {
+                                    Navigator.of(context).pop();
+                                    showPickerDialog(isVideo: false);
+                                  },
+                                  chooseVideo: () {
+                                    Navigator.of(context).pop();
+                                    showPickerDialog(isVideo: true);
+                                  },
+                                  chooseDocument: () {
+                                    Navigator.of(context).pop();
+                                    DialogService(context).showSnackbar(
+                                        notSupport, _scaffoldKey,
+                                        type: SnackBarType.ERROR);
+                                  },
+                                  chooseLocation: () {
+                                    Navigator.of(context).pop();
+                                    DialogService(context).showSnackbar(
+                                        notSupport, _scaffoldKey,
+                                        type: SnackBarType.ERROR);
+                                  },
+                                  chooseLink: () {
+                                    Navigator.of(context).pop();
+                                    DialogService(context).showSnackbar(
+                                        notSupport, _scaffoldKey,
+                                        type: SnackBarType.ERROR);
+                                  },
+                                );
+                              },
+                              child:
+                                  SvgPicture.asset('assets/icons/ic_add.svg')),
+                          SizedBox(
+                            width: offsetBase,
+                          ),
+                        ],
+                      ),
                     ),
-                    SizedBox(width: offsetBase,),
-                    InkWell(
-                        onTap: () {
-                          FocusScope.of(context).unfocus();
-                          if (!appSettingInfo['isChatEmoji']) {
-                            DialogService(context).showSnackbar(notSupport, _scaffoldKey, type: SnackBarType.ERROR);
-                            return;
-                          }
-                        },
-                        child: SvgPicture.asset('assets/icons/ic_emoj.svg')
-                    ),
-                    SizedBox(width: offsetBase,),
-                    InkWell(
-                        onTap: () {
-                          FocusScope.of(context).unfocus();
-                          if (!appSettingInfo['isChatAdd']) {
-                            DialogService(context).showSnackbar(notSupport, _scaffoldKey, type: SnackBarType.ERROR);
-                            return;
-                          }
-                          DialogService(context).showTypeDialog(
-                            chooseImage: () {
-                              Navigator.of(context).pop();
-                              showPickerDialog(isVideo: false);
-                            },
-                            chooseVideo: () {
-                              Navigator.of(context).pop();
-                              showPickerDialog(isVideo: true);
-                            },
-                            chooseDocument: () {
-                              Navigator.of(context).pop();
-                              DialogService(context).showSnackbar(notSupport, _scaffoldKey, type: SnackBarType.ERROR);
-                            },
-                            chooseLocation: () {
-                              Navigator.of(context).pop();
-                              DialogService(context).showSnackbar(notSupport, _scaffoldKey, type: SnackBarType.ERROR);
-                            },
-                            chooseLink: () {
-                              Navigator.of(context).pop();
-                              DialogService(context).showSnackbar(notSupport, _scaffoldKey, type: SnackBarType.ERROR);
-                            },
-                          );
-                        },
-                        child: SvgPicture.asset('assets/icons/ic_add.svg')),
-                    SizedBox(width: offsetBase,),
-                  ],
-                ),
-              ),
             ],
           ),
         ),
@@ -495,10 +542,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
         for (var user in roomUsers) {
           if (user.user.id == currentUser.id) continue;
-          socketService.sendChat('Text', model.content, model.regdate, user.roomid, user.user.id, widget.room.id);
+          socketService.sendChat('Text', model.content, model.regdate,
+              user.roomid, user.user.id, widget.room.id);
         }
       }
-    } catch(e) {
+    } catch (e) {
       model.isError = true;
       model.isSending = false;
       messageController.add(messages);
@@ -539,7 +587,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
         for (var user in roomUsers) {
           if (user.user.id == currentUser.id) continue;
-          socketService.sendChat('Image', 'just sent ${model.type} to you.', model.regdate, user.roomid, user.user.id, widget.room.id);
+          socketService.sendChat('Image', 'just sent ${model.type} to you.',
+              model.regdate, user.roomid, user.user.id, widget.room.id);
         }
       }
     } catch (e) {
@@ -561,8 +610,11 @@ class _ChatScreenState extends State<ChatScreen> {
   void onCallRequest() {
     DialogService(context).showCustomModalBottomSheet(
         titleWidget: Container(
-          padding: EdgeInsets.all(offsetBase),
-            child: Text('Call Method', style: semiBold.copyWith(fontSize: fontMd),)),
+            padding: EdgeInsets.all(offsetBase),
+            child: Text(
+              'Call Method',
+              style: semiBold.copyWith(fontSize: fontMd),
+            )),
         bodyWidget: Container(
           padding: EdgeInsets.all(offsetBase),
           child: Column(
@@ -578,12 +630,13 @@ class _ChatScreenState extends State<ChatScreen> {
                     }
                   }
                   var data = {
-                    'id' : selUser.id,
-                    'text' : selUser.imgurl,
-                    'username' : selUser.username,
+                    'id': selUser.id,
+                    'text': selUser.imgurl,
+                    'username': selUser.username,
                   };
                   socketService.sendCallRequest(selUser.id, 'voice');
-                  NavigatorService(context).pushToWidget(screen: VoiceRequestScreen(
+                  NavigatorService(context).pushToWidget(
+                      screen: VoiceRequestScreen(
                     data: data,
                     isCall: true,
                   ));
@@ -591,25 +644,42 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.call, color: blueColor,),
-                    SizedBox(width: offsetBase,),
-                    Text('Voice Call', style: mediumText.copyWith(fontSize: fontBase),)
+                    Icon(
+                      Icons.call,
+                      color: blueColor,
+                    ),
+                    SizedBox(
+                      width: offsetBase,
+                    ),
+                    Text(
+                      'Voice Call',
+                      style: mediumText.copyWith(fontSize: fontBase),
+                    )
                   ],
                 ),
               ),
-              SizedBox(height: offsetBase,),
+              SizedBox(
+                height: offsetBase,
+              ),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.videocam, color: primaryColor,),
-                  SizedBox(width: offsetBase,),
-                  Text('Video Call', style: mediumText.copyWith(fontSize: fontBase),)
+                  Icon(
+                    Icons.videocam,
+                    color: primaryColor,
+                  ),
+                  SizedBox(
+                    width: offsetBase,
+                  ),
+                  Text(
+                    'Video Call',
+                    style: mediumText.copyWith(fontSize: fontBase),
+                  )
                 ],
               ),
             ],
           ),
-        )
-    );
+        ));
   }
 
   void showPickerDialog({bool isVideo = false}) {
@@ -685,7 +755,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         decoration: BoxDecoration(
                           gradient: getGradientColor(color: data['color']),
                           borderRadius:
-                          BorderRadius.all(Radius.circular(offsetBase)),
+                              BorderRadius.all(Radius.circular(offsetBase)),
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -732,7 +802,9 @@ class _ChatScreenState extends State<ChatScreen> {
       other: '',
     );
 
-    setState(() {isAttachment = true;});
+    setState(() {
+      isAttachment = true;
+    });
   }
 
   _vidPicker(ImageSource source) async {
@@ -750,13 +822,15 @@ class _ChatScreenState extends State<ChatScreen> {
       other: '',
     );
 
-    setState(() {isAttachment = true;});
+    setState(() {
+      isAttachment = true;
+    });
   }
 
   Widget _getMediaWidget(double size, {Function() action}) {
     switch (mediaModel.type) {
-      case 'IMAGE' :
-      case 'VIDEO' :
+      case 'IMAGE':
+      case 'VIDEO':
         return InkWell(
           onTap: action,
           child: ClipRRect(
@@ -767,22 +841,30 @@ class _ChatScreenState extends State<ChatScreen> {
               child: Stack(
                 children: [
                   Center(
-                    child: Image.memory(base64.decode(mediaModel.thumbnail),
+                    child: Image.memory(
+                      base64.decode(mediaModel.thumbnail),
                       fit: BoxFit.cover,
                       width: size,
                       height: size,
                     ),
                   ),
-                  if (mediaModel.type == 'VIDEO') Center(
-                    child: Container(
-                      width: 48, height: 48,
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.5),
-                        borderRadius: BorderRadius.all(Radius.circular(48 / 2)),
+                  if (mediaModel.type == 'VIDEO')
+                    Center(
+                      child: Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.5),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(48 / 2)),
+                        ),
+                        child: Icon(
+                          Icons.play_arrow,
+                          color: Colors.white,
+                          size: 48 / 2,
+                        ),
                       ),
-                      child: Icon(Icons.play_arrow, color: Colors.white, size: 48 / 2,),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -791,5 +873,4 @@ class _ChatScreenState extends State<ChatScreen> {
     }
     return Container();
   }
-
 }
