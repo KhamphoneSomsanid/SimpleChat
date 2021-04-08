@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 enum FILETYPE { IMAGE, VIDEO, DOCUMENT, OTHER }
 
 class FileService {
-  final videoTypes = [
+  static final videoTypes = [
     'mp4',
     'webm',
     'mpg',
@@ -27,7 +27,7 @@ class FileService {
         'swf',
     'avchd'
   ];
-  final imageType = [
+  static final imageTypes = [
     'jpg',
     'jpeg',
     'png',
@@ -58,7 +58,7 @@ class FileService {
     if (videoTypes.contains(ext.toLowerCase())) {
       return FILETYPE.VIDEO;
     }
-    if (imageType.contains(ext.toLowerCase())) {
+    if (imageTypes.contains(ext.toLowerCase())) {
       return FILETYPE.IMAGE;
     }
     return FILETYPE.OTHER;
@@ -93,5 +93,36 @@ class FileService {
         return;
       });
     });
+  }
+
+  static Future<String> getRootPath() async {
+    Directory rootPath;
+    if (Platform.isAndroid) {
+      rootPath = await getExternalStorageDirectory();
+    } else {
+      rootPath = await getApplicationDocumentsDirectory();
+    }
+    return rootPath.path;
+  }
+
+  static Future<String> copy(File file) async {
+    String filePath = file.path;
+    String fullName = filePath.split('/').last;
+    String fileName = fullName.split('.').first;
+    String ext = fullName.split('.').last;
+
+    String rootPath = await getRootPath();
+    String targetPath = '';
+    if (imageTypes.contains(ext.toLowerCase())) {
+      targetPath = rootPath + '/images/';
+    } else if (videoTypes.contains(ext.toLowerCase())) {
+      targetPath = rootPath + '/videos/';
+    } else {
+      targetPath = rootPath + '/files/';
+    }
+
+    final newFile = await file.copy('$targetPath$fileName.$ext');
+
+    return newFile.path;
   }
 }

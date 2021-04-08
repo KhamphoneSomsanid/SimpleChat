@@ -1,17 +1,13 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:simplechat/services/string_service.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/params.dart';
-import 'package:simplechat/utils/themes.dart';
 import 'package:simplechat/widgets/chat/media_other_widget.dart';
 import 'package:simplechat/widgets/chat/media_self_widget.dart';
 import 'package:simplechat/widgets/chat/text_other_widget.dart';
 import 'package:simplechat/widgets/chat/text_self_widget.dart';
-import 'package:simplechat/widgets/image_widget.dart';
 
 class MessageModel {
   String id;
