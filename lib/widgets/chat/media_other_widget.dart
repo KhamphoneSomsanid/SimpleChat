@@ -23,6 +23,7 @@ class ChatMediaOtherWidget extends StatefulWidget {
     @required this.optionSize,
     @required this.detail,
     @required this.callRequest,
+    this.share,
   }) : super(key: key);
 
   final String imgurl;
@@ -38,6 +39,7 @@ class ChatMediaOtherWidget extends StatefulWidget {
   final double optionSize;
   final Function() detail;
   final Function() callRequest;
+  final Function() share;
 
   @override
   _ChatMediaOtherWidgetState createState() => _ChatMediaOtherWidgetState();
@@ -144,33 +146,47 @@ class _ChatMediaOtherWidgetState extends State<ChatMediaOtherWidget> {
                                 child: Row(
                                   children: [
                                     Spacer(),
-                                    Container(
-                                      width: widget.optionSize,
-                                      height: widget.optionSize,
-                                      margin: EdgeInsets.only(right: offsetSm),
-                                      decoration: BoxDecoration(
-                                          color: Colors.black.withOpacity(0.5),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(
-                                                  widget.optionSize / 2.0))),
-                                      child: Icon(
-                                        Icons.share,
-                                        color: Colors.white,
-                                        size: 12.0,
+                                    InkWell(
+                                      onTap: () {
+                                        if (widget.share != null)
+                                          widget.share();
+                                      },
+                                      child: Container(
+                                        width: widget.optionSize,
+                                        height: widget.optionSize,
+                                        margin:
+                                            EdgeInsets.only(right: offsetSm),
+                                        decoration: BoxDecoration(
+                                            color:
+                                                Colors.black.withOpacity(0.5),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(
+                                                    widget.optionSize / 2.0))),
+                                        child: Icon(
+                                          Icons.share,
+                                          color: Colors.white,
+                                          size: 12.0,
+                                        ),
                                       ),
                                     ),
-                                    Container(
-                                      width: widget.optionSize,
-                                      height: widget.optionSize,
-                                      decoration: BoxDecoration(
-                                          color: Colors.black.withOpacity(0.5),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(
-                                                  widget.optionSize / 2.0))),
-                                      child: Icon(
-                                        Icons.download_sharp,
-                                        color: Colors.white,
-                                        size: 12.0,
+                                    InkWell(
+                                      onTap: () {
+                                        download();
+                                      },
+                                      child: Container(
+                                        width: widget.optionSize,
+                                        height: widget.optionSize,
+                                        decoration: BoxDecoration(
+                                            color:
+                                                Colors.black.withOpacity(0.5),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(
+                                                    widget.optionSize / 2.0))),
+                                        child: Icon(
+                                          Icons.download_sharp,
+                                          color: Colors.white,
+                                          size: 12.0,
+                                        ),
                                       ),
                                     )
                                   ],
@@ -193,4 +209,6 @@ class _ChatMediaOtherWidgetState extends State<ChatMediaOtherWidget> {
       ),
     );
   }
+
+  void download() async {}
 }
