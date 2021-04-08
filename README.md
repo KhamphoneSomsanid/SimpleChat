@@ -1,3 +1,3 @@
-# simplechat-client
+# SChat-client
 
 /Volumes/Data/Android/flutter/bin/flutter
