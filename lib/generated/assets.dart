@@ -19,6 +19,9 @@ class Assets {
   static const String iconsIcFriend = 'assets/icons/ic_friend.svg';
   static const String iconsIcLike = 'assets/icons/ic_like.svg';
   static const String iconsIcLink = 'assets/icons/ic_link.svg';
+  static const String iconsIcLoginApple = 'assets/icons/ic_login_apple.svg';
+  static const String iconsIcLoginGoogle = 'assets/icons/ic_login_google.svg';
+  static const String iconsIcLoginWechat = 'assets/icons/ic_login_wechat.svg';
   static const String iconsIcLogo = 'assets/icons/ic_logo.png';
   static const String iconsIcMembership = 'assets/icons/ic_membership.svg';
   static const String iconsIcNearby = 'assets/icons/ic_nearby.svg';
@@ -26,6 +29,7 @@ class Assets {
   static const String iconsIcPicture = 'assets/icons/ic_picture.svg';
   static const String iconsIcPost = 'assets/icons/ic_post.svg';
   static const String iconsIcProject = 'assets/icons/ic_project.svg';
+  static const String iconsIcRating = 'assets/icons/ic_rating.svg';
   static const String iconsIcRecord = 'assets/icons/ic_record.svg';
   static const String iconsIcReviewAngry = 'assets/icons/ic_review_angry.png';
   static const String iconsIcReviewFunny = 'assets/icons/ic_review_funny.png';
@@ -36,5 +40,7 @@ class Assets {
   static const String iconsIcSecret = 'assets/icons/ic_secret.svg';
   static const String iconsIcSetting = 'assets/icons/ic_setting.svg';
   static const String iconsIcShare = 'assets/icons/ic_share.svg';
+  static const String iconsIcSupport = 'assets/icons/ic_support.svg';
+  static const String imagesLogo = 'assets/images/logo.png';
 
 }

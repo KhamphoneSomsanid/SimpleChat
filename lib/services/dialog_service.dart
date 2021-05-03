@@ -246,19 +246,19 @@ class DialogService {
                 InkWell(
                     onTap: types[0]['action'],
                     child: getTypeWidget(types[0],
-                        (MediaQuery.of(context).size.width / 5 - offsetMd))),
+                        (MediaQuery.of(context).size.width / 5 - offsetLg))),
                 InkWell(
                     onTap: types[1]['action'],
                     child: getTypeWidget(types[1],
-                        (MediaQuery.of(context).size.width / 5 - offsetMd))),
+                        (MediaQuery.of(context).size.width / 5 - offsetLg))),
                 InkWell(
                     onTap: types[2]['action'],
                     child: getTypeWidget(types[2],
-                        (MediaQuery.of(context).size.width / 5 - offsetMd))),
+                        (MediaQuery.of(context).size.width / 5 - offsetLg))),
                 InkWell(
                     onTap: types[3]['action'],
                     child: getTypeWidget(types[3],
-                        (MediaQuery.of(context).size.width / 5 - offsetMd))),
+                        (MediaQuery.of(context).size.width / 5 - offsetLg))),
                 Container(),
               ],
             ),
