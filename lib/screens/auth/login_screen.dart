@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:package_info/package_info.dart';
 import 'package:simplechat/jsons/auth_json.dart';
@@ -249,22 +250,29 @@ class _LoginScreenState extends State<LoginScreen> {
               Row(
                 children: [
                   Spacer(),
-                  SizedBox(width: offsetLg,),
-                  for (var socialItem in socialLoginJson) if(socialItem['isShown']) Row(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          _onSocialLogin(socialItem['type']);
-                        },
-                        child: SvgPicture.asset(socialItem['icon'],
-                          width: socialItem['size'],
-                          height: socialItem['size'],
-                          color: socialItem['color'],
-                        ),
-                      ),
-                      SizedBox(width: offsetLg,),
-                    ],
+                  SizedBox(
+                    width: offsetLg,
                   ),
+                  for (var socialItem in socialLoginJson)
+                    if (socialItem['isShown'])
+                      Row(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              _onSocialLogin(socialItem['type']);
+                            },
+                            child: SvgPicture.asset(
+                              socialItem['icon'],
+                              width: socialItem['size'],
+                              height: socialItem['size'],
+                              color: socialItem['color'],
+                            ),
+                          ),
+                          SizedBox(
+                            width: offsetLg,
+                          ),
+                        ],
+                      ),
                   Spacer(),
                 ],
               ),
@@ -315,7 +323,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   _onLoginApple() async {
-    String redirectionUri = 'https://simplechat.laodev.info/Backend/redirect_apple';
+    String redirectionUri =
+        'https://simplechat.laodev.info/Backend/redirect_apple';
     final credential = await SignInWithApple.getAppleIDCredential(
       scopes: [
         AppleIDAuthorizationScopes.email,
@@ -335,9 +344,9 @@ class _LoginScreenState extends State<LoginScreen> {
       Map<String, dynamic> payload = Jwt.parseJwt(credential.identityToken);
       String email = payload['email'] as String;
       var param = {
-        'email' : email,
-        'deviceid' : payload['sub'] as String,
-        'name' : email.split('@').first,
+        'email': email,
+        'deviceid': payload['sub'] as String,
+        'name': email.split('@').first,
       };
       var resp = await NetworkService(context)
           .ajax('chat_apple_login', param, isProgress: true);
@@ -349,12 +358,38 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       }
     } catch (e) {
-      DialogService(context).showSnackbar('Error Apple Sign', _scaffoldKey, type: SnackBarType.ERROR);
+      DialogService(context).showSnackbar('Error Apple Sign', _scaffoldKey,
+          type: SnackBarType.ERROR);
     }
   }
 
   void _onLoginGoogle() async {
-    
+    GoogleSignIn _googleSignIn = GoogleSignIn(
+      scopes: [
+        'email',
+        'https://www.googleapis.com/auth/contacts.readonly',
+      ],
+    );
+    var account = await _googleSignIn.signIn();
+    print('google account ===> $account');
+    var param = {
+      'email': account.email,
+      'deviceid': account.id,
+      'name': account.displayName,
+      'imgurl': account.photoUrl,
+    };
+    var resp = await NetworkService(context)
+        .ajax('chat_google_login', param, isProgress: true);
+    if (resp['ret'] == 10000) {
+      currentUser = UserModel.fromMap(resp['result']);
+      NavigatorService(context).pushToWidget(
+        screen: MainScreen(),
+        replace: true,
+      );
+    } else {
+      DialogService(context).showSnackbar('Error Google Sign', _scaffoldKey,
+          type: SnackBarType.ERROR);
+    }
   }
 
   _onLoginEvent(String email, String pass) async {
