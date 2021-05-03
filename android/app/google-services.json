@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "286854281469",
+    "project_id": "active-area-310108",
+    "storage_bucket": "active-area-310108.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:286854281469:android:78f954a91b733b215ea694",
+        "android_client_info": {
+          "package_name": "com.laodev.simplechat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "286854281469-oc1kicbi67to9kikqjs90ja0qb7l3s91.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.laodev.simplechat",
+            "certificate_hash": "ffb68b7a4eac858117cc57e64eba3a27ab63062d"
+          }
+        },
+        {
+          "client_id": "286854281469-olpneg450e9re8k5ldp638q20vfv3gm2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.laodev.simplechat",
+            "certificate_hash": "e9802aa873d120e53562002d620f04b02bb6ed74"
+          }
+        },
+        {
+          "client_id": "286854281469-4cb62723th5it1k5j3juq45nkpjc34l4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvEYevnS_B8yr5EYBQJJ9G0lMjTyqS-Eg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "286854281469-4cb62723th5it1k5j3juq45nkpjc34l4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "286854281469-5dme21nu10k4h27vjuilk3ivslu4u88r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.laodev.simplechat",
+                "app_store_id": "1560156953"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
