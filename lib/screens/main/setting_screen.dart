@@ -118,8 +118,7 @@ class _SettingScreenState extends State<SettingScreen> {
         ],
       ),
       body: Container(
-        padding:
-            EdgeInsets.symmetric(horizontal: offsetBase),
+        padding: EdgeInsets.symmetric(horizontal: offsetBase),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,8 +135,11 @@ class _SettingScreenState extends State<SettingScreen> {
                   ),
                   InkWell(
                       onTap: () {
-                        NavigatorService(context)
-                            .pushToWidget(screen: ProfileScreen());
+                        NavigatorService(context).pushToWidget(
+                            screen: ProfileScreen(),
+                            pop: (value) {
+                              setState(() {});
+                            });
                       },
                       child: currentUser.itemSettingWidget()),
                   SizedBox(

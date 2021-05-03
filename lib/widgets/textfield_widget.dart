@@ -15,6 +15,7 @@ class UnderLineTextField extends TextFormField {
   final Function(String) onEnterTrigger;
   final String errorText;
   final bool isPassword;
+  final bool autofocus;
   final Function() onTap;
 
   UnderLineTextField({
@@ -30,6 +31,7 @@ class UnderLineTextField extends TextFormField {
     this.onEnterTrigger,
     this.errorText,
     this.isPassword = false,
+    this.autofocus = false,
     this.onTap,
   }) : super(
             key: key,
@@ -42,6 +44,7 @@ class UnderLineTextField extends TextFormField {
                 onEnterTrigger(value);
               }
             },
+            autofocus: autofocus,
             readOnly: isReadOnly,
             decoration: InputDecoration(
               enabled: !isDisable,
