@@ -8,9 +8,11 @@ import 'package:package_info/package_info.dart';
 import 'package:simplechat/jsons/auth_json.dart';
 import 'package:simplechat/models/user_model.dart';
 import 'package:simplechat/screens/auth/forgot_screen.dart';
+import 'package:simplechat/screens/main/app_upgrade_screen.dart';
 import 'package:simplechat/screens/main_screen.dart';
 import 'package:simplechat/screens/auth/register_screen.dart';
 import 'package:simplechat/screens/auth/verify_screen.dart';
+import 'package:simplechat/screens/setting/privacy_screen.dart';
 import 'package:simplechat/services/common_service.dart';
 import 'package:simplechat/services/dialog_service.dart';
 import 'package:simplechat/services/navigator_service.dart';
@@ -77,11 +79,15 @@ class _LoginScreenState extends State<LoginScreen> {
       appSettingInfo['isVoiceCall'] = resp['result']['voicecall'] == '1';
       appSettingInfo['isVideoCall'] = resp['result']['videocall'] == '1';
       appSettingInfo['isAppVersion'] =
-          checkVersion(resp['result']['appversion']);
+          checkVersion(resp['result']['appversion'], _packageInfo);
       appSettingInfo['contactEmail'] = resp['result']['email'];
       appSettingInfo['contactPhone'] = resp['result']['phone'];
 
       print('appSettingInfo ===> ${appSettingInfo.toString()}');
+      if (!appSettingInfo['isAppVersion']) {
+        NavigatorService(context)
+            .pushToWidget(screen: AppUpgradeScreen(), replace: true);
+      }
     }
   }
 
@@ -90,24 +96,6 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       _packageInfo = info;
     });
-  }
-
-  bool checkVersion(String appVersion) {
-    var currentVersions = _packageInfo.version.split('.');
-    var difVersions = appVersion.split('.');
-
-    var cValue = 0;
-    var dValue = 0;
-
-    for (var index = 0; index < currentVersions.length; index++) {
-      var current = int.tryParse(currentVersions[index]);
-      cValue = cValue * 10 + current;
-
-      var dif = int.tryParse(difVersions[index]);
-      dValue = dValue * 10 + dif;
-    }
-    print('cValue dValue ===> $cValue $dValue');
-    return !(dValue > cValue);
   }
 
   Future<void> initData() async {
@@ -301,8 +289,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   Spacer(),
                 ],
               ),
-              SizedBox(
-                height: offsetBase,
+              Padding(
+                padding: const EdgeInsets.all(offsetBase),
+                child: InkWell(
+                  onTap: () {
+                    NavigatorService(context)
+                        .pushToWidget(screen: PrivacyScreen());
+                  },
+                  child: Text(
+                    'Privacy and Policy',
+                    style: mediumText.copyWith(
+                        fontSize: 12.0, color: primaryColor),
+                  ),
+                ),
               ),
             ],
           ),
@@ -376,7 +375,7 @@ class _LoginScreenState extends State<LoginScreen> {
       'email': account.email,
       'deviceid': account.id,
       'name': account.displayName,
-      'imgurl': account.photoUrl,
+      'imgurl': account.photoUrl ?? 'imgurl',
     };
     var resp = await NetworkService(context)
         .ajax('chat_google_login', param, isProgress: true);
@@ -394,9 +393,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   _onLoginEvent(String email, String pass) async {
     if (!appSettingInfo['isAppVersion']) {
-      DialogService(context).showSnackbar(
-          'Your app version is so low. Please update it.', _scaffoldKey,
-          type: SnackBarType.WARING);
+      NavigatorService(context)
+          .pushToWidget(screen: AppUpgradeScreen(), replace: true);
       return;
     }
     FocusScope.of(context).unfocus();

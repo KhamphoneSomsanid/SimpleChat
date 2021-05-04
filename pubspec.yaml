@@ -3,7 +3,7 @@ description: A new Flutter application.
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+6
+version: 1.0.0+7
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -44,6 +44,8 @@ dependencies:
   sign_in_with_apple: ^3.0.0
   jwt_decode: ^0.3.1
   google_sign_in: ^4.5.9
+
+  webview_flutter: ^0.3.24
 
   intl: ^0.17.0
   flutter_localizations:

@@ -16,7 +16,6 @@ class AppInfoScreen extends StatefulWidget {
 }
 
 class _AppInfoScreenState extends State<AppInfoScreen> {
-
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
     packageName: 'Unknown',
@@ -48,43 +47,38 @@ class _AppInfoScreenState extends State<AppInfoScreen> {
         padding: EdgeInsets.symmetric(horizontal: offsetBase),
         child: Column(
           children: [
-            SizedBox(height: offsetBase,),
+            SizedBox(
+              height: offsetBase,
+            ),
             cellWidget('App Name', _packageInfo.appName),
             cellWidget('Package Name', _packageInfo.packageName),
             cellWidget('Version', _packageInfo.version),
             cellWidget('Build Version', _packageInfo.buildNumber),
             InkWell(
-              onTap: () {
-                String url;
-                if (Platform.isIOS) {
-                  url = 'https://apps.apple.com/us/app/Simple Chat 2021/id1560156953';
-                } else {
-                  url = 'https://play.google.com/store/apps/details?id=${_packageInfo.packageName}';
-                }
-                launch(url);
-              },
-                child: cellWidget('App Store Link', Platform.isIOS? 'Apple' : 'Google')
-            ),
+                onTap: () {
+                  launch(storeUrl);
+                },
+                child: cellWidget(
+                    'App Store Link', Platform.isIOS ? 'Apple' : 'Google')),
             InkWell(
-              onTap: () {
-                final Uri _emailLaunchUri = Uri(
-                    scheme: 'mailto',
-                    path: appSettingInfo['contactEmail'],
-                    queryParameters: {
-                      'subject': 'Contact us'
-                    }
-                );
-                launch(_emailLaunchUri.toString());
-              },
-                child: cellWidget('Support Email', appSettingInfo['contactEmail'])
-            ),
+                onTap: () {
+                  final Uri _emailLaunchUri = Uri(
+                      scheme: 'mailto',
+                      path: appSettingInfo['contactEmail'],
+                      queryParameters: {'subject': 'Contact us'});
+                  launch(_emailLaunchUri.toString());
+                },
+                child: cellWidget(
+                    'Support Email', appSettingInfo['contactEmail'])),
             InkWell(
-              onTap: () {
-                launch('tel:${appSettingInfo['contactPhone']}');
-              },
-                child: cellWidget('Support Mobile', appSettingInfo['contactPhone'])
+                onTap: () {
+                  launch('tel:${appSettingInfo['contactPhone']}');
+                },
+                child: cellWidget(
+                    'Support Mobile', appSettingInfo['contactPhone'])),
+            SizedBox(
+              height: offsetBase,
             ),
-            SizedBox(height: offsetBase,),
           ],
         ),
       ),
@@ -95,12 +89,19 @@ class _AppInfoScreenState extends State<AppInfoScreen> {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.symmetric(vertical: offsetBase, horizontal: offsetSm),
+          padding:
+              EdgeInsets.symmetric(vertical: offsetBase, horizontal: offsetSm),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(title, style: semiBold.copyWith(fontSize: fontBase),),
-              Text(value, style: mediumText.copyWith(fontSize: fontBase),),
+              Text(
+                title,
+                style: semiBold.copyWith(fontSize: fontBase),
+              ),
+              Text(
+                value,
+                style: mediumText.copyWith(fontSize: fontBase),
+              ),
             ],
           ),
         ),

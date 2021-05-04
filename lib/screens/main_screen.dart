@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:package_info/package_info.dart';
 import 'package:simplechat/main.dart';
 import 'package:simplechat/models/room_model.dart';
 import 'package:simplechat/screens/chat/voice_request_screen.dart';
+import 'package:simplechat/screens/main/app_upgrade_screen.dart';
 import 'package:simplechat/screens/main/chat_list_screen.dart';
 import 'package:simplechat/screens/main/nearby_screen.dart';
 import 'package:simplechat/screens/main/noti_screen.dart';
@@ -11,6 +13,7 @@ import 'package:simplechat/screens/main/post_screen.dart';
 import 'package:simplechat/screens/main/setting_screen.dart';
 import 'package:simplechat/screens/post/add_post_screen.dart';
 import 'package:simplechat/screens/setting/invite_screen.dart';
+import 'package:simplechat/services/common_service.dart';
 import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/services/notification_service.dart';
@@ -83,8 +86,17 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     var param = {
       'id': currentUser.id,
     };
-    await NetworkService(context)
+    var resp = await NetworkService(context)
         .ajax('chat_enter_app', param, isProgress: false);
+    if (resp['ret'] == 10000) {
+      final PackageInfo info = await PackageInfo.fromPlatform();
+      appSettingInfo['isAppVersion'] =
+          checkVersion(resp['result']['appversion'], info);
+      if (!appSettingInfo['isAppVersion']) {
+        NavigatorService(context)
+            .pushToWidget(screen: AppUpgradeScreen(), replace: true);
+      }
+    }
   }
 
   void request(dynamic value) {

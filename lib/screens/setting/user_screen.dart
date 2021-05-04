@@ -295,7 +295,9 @@ class _UserScreenState extends State<UserScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: offsetBase,),
+              SizedBox(
+                height: offsetBase,
+              ),
               CircleAvatarWidget(
                 headurl: widget.user.imgurl,
               ),
@@ -345,48 +347,51 @@ class _UserScreenState extends State<UserScreen> {
               SizedBox(
                 height: offsetBase,
               ),
-              Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(offsetBase)),
-                elevation: 2,
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: offsetMd, vertical: offsetBase),
-                  decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.all(Radius.circular(offsetBase)),
-                      color: Colors.white),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'About',
-                        style: boldText.copyWith(
-                          fontSize: fontMd,
-                        ),
-                      ),
-                      for (var item in aboutItems)
-                        Container(
-                          padding: EdgeInsets.symmetric(vertical: offsetBase),
-                          child: Row(
-                            children: [
-                              item['icon'],
-                              SizedBox(
-                                width: offsetBase,
-                              ),
-                              Text(
-                                item['title'],
-                                style: semiBold.copyWith(fontSize: fontBase),
-                              ),
-                              Spacer(),
-                            ],
+              if (userStatus == 3)
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(offsetBase)),
+                  elevation: 2,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: offsetMd, vertical: offsetBase),
+                    decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.all(Radius.circular(offsetBase)),
+                        color: Colors.white),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'About',
+                          style: boldText.copyWith(
+                            fontSize: fontMd,
                           ),
                         ),
-                    ],
+                        for (var item in aboutItems)
+                          Container(
+                            padding: EdgeInsets.symmetric(vertical: offsetBase),
+                            child: Row(
+                              children: [
+                                item['icon'],
+                                SizedBox(
+                                  width: offsetBase,
+                                ),
+                                Text(
+                                  item['title'],
+                                  style: semiBold.copyWith(fontSize: fontBase),
+                                ),
+                                Spacer(),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
+              SizedBox(
+                height: offsetBase,
               ),
-              SizedBox(height: offsetBase,),
             ],
           ),
         ),
@@ -450,9 +455,9 @@ class _UserScreenState extends State<UserScreen> {
 
   void _chat() async {
     var param = {
-      'id' : currentUser.id,
-      'userid' : widget.user.id,
-      'type' : 'INDIVIAL'
+      'id': currentUser.id,
+      'userid': widget.user.id,
+      'type': 'INDIVIAL'
     };
 
     var resp = await NetworkService(context)
@@ -461,20 +466,25 @@ class _UserScreenState extends State<UserScreen> {
       RoomModel model = RoomModel.fromMap(resp['result']);
       model.title = widget.user.username;
       model.imgurl = widget.user.imgurl;
-      NavigatorService(context).pushToWidget(screen: ChatScreen(room: model,));
+      NavigatorService(context).pushToWidget(
+          screen: ChatScreen(
+        room: model,
+      ));
     }
   }
 
   void _voice() async {
     if (!appSettingInfo['isVoiceCall']) {
-      DialogService(context).showSnackbar(notSupport, _scaffoldKey, type: SnackBarType.ERROR);
+      DialogService(context)
+          .showSnackbar(notSupport, _scaffoldKey, type: SnackBarType.ERROR);
       return;
     }
   }
 
   void _video() async {
     if (!appSettingInfo['isVideoCall']) {
-      DialogService(context).showSnackbar(notSupport, _scaffoldKey, type: SnackBarType.ERROR);
+      DialogService(context)
+          .showSnackbar(notSupport, _scaffoldKey, type: SnackBarType.ERROR);
       return;
     }
   }

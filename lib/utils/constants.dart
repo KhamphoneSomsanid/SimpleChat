@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 const String DOMAIN = 'simplechat.laodev.info';
@@ -6,6 +8,8 @@ const String DOMAIN = 'simplechat.laodev.info';
 const String SOCKET = 'ws://54.36.110.237:8222';
 
 const String avatarUrl = 'https://' + DOMAIN + '/uploads/ic_avatar.png';
+const String privacyUrl = 'https://privacy.laodev.info/simplechat.php';
+const String userAgreeUrl = 'https://privacy.laodev.info/simplechat.php';
 
 var appSettingInfo = {
   'isNearby': true,
@@ -43,3 +47,7 @@ const List<String> reviewIcons = [
 ];
 
 const String notSupport = 'This feature is not supported yet.';
+
+var storeUrl = Platform.isIOS
+    ? 'https://apps.apple.com/us/app/simple-chat-2021/id1560156953'
+    : 'https://play.google.com/store/apps/details?id=com.laodev.simplechat';

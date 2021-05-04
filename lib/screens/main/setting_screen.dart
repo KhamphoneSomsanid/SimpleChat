@@ -9,6 +9,7 @@ import 'package:simplechat/screens/setting/chat_setting_screen.dart';
 import 'package:simplechat/screens/setting/friend_setting_screen.dart';
 import 'package:simplechat/screens/setting/membership_screen.dart';
 import 'package:simplechat/screens/setting/my_post_screen.dart';
+import 'package:simplechat/screens/setting/privacy_screen.dart';
 import 'package:simplechat/screens/setting/profile_screen.dart';
 import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/network_service.dart';
@@ -88,6 +89,11 @@ class _SettingScreenState extends State<SettingScreen> {
           'title': 'App Informaiton',
           'actionWidget': AppInfoScreen(),
         },
+        {
+          'icon': 'assets/icons/ic_empty.svg',
+          'title': 'Privacy and Policy',
+          'actionWidget': PrivacyScreen(),
+        },
       ],
     },
   ];
@@ -118,8 +124,7 @@ class _SettingScreenState extends State<SettingScreen> {
         ],
       ),
       body: Container(
-        padding:
-            EdgeInsets.symmetric(horizontal: offsetBase),
+        padding: EdgeInsets.symmetric(horizontal: offsetBase),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,8 +141,11 @@ class _SettingScreenState extends State<SettingScreen> {
                   ),
                   InkWell(
                       onTap: () {
-                        NavigatorService(context)
-                            .pushToWidget(screen: ProfileScreen());
+                        NavigatorService(context).pushToWidget(
+                            screen: ProfileScreen(),
+                            pop: (value) {
+                              setState(() {});
+                            });
                       },
                       child: currentUser.itemSettingWidget()),
                   SizedBox(
