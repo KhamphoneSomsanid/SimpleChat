@@ -277,12 +277,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       SizedBox(
                                         width: offsetBase,
                                       ),
-                                      Text(
-                                        item['title'],
-                                        style: semiBold.copyWith(
-                                            fontSize: fontBase),
+                                      Expanded(
+                                        child: Text(
+                                          item['title'],
+                                          style: semiBold.copyWith(
+                                              fontSize: fontBase),
+                                          maxLines: 1,
+                                        ),
                                       ),
-                                      Spacer(),
                                       IconButton(
                                           icon: Icon(
                                             Icons.edit,
