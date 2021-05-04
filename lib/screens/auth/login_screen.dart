@@ -8,6 +8,7 @@ import 'package:package_info/package_info.dart';
 import 'package:simplechat/jsons/auth_json.dart';
 import 'package:simplechat/models/user_model.dart';
 import 'package:simplechat/screens/auth/forgot_screen.dart';
+import 'package:simplechat/screens/main/app_upgrade_screen.dart';
 import 'package:simplechat/screens/main_screen.dart';
 import 'package:simplechat/screens/auth/register_screen.dart';
 import 'package:simplechat/screens/auth/verify_screen.dart';
@@ -78,11 +79,15 @@ class _LoginScreenState extends State<LoginScreen> {
       appSettingInfo['isVoiceCall'] = resp['result']['voicecall'] == '1';
       appSettingInfo['isVideoCall'] = resp['result']['videocall'] == '1';
       appSettingInfo['isAppVersion'] =
-          checkVersion(resp['result']['appversion']);
+          checkVersion(resp['result']['appversion'], _packageInfo);
       appSettingInfo['contactEmail'] = resp['result']['email'];
       appSettingInfo['contactPhone'] = resp['result']['phone'];
 
       print('appSettingInfo ===> ${appSettingInfo.toString()}');
+      if (!appSettingInfo['isAppVersion']) {
+        NavigatorService(context)
+            .pushToWidget(screen: AppUpgradeScreen(), replace: true);
+      }
     }
   }
 
@@ -91,24 +96,6 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       _packageInfo = info;
     });
-  }
-
-  bool checkVersion(String appVersion) {
-    var currentVersions = _packageInfo.version.split('.');
-    var difVersions = appVersion.split('.');
-
-    var cValue = 0;
-    var dValue = 0;
-
-    for (var index = 0; index < currentVersions.length; index++) {
-      var current = int.tryParse(currentVersions[index]);
-      cValue = cValue * 10 + current;
-
-      var dif = int.tryParse(difVersions[index]);
-      dValue = dValue * 10 + dif;
-    }
-    print('cValue dValue ===> $cValue $dValue');
-    return !(dValue > cValue);
   }
 
   Future<void> initData() async {
@@ -406,9 +393,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   _onLoginEvent(String email, String pass) async {
     if (!appSettingInfo['isAppVersion']) {
-      DialogService(context).showSnackbar(
-          'Your app version is so low. Please update it.', _scaffoldKey,
-          type: SnackBarType.WARING);
+      NavigatorService(context)
+          .pushToWidget(screen: AppUpgradeScreen(), replace: true);
       return;
     }
     FocusScope.of(context).unfocus();
