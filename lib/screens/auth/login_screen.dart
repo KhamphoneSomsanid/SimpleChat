@@ -376,7 +376,7 @@ class _LoginScreenState extends State<LoginScreen> {
       'email': account.email,
       'deviceid': account.id,
       'name': account.displayName,
-      'imgurl': account.photoUrl,
+      'imgurl': account.photoUrl??'imgurl',
     };
     var resp = await NetworkService(context)
         .ajax('chat_google_login', param, isProgress: true);
