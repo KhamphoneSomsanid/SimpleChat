@@ -11,6 +11,7 @@ import 'package:simplechat/screens/auth/forgot_screen.dart';
 import 'package:simplechat/screens/main_screen.dart';
 import 'package:simplechat/screens/auth/register_screen.dart';
 import 'package:simplechat/screens/auth/verify_screen.dart';
+import 'package:simplechat/screens/setting/privacy_screen.dart';
 import 'package:simplechat/services/common_service.dart';
 import 'package:simplechat/services/dialog_service.dart';
 import 'package:simplechat/services/navigator_service.dart';
@@ -301,8 +302,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   Spacer(),
                 ],
               ),
-              SizedBox(
-                height: offsetBase,
+              Padding(
+                padding: const EdgeInsets.all(offsetBase),
+                child: InkWell(
+                  onTap: () {
+                    NavigatorService(context)
+                        .pushToWidget(screen: PrivacyScreen());
+                  },
+                  child: Text(
+                    'Privacy and Policy',
+                    style: mediumText.copyWith(
+                        fontSize: 12.0, color: primaryColor),
+                  ),
+                ),
               ),
             ],
           ),
@@ -376,7 +388,7 @@ class _LoginScreenState extends State<LoginScreen> {
       'email': account.email,
       'deviceid': account.id,
       'name': account.displayName,
-      'imgurl': account.photoUrl??'imgurl',
+      'imgurl': account.photoUrl ?? 'imgurl',
     };
     var resp = await NetworkService(context)
         .ajax('chat_google_login', param, isProgress: true);

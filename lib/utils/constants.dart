@@ -6,6 +6,8 @@ const String DOMAIN = 'simplechat.laodev.info';
 const String SOCKET = 'ws://54.36.110.237:8222';
 
 const String avatarUrl = 'https://' + DOMAIN + '/uploads/ic_avatar.png';
+const String privacyUrl = 'https://privacy.laodev.info/simplechat.php';
+const String userAgreeUrl = 'https://privacy.laodev.info/simplechat.php';
 
 var appSettingInfo = {
   'isNearby': true,

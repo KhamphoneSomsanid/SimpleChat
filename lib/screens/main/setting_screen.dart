@@ -9,6 +9,7 @@ import 'package:simplechat/screens/setting/chat_setting_screen.dart';
 import 'package:simplechat/screens/setting/friend_setting_screen.dart';
 import 'package:simplechat/screens/setting/membership_screen.dart';
 import 'package:simplechat/screens/setting/my_post_screen.dart';
+import 'package:simplechat/screens/setting/privacy_screen.dart';
 import 'package:simplechat/screens/setting/profile_screen.dart';
 import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/network_service.dart';
@@ -87,6 +88,11 @@ class _SettingScreenState extends State<SettingScreen> {
           'icon': 'assets/icons/ic_support.svg',
           'title': 'App Informaiton',
           'actionWidget': AppInfoScreen(),
+        },
+        {
+          'icon': 'assets/icons/ic_empty.svg',
+          'title': 'Privacy and Policy',
+          'actionWidget': PrivacyScreen(),
         },
       ],
     },
