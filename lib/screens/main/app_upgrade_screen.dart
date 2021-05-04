@@ -4,7 +4,6 @@ import 'package:simplechat/utils/colors.dart';
 import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/themes.dart';
-import 'package:simplechat/widgets/appbar_widget.dart';
 import 'package:simplechat/widgets/button_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -764,10 +763,5 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  _vidPicker(ImageSource source) async {
-    PickedFile video = await ImagePicker().getVideo(source: source);
-
-    String base64Thumbnail = await ImageService()
-        .getThumbnailBase64FromVideo(File(video.path), width: 320, height: 320);
-  }
+  _vidPicker(ImageSource source) async {}
 }
