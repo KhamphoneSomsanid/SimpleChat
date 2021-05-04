@@ -28,7 +28,6 @@ android {
     compileSdkVersion 30
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.laodev.simplechat"
         minSdkVersion 23
         targetSdkVersion 30
