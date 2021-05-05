@@ -62,12 +62,12 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
     if (!mounted) return;
 
     // refresh items for android
-    try {
-      String msg = await FlutterInappPurchase.instance.consumeAllItems;
-      print('consumeAllItems: $msg');
-    } catch (err) {
-      print('consumeAllItems error: $err');
-    }
+    // try {
+    //   String msg = await FlutterInappPurchase.instance.consumeAllItems;
+    //   print('consumeAllItems: $msg');
+    // } catch (err) {
+    //   print('consumeAllItems error: $err');
+    // }
 
     _conectionSubscription =
         FlutterInappPurchase.connectionUpdated.listen((connected) {

@@ -4119,3 +4119,5 @@ android/.idea/libraries/Gradle__io_flutter_flutter_embedding_debug_1_0_0_05e680e
 android/.idea/libraries/Gradle__io_flutter_x86_64_debug_1_0_0_05e680e202af9a92461070cb2d9982acad46c83c.xml
 android/.idea/libraries/Gradle__io_flutter_x86_debug_1_0_0_05e680e202af9a92461070cb2d9982acad46c83c.xml
 android/.idea/modules/-286073979/android.google_sign_in.iml
+android/.idea/libraries/Gradle__androidx_webkit_webkit_1_0_0_aar.xml
+android/.idea/modules/-1011211427/android.webview_flutter.iml
