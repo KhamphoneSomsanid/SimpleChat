@@ -16,9 +16,12 @@ class MemberShipScreen extends StatefulWidget {
 
 class _MemberShipScreenState extends State<MemberShipScreen> {
   StreamSubscription _conectionSubscription;
+  StreamSubscription _purchaseUpdatedSubscription;
+  StreamSubscription _purchaseErrorSubscription;
+
   final List<String> _productLists = [
+    'com.laodev.simplechat.jobpost',
     'com.laodev.simplechat.membership',
-    'com.laodev.simplechat.jobpost'
   ];
   List<IAPItem> _items = [];
   // List<PurchasedItem> _purchases = [];
@@ -52,6 +55,14 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
       _conectionSubscription.cancel();
       _conectionSubscription = null;
     }
+    if (_purchaseUpdatedSubscription != null) {
+      _purchaseUpdatedSubscription.cancel();
+      _purchaseUpdatedSubscription = null;
+    }
+    if (_purchaseErrorSubscription != null) {
+      _purchaseErrorSubscription.cancel();
+      _purchaseErrorSubscription = null;
+    }
     super.dispose();
   }
 
@@ -72,6 +83,16 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
     _conectionSubscription =
         FlutterInappPurchase.connectionUpdated.listen((connected) {
       print('connected: $connected');
+    });
+
+    _purchaseUpdatedSubscription =
+        FlutterInappPurchase.purchaseUpdated.listen((productItem) {
+      print('purchase-updated: $productItem');
+    });
+
+    _purchaseErrorSubscription =
+        FlutterInappPurchase.purchaseError.listen((purchaseError) {
+      print('purchase-error: $purchaseError');
     });
 
     _getProduct();
@@ -264,7 +285,7 @@ class _MemberShipScreenState extends State<MemberShipScreen> {
                         ? InkWell(
                             onTap: () {
                               if (_items.isEmpty) return;
-                              _requestPurchase(_items[0]);
+                              _requestPurchase(_items[1]);
                             },
                             child: OutLineLabel(
                               title: 'Upgrade Now',
