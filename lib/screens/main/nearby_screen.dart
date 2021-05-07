@@ -1,12 +1,15 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:simplechat/models/nearby_model.dart';
 import 'package:simplechat/screens/setting/membership_screen.dart';
 import 'package:simplechat/services/dialog_service.dart';
 import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/utils/colors.dart';
+import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/params.dart';
 import 'package:simplechat/utils/themes.dart';
@@ -40,13 +43,22 @@ class _NearByScreenState extends State<NearByScreen> {
     var resp = await NetworkService(context)
         .ajax('chat_nearby_data', param, isProgress: true);
     if (resp['ret'] == 10000) {
+      if (resp['result'] == null) {
+        state = NearbyScreenState.NOREGISTER;
+      } else {
+        currentNearby = NearbyModel.fromMap(resp['result']);
+        if (currentNearby.type == nearbyTypeSeller) {
+          state = NearbyScreenState.SELLER;
+        } else {
+          state = NearbyScreenState.BUYER;
+        }
+      }
     } else {
-      setState(() {
-        state = NearbyScreenState.EXPIRED;
-      });
+      state = NearbyScreenState.EXPIRED;
       DialogService(context)
           .showSnackbar(resp['msg'], _scaffoldKey, type: SnackBarType.ERROR);
     }
+    setState(() {});
   }
 
   _getContentView() {
@@ -90,11 +102,58 @@ class _NearByScreenState extends State<NearByScreen> {
           ),
         );
       case NearbyScreenState.NOREGISTER:
-        return Container();
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: offsetMd),
+          child: Column(
+            children: [
+              Spacer(),
+              Container(
+                width: 120, height: 120,
+                padding: EdgeInsets.all(offsetLg),
+                decoration: BoxDecoration(
+                  color: primaryColor.withOpacity(0.5),
+                  borderRadius: BorderRadius.all(Radius.circular(60.0)),
+                ),
+                child: SvgPicture.asset(
+                  'assets/icons/ic_nearby.svg',
+                  color: Colors.white,),
+              ),
+              SizedBox(height: offsetXLg, width: double.infinity,),
+              Text('Welcome to Nearby!',
+                textAlign: TextAlign.center,
+                style: boldText.copyWith(fontSize: fontLg),),
+              SizedBox(height: offsetBase,),
+              Text('You can start your business from here\nPlease choose your business type.',
+                textAlign: TextAlign.center,
+                style: mediumText.copyWith(fontSize: fontMd),),
+              SizedBox(height: offsetXLg,),
+              FullWidthButton(
+                title: 'Join to Buyer',
+                action: () {
+                  joinNearby(nearbyTypeBuyer);
+                },
+              ),
+              SizedBox(height: offsetMd,),
+              FullWidthButton(
+                title: 'Join to Seller',
+                color: blueColor,
+                action: () {
+                  joinNearby(nearbyTypeSeller);
+                },
+              ),
+              Spacer(),
+            ],
+          ),
+        );
       case NearbyScreenState.SELLER:
         return Container();
       case NearbyScreenState.BUYER:
-        return Container();
+        return Column(
+          children: [
+            Text('My projects', style: semiBold.copyWith(fontSize: fontMd),),
+
+          ],
+        );
     }
     return Container();
   }
@@ -120,6 +179,30 @@ class _NearByScreenState extends State<NearByScreen> {
       ),
     );
   }
+
+  void joinNearby(String type) async {
+    var param = {
+      'userid': currentUser.id,
+      'type' : type,
+    };
+    var resp = await NetworkService(context)
+        .ajax('chat_nearby_join', param, isProgress: true);
+    if (resp['ret'] == 10000) {
+      currentNearby = NearbyModel.fromMap(resp['result']);
+      if (currentNearby.type == nearbyTypeSeller) {
+        state = NearbyScreenState.SELLER;
+      } else {
+        state = NearbyScreenState.BUYER;
+      }
+      DialogService(context)
+          .showSnackbar(resp['msg'], _scaffoldKey,);
+    } else {
+      DialogService(context)
+          .showSnackbar(resp['msg'], _scaffoldKey, type: SnackBarType.ERROR);
+    }
+    setState(() {});
+  }
+
 }
 
 enum NearbyScreenState {

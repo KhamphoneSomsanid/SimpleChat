@@ -11,6 +11,9 @@ const String avatarUrl = 'https://' + DOMAIN + '/uploads/ic_avatar.png';
 const String privacyUrl = 'https://privacy.laodev.info/simplechat.php';
 const String userAgreeUrl = 'https://privacy.laodev.info/simplechat.php';
 
+const String nearbyTypeSeller = 'SELLER';
+const String nearbyTypeBuyer = 'BUYER';
+
 var appSettingInfo = {
   'isNearby': true,
   'isVideoStory': true,
