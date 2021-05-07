@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:simplechat/main.dart';
 import 'package:simplechat/models/user_model.dart';
@@ -96,18 +95,19 @@ class _InviteScreenState extends State<InviteScreen> {
         showUsers.add(user);
       }
     }
-    setState(() { });
+    setState(() {});
   }
 
   void _getInvite() async {
     var param = {
-      'id' : currentUser.id,
+      'id': currentUser.id,
     };
     var resp = await NetworkService(context)
         .ajax('chat_invite', param, isProgress: true);
     if (resp['ret'] == 10000) {
       inviteFriends.clear();
-      inviteFriends = (resp['result'].map((item) => UserModel.fromMap(item)).toList());
+      inviteFriends =
+          (resp['result'].map((item) => UserModel.fromMap(item)).toList());
       print('inviteFriends ===> ${inviteFriends.length}');
       _getShowContacts();
     }
@@ -128,9 +128,11 @@ class _InviteScreenState extends State<InviteScreen> {
               },
               child: Icon(Icons.arrow_back_ios)),
           actions: [
-            IconButton(onPressed: () {
-              showDialog();
-            }, icon: Icon(Icons.help_outline))
+            IconButton(
+                onPressed: () {
+                  showDialog();
+                },
+                icon: Icon(Icons.help_outline))
           ],
         ),
         body: Container(
@@ -152,16 +154,16 @@ class _InviteScreenState extends State<InviteScreen> {
               Expanded(
                 child: showUsers.isEmpty
                     ? EmptyWidget(
-                  title: 'The request friends is not existed. After some delay, please try it again.',
-                ) : ListView.builder(
-                    itemCount: showUsers.length,
-                    itemBuilder: (context, i) {
-                      return showUsers[i].itemRequestWidget(
-                          () {
+                        title:
+                            'The request friends is not existed. After some delay, please try it again.',
+                      )
+                    : ListView.builder(
+                        itemCount: showUsers.length,
+                        itemBuilder: (context, i) {
+                          return showUsers[i].itemRequestWidget(() {
                             _request(showUsers[i]);
-                          }
-                      );
-                    }),
+                          });
+                        }),
               ),
             ],
           ),
@@ -180,7 +182,8 @@ class _InviteScreenState extends State<InviteScreen> {
         _getInvite();
       });
     } else {
-      DialogService(context).showSnackbar(resp['msg'], _scaffoldKey, type: SnackBarType.WARING);
+      DialogService(context)
+          .showSnackbar(resp['msg'], _scaffoldKey, type: SnackBarType.WARING);
     }
   }
 
@@ -188,21 +191,26 @@ class _InviteScreenState extends State<InviteScreen> {
     DialogService(context).showCustomModalBottomSheet(
       titleWidget: Padding(
         padding: const EdgeInsets.symmetric(vertical: offsetBase),
-        child: Text('How to send a friend invitation?',
-            style: boldText.copyWith(fontSize: fontLg),
+        child: Text(
+          'How to send a friend invitation?',
+          style: boldText.copyWith(fontSize: fontLg),
         ),
       ),
       bodyWidget: Container(
         padding: EdgeInsets.all(offsetBase),
         child: Column(
           children: [
-            Text('You can search a friend email in here.' +
-                '\nThat email should be matched over 8 characters.' +
-                '\nAfter input, you can see a list to match friends, then you can click the invite send button.',
+            Text(
+              'You can search a friend email in here.' +
+                  '\nThat email should be matched over 8 characters.' +
+                  '\nAfter input, you can see a list to match friends, then you can click the invite send button.',
               style: semiBold.copyWith(fontSize: fontMd),
             ),
-            SizedBox(height: offsetSm,),
-            Text('Or you can share your qr code in profile screen.\nPlease reference qr code generator and using.',
+            SizedBox(
+              height: offsetSm,
+            ),
+            Text(
+              'Or you can share your qr code in profile screen.\nPlease reference qr code generator and using.',
               style: semiBold.copyWith(fontSize: fontMd),
             ),
           ],
@@ -210,5 +218,4 @@ class _InviteScreenState extends State<InviteScreen> {
       ),
     );
   }
-
 }

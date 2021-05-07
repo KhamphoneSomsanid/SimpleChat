@@ -11,6 +11,7 @@ import 'package:simplechat/screens/main/nearby_screen.dart';
 import 'package:simplechat/screens/main/noti_screen.dart';
 import 'package:simplechat/screens/main/post_screen.dart';
 import 'package:simplechat/screens/main/setting_screen.dart';
+import 'package:simplechat/screens/nearby/add_project_screen.dart';
 import 'package:simplechat/screens/post/add_post_screen.dart';
 import 'package:simplechat/screens/setting/invite_screen.dart';
 import 'package:simplechat/services/common_service.dart';
@@ -249,6 +250,15 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                 case 1:
                   NavigatorService(context).pushToWidget(
                       screen: InviteScreen(),
+                      pop: (value) {
+                        if (value != null) {
+                          setState(() {});
+                        }
+                      });
+                  break;
+                case 3:
+                  NavigatorService(context).pushToWidget(
+                      screen: AddProjectScreen(),
                       pop: (value) {
                         if (value != null) {
                           setState(() {});
