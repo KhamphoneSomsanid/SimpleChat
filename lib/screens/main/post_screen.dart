@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:simplechat/models/post_model.dart';
 import 'package:simplechat/models/story_model.dart';
+import 'package:simplechat/screens/main/noti_screen.dart';
 import 'package:simplechat/screens/post/comment_screen.dart';
 import 'package:simplechat/screens/post/follow_screen.dart';
 import 'package:simplechat/screens/post/post_detail_screen.dart';
@@ -15,6 +16,7 @@ import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/services/pref_service.dart';
 import 'package:simplechat/utils/colors.dart';
+import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/params.dart';
 import 'package:simplechat/utils/themes.dart';
@@ -38,7 +40,8 @@ class _PostScreenState extends State<PostScreen> {
   var newFeedAccount = 0;
   var isFriendMenu = false;
 
-  RefreshController _refreshController = RefreshController(initialRefresh: false);
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
   @override
   void initState() {
@@ -50,7 +53,7 @@ class _PostScreenState extends State<PostScreen> {
 
     preLoadData();
   }
-  
+
   @override
   void dispose() {
     _refreshController.dispose();
@@ -123,6 +126,17 @@ class _PostScreenState extends State<PostScreen> {
           ),
         ),
         titleString: 'Posts',
+        actions: [
+          if (appSettingInfo['isNearby'])
+            IconButton(
+                icon: SvgPicture.asset(
+                  'assets/icons/ic_notification_on.svg',
+                  color: primaryColor,
+                ),
+                onPressed: () {
+                  NavigatorService(context).pushToWidget(screen: NotiScreen());
+                }),
+        ],
       ),
       body: SmartRefresher(
         enablePullDown: true,
@@ -172,65 +186,65 @@ class _PostScreenState extends State<PostScreen> {
                     ),
                   ),
                 for (var post in posts)
-                  post.item(
-                      toUserDtail: () {
-                        if (post.user.id == currentUser.id) {
-                          DialogService(context).showSnackbar('This is a your account. You can check the status on setting.',
-                              _scaffoldKey, type: SnackBarType.WARING);
-                          return;
-                        }
-                        NavigatorService(context)
-                            .pushToWidget(screen: UserScreen(user: post.user));
-                      },
-                      toDtail: () {
-                        if (post.list.isEmpty) {
-                          DialogService(context).showSnackbar('This is a text feed so that you can\'t see detail.',
-                              _scaffoldKey, type: SnackBarType.WARING);
-                          return;
-                        }
-                        NavigatorService(context)
-                            .pushToWidget(screen: PostDetailScreen(post: post),
-                          pop: (val) {
-                              _getData();
-                          }
-                        );
-                      },
-                      toLike: () {
-                        NavigatorService(context).pushToWidget(screen: ReviewScreen(postid: post.post.id));
-                      },
-                      toComment: () {
-                        NavigatorService(context).pushToWidget(
-                            screen: CommentScreen(model: post,),
-                            pop: (value) {
-                              _getData();
-                            });
-                      },
-                      toFollow: () {
-                        NavigatorService(context).pushToWidget(
-                            screen: FollowScreen(postid: post.post.id,),
-                        );
-                      },
-                      setLike: (offset) {
-                        DialogService(context).showLikePopupMenu(
-                            offset,
-                          setLike: (value) async {
-                            Navigator.of(context).pop();
-                            await post.setLike(context, _scaffoldKey, value);
-                            _getData();
-                          }
-                        );
-                      },
-                      setComment: () {
-                        NavigatorService(context).pushToWidget(
-                            screen: CommentScreen(model: post,),
-                            pop: (value) {
-                              _getData();
-                            });
-                      },
-                      setFollow: () async {
-                        await post.setFollow(context, _scaffoldKey);
-                        _getData();
-                      }),
+                  post.item(toUserDtail: () {
+                    if (post.user.id == currentUser.id) {
+                      DialogService(context).showSnackbar(
+                          'This is a your account. You can check the status on setting.',
+                          _scaffoldKey,
+                          type: SnackBarType.WARING);
+                      return;
+                    }
+                    NavigatorService(context)
+                        .pushToWidget(screen: UserScreen(user: post.user));
+                  }, toDtail: () {
+                    if (post.list.isEmpty) {
+                      DialogService(context).showSnackbar(
+                          'This is a text feed so that you can\'t see detail.',
+                          _scaffoldKey,
+                          type: SnackBarType.WARING);
+                      return;
+                    }
+                    NavigatorService(context).pushToWidget(
+                        screen: PostDetailScreen(post: post),
+                        pop: (val) {
+                          _getData();
+                        });
+                  }, toLike: () {
+                    NavigatorService(context).pushToWidget(
+                        screen: ReviewScreen(postid: post.post.id));
+                  }, toComment: () {
+                    NavigatorService(context).pushToWidget(
+                        screen: CommentScreen(
+                          model: post,
+                        ),
+                        pop: (value) {
+                          _getData();
+                        });
+                  }, toFollow: () {
+                    NavigatorService(context).pushToWidget(
+                      screen: FollowScreen(
+                        postid: post.post.id,
+                      ),
+                    );
+                  }, setLike: (offset) {
+                    DialogService(context).showLikePopupMenu(offset,
+                        setLike: (value) async {
+                      Navigator.of(context).pop();
+                      await post.setLike(context, _scaffoldKey, value);
+                      _getData();
+                    });
+                  }, setComment: () {
+                    NavigatorService(context).pushToWidget(
+                        screen: CommentScreen(
+                          model: post,
+                        ),
+                        pop: (value) {
+                          _getData();
+                        });
+                  }, setFollow: () async {
+                    await post.setFollow(context, _scaffoldKey);
+                    _getData();
+                  }),
                 SizedBox(
                   height: offsetLg,
                 ),
@@ -241,6 +255,4 @@ class _PostScreenState extends State<PostScreen> {
       ),
     );
   }
-
-
 }
