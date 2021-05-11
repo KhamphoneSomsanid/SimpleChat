@@ -127,3 +127,27 @@ class SearchWidget extends StatelessWidget {
     );
   }
 }
+
+class MultiLineTextField extends TextFormField {
+  MultiLineTextField({
+    Key key,
+    TextEditingController controller,
+    String hint,
+    double fontSize = fontMd,
+  }) : super(
+            key: key,
+            controller: controller,
+            keyboardType: TextInputType.multiline,
+            minLines: 7,
+            maxLines: 7,
+            decoration: InputDecoration(
+              hintText: hint,
+              hintStyle:
+                  semiBold.copyWith(fontSize: fontSize, color: Colors.grey),
+              border: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              disabledBorder: InputBorder.none,
+            ));
+}
