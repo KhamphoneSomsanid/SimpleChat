@@ -87,17 +87,17 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     var param = {
       'id': currentUser.id,
     };
-    var resp = await NetworkService(context)
-        .ajax('chat_enter_app', param, isProgress: false);
-    if (resp['ret'] == 10000) {
-      final PackageInfo info = await PackageInfo.fromPlatform();
-      appSettingInfo['isAppVersion'] =
-          checkVersion(resp['result']['appversion'], info);
-      if (!appSettingInfo['isAppVersion']) {
-        NavigatorService(context)
-            .pushToWidget(screen: AppUpgradeScreen(), replace: true);
-      }
-    }
+    // var resp = await NetworkService(context)
+    //     .ajax('chat_enter_app', param, isProgress: false);
+    // if (resp['ret'] == 10000) {
+    //   final PackageInfo info = await PackageInfo.fromPlatform();
+    //   appSettingInfo['isAppVersion'] =
+    //       checkVersion(resp['result']['appversion'], info);
+    //   if (!appSettingInfo['isAppVersion']) {
+    //     NavigatorService(context)
+    //         .pushToWidget(screen: AppUpgradeScreen(), replace: true);
+    //   }
+    // }
   }
 
   void request(dynamic value) {
