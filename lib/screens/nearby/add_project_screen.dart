@@ -1,13 +1,9 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:simplechat/models/media_model.dart';
 import 'package:simplechat/services/dialog_service.dart';
-import 'package:simplechat/services/image_service.dart';
 import 'package:simplechat/utils/colors.dart';
 import 'package:simplechat/utils/dimens.dart';
-import 'package:simplechat/utils/params.dart';
 import 'package:simplechat/utils/themes.dart';
 import 'package:simplechat/widgets/appbar_widget.dart';
 import 'package:simplechat/widgets/textfield_widget.dart';

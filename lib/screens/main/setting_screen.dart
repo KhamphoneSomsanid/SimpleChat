@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:simplechat/screens/auth/forgot_screen.dart';
 import 'package:simplechat/screens/auth/login_screen.dart';
 import 'package:simplechat/screens/post/follow_post_screen.dart';
@@ -11,13 +12,17 @@ import 'package:simplechat/screens/setting/membership_screen.dart';
 import 'package:simplechat/screens/setting/my_post_screen.dart';
 import 'package:simplechat/screens/setting/privacy_screen.dart';
 import 'package:simplechat/screens/setting/profile_screen.dart';
+import 'package:simplechat/services/dialog_service.dart';
 import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/network_service.dart';
+import 'package:simplechat/services/string_service.dart';
 import 'package:simplechat/utils/colors.dart';
 import 'package:simplechat/utils/constants.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/params.dart';
+import 'package:simplechat/utils/themes.dart';
 import 'package:simplechat/widgets/appbar_widget.dart';
+import 'package:simplechat/widgets/button_widget.dart';
 import 'package:simplechat/widgets/common_widget.dart';
 import 'package:simplechat/widgets/label_widget.dart';
 
@@ -103,6 +108,67 @@ class _SettingScreenState extends State<SettingScreen> {
     super.initState();
   }
 
+  void showQRCode() {
+    String encryptData = StringService.encryptString(currentUser.toJson());
+
+    DialogService(context).showCustomDialog(
+        titleWidget: Text('My QR Code',
+          style: boldText.copyWith(fontSize: fontLg),),
+        bodyWidget: Container(
+          color: Colors.white,
+          width: double.infinity,
+          padding: EdgeInsets.all(offsetBase),
+          child: Center(
+            child: QrImage(
+              data: encryptData,
+              version: QrVersions.auto,
+              embeddedImage: AssetImage('assets/icons/ic_logo.png'),
+              embeddedImageStyle: QrEmbeddedImageStyle(
+                size: Size(80, 80),
+              ),
+              size: 250.0,
+            ),
+          ),
+        ),
+        bottomWidget: Container(
+          padding: EdgeInsets.all(offsetBase),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(offsetBase),
+                bottomRight: Radius.circular(offsetBase)),
+          ),
+          child: Row(
+            children: [
+              Spacer(),
+              Container(
+                width: 100, height: 40,
+                child: FullWidthButton(
+                  title: 'Dismiss',
+                  color: Colors.red,
+                  action: () {
+                    Navigator.of(context, rootNavigator: true).pop();
+                  },
+                ),
+              ),
+              SizedBox(
+                width: offsetMd,
+              ),
+              Container(
+                width: 100, height: 40,
+                child: FullWidthButton(
+                  title: 'Share',
+                  action: () {
+                    Navigator.of(context, rootNavigator: true).pop();
+                  },
+                ),
+              ),
+              Spacer(),
+            ],
+          ),
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,6 +214,19 @@ class _SettingScreenState extends State<SettingScreen> {
                             });
                       },
                       child: currentUser.itemSettingWidget()),
+                  SizedBox(
+                    height: offsetSm,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      showQRCode();
+                    },
+                    child: SettingCellWidget(
+                      icon: 'assets/icons/ic_qr_code.svg',
+                      title: 'My QR Code',
+                      textColor: primaryColor,
+                    ),
+                  ),
                   SizedBox(
                     height: offsetSm,
                   ),

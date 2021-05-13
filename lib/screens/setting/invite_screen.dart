@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,14 +7,20 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:simplechat/main.dart';
 import 'package:simplechat/models/user_model.dart';
+import 'package:simplechat/screens/setting/qr_scan_screen.dart';
 import 'package:simplechat/services/dialog_service.dart';
+import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/network_service.dart';
+import 'package:simplechat/services/string_service.dart';
 import 'package:simplechat/utils/dimens.dart';
 import 'package:simplechat/utils/params.dart';
 import 'package:simplechat/utils/themes.dart';
 import 'package:simplechat/widgets/appbar_widget.dart';
+import 'package:simplechat/widgets/button_widget.dart';
 import 'package:simplechat/widgets/empty_widget.dart';
+import 'package:simplechat/widgets/image_widget.dart';
 import 'package:simplechat/widgets/textfield_widget.dart';
+// import 'package:qrscan/qrscan.dart' as scanner;
 
 class InviteScreen extends StatefulWidget {
   @override
@@ -132,7 +139,7 @@ class _InviteScreenState extends State<InviteScreen> {
                 onPressed: () {
                   showDialog();
                 },
-                icon: Icon(Icons.help_outline))
+                icon: Icon(Icons.help_outline)),
           ],
         ),
         body: Container(
@@ -167,6 +174,78 @@ class _InviteScreenState extends State<InviteScreen> {
               ),
             ],
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            NavigatorService(context).pushToWidget(
+                screen: QrScanScreen(),
+                pop: (value) {
+                  if (value != null) {
+                    var userData = StringService.decryptString(value);
+                    var invitedUser = UserModel.fromMap(jsonDecode(userData));
+                    print('invitedUser ===> ${invitedUser.toJson()}');
+
+                    DialogService(context).showCustomDialog(
+                        titleWidget: Text('Invite Friend',style: boldText.copyWith(fontSize: fontLg),),
+                        bodyWidget: Container(
+                          width: double.infinity,
+                          color: Colors.white,
+                          padding: EdgeInsets.all(offsetBase),
+                          child: Center(
+                            child: Column(
+                              children: [
+                                CircleAvatarWidget(headurl: invitedUser.imgurl),
+                                SizedBox(height: offsetBase,),
+                                Text('Full Name: ${invitedUser.username}', style: semiBold.copyWith(fontSize: fontMd),),
+                                SizedBox(height: offsetXSm,),
+                                Text(invitedUser.email, style: mediumText.copyWith(fontSize: fontBase),),
+                              ],
+                            ),
+                          ),
+                        ),
+                        bottomWidget: Container(
+                          padding: EdgeInsets.all(offsetBase),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(offsetBase),
+                                bottomRight: Radius.circular(offsetBase)),
+                          ),
+                          child: Row(
+                            children: [
+                              Spacer(),
+                              Container(
+                                width: 100, height: 40,
+                                child: FullWidthButton(
+                                  title: 'Cancel',
+                                  color: Colors.red,
+                                  action: () {
+                                    Navigator.of(context, rootNavigator: true).pop();
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                width: offsetMd,
+                              ),
+                              Container(
+                                width: 100, height: 40,
+                                child: FullWidthButton(
+                                  title: 'Send',
+                                  action: () {
+                                    Navigator.of(context, rootNavigator: true).pop();
+                                    _request(invitedUser);
+                                  },
+                                ),
+                              ),
+                              Spacer(),
+                            ],
+                          ),
+                        ));
+                  }
+                }
+            );
+          },
+          child: Icon(Icons.qr_code_scanner),
         ),
       ),
     );

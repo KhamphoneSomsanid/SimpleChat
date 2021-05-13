@@ -26,6 +26,7 @@ var appSettingInfo = {
   'isAppVersion': false,
   'contactEmail': 'bgold1118@gmail.com',
   'contactPhone': '+8562096227257',
+  'encrypt': '',
 };
 
 final tagMask = new MaskTextInputFormatter(

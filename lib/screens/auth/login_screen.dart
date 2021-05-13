@@ -82,6 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
           checkVersion(resp['result']['appversion'], _packageInfo);
       appSettingInfo['contactEmail'] = resp['result']['email'];
       appSettingInfo['contactPhone'] = resp['result']['phone'];
+      appSettingInfo['encrypt'] = resp['result']['encrypt'];
 
       print('appSettingInfo ===> ${appSettingInfo.toString()}');
       if (!appSettingInfo['isAppVersion']) {
