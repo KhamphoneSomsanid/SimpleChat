@@ -54,9 +54,13 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
+            shrinkResources false
+            minifyEnabled false
         }
         release {
             signingConfig signingConfigs.release
+            shrinkResources false
+            minifyEnabled false
         }
     }
     compileOptions {

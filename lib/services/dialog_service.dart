@@ -283,6 +283,80 @@ class DialogService {
     );
   }
 
+  void showProjectDialog({
+    Function() chooseImage,
+    Function() chooseVideo,
+    Function() chooseFile,
+  }) {
+    var types = [
+      {
+        'icon': Icons.image,
+        'title': 'Image',
+        'color': primaryColor,
+        'action': chooseImage,
+      },
+      {
+        'icon': Icons.video_collection_sharp,
+        'title': 'Video',
+        'color': primaryColor,
+        'action': chooseVideo,
+      },
+      {
+        'icon': Icons.file_copy,
+        'title': 'File',
+        'color': primaryColor,
+        'action': chooseFile,
+      },
+    ];
+
+    showCustomModalBottomSheet(
+      bodyWidget: Container(
+        padding: EdgeInsets.all(offsetBase),
+        child: Column(
+          children: [
+            SizedBox(
+              height: offsetSm,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(),
+                InkWell(
+                    onTap: types[0]['action'],
+                    child: getTypeWidget(types[0],
+                        (MediaQuery.of(context).size.width / 4 - offsetLg))),
+                InkWell(
+                    onTap: types[1]['action'],
+                    child: getTypeWidget(types[1],
+                        (MediaQuery.of(context).size.width / 4 - offsetLg))),
+                InkWell(
+                    onTap: types[2]['action'],
+                    child: getTypeWidget(types[2],
+                        (MediaQuery.of(context).size.width / 4 - offsetLg))),
+                Container(),
+              ],
+            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Container(),
+            //     InkWell(
+            //         onTap: types[3]['action'],
+            //         child: getTypeWidget(types[3], (MediaQuery.of(context).size.width / 5 - offsetMd))
+            //     ),
+            //     InkWell(
+            //         onTap: types[4]['action'],
+            //         child: getTypeWidget(types[4], (MediaQuery.of(context).size.width / 5 - offsetMd))
+            //     ),
+            //     Container(),
+            //   ],
+            // ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget getTypeWidget(dynamic type, double size) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: offsetBase, vertical: offsetSm),

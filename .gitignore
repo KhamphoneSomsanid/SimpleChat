@@ -4121,3 +4121,11 @@ android/.idea/libraries/Gradle__io_flutter_x86_debug_1_0_0_05e680e202af9a9246107
 android/.idea/modules/-286073979/android.google_sign_in.iml
 android/.idea/libraries/Gradle__androidx_webkit_webkit_1_0_0_aar.xml
 android/.idea/modules/-1011211427/android.webview_flutter.iml
+android/.idea/libraries/Gradle_______build_app_intermediates_flutter_release_libs_jar.xml
+android/.idea/libraries/Gradle__io_flutter_arm64_v8a_release_1_0_0_05e680e202af9a92461070cb2d9982acad46c83c.xml
+android/.idea/libraries/Gradle__io_flutter_armeabi_v7a_release_1_0_0_05e680e202af9a92461070cb2d9982acad46c83c.xml
+android/.idea/libraries/Gradle__io_flutter_flutter_embedding_release_1_0_0_05e680e202af9a92461070cb2d9982acad46c83c.xml
+android/.idea/libraries/Gradle__io_flutter_x86_64_release_1_0_0_05e680e202af9a92461070cb2d9982acad46c83c.xml
+android/app/release/app-release.apk
+android/app/release/output-metadata.json
+/android/.idea/libraries/

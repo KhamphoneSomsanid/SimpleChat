@@ -11,6 +11,7 @@ import 'package:simplechat/screens/main/nearby_screen.dart';
 import 'package:simplechat/screens/main/noti_screen.dart';
 import 'package:simplechat/screens/main/post_screen.dart';
 import 'package:simplechat/screens/main/setting_screen.dart';
+import 'package:simplechat/screens/nearby/add_project_screen.dart';
 import 'package:simplechat/screens/post/add_post_screen.dart';
 import 'package:simplechat/screens/setting/invite_screen.dart';
 import 'package:simplechat/services/common_service.dart';
@@ -86,17 +87,17 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     var param = {
       'id': currentUser.id,
     };
-    var resp = await NetworkService(context)
-        .ajax('chat_enter_app', param, isProgress: false);
-    if (resp['ret'] == 10000) {
-      final PackageInfo info = await PackageInfo.fromPlatform();
-      appSettingInfo['isAppVersion'] =
-          checkVersion(resp['result']['appversion'], info);
-      if (!appSettingInfo['isAppVersion']) {
-        NavigatorService(context)
-            .pushToWidget(screen: AppUpgradeScreen(), replace: true);
-      }
-    }
+    // var resp = await NetworkService(context)
+    //     .ajax('chat_enter_app', param, isProgress: false);
+    // if (resp['ret'] == 10000) {
+    //   final PackageInfo info = await PackageInfo.fromPlatform();
+    //   appSettingInfo['isAppVersion'] =
+    //       checkVersion(resp['result']['appversion'], info);
+    //   if (!appSettingInfo['isAppVersion']) {
+    //     NavigatorService(context)
+    //         .pushToWidget(screen: AppUpgradeScreen(), replace: true);
+    //   }
+    // }
   }
 
   void request(dynamic value) {
@@ -249,6 +250,15 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                 case 1:
                   NavigatorService(context).pushToWidget(
                       screen: InviteScreen(),
+                      pop: (value) {
+                        if (value != null) {
+                          setState(() {});
+                        }
+                      });
+                  break;
+                case 3:
+                  NavigatorService(context).pushToWidget(
+                      screen: AddProjectScreen(),
                       pop: (value) {
                         if (value != null) {
                           setState(() {});
