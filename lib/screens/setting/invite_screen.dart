@@ -179,68 +179,88 @@ class _InviteScreenState extends State<InviteScreen> {
           onPressed: () {
             NavigatorService(context).pushToWidget(
                 screen: QrScanScreen(),
-                pop: (value) {
+                pop: (value) async {
                   if (value != null) {
                     var userData = StringService.decryptString(value);
                     var invitedUser = UserModel.fromMap(jsonDecode(userData));
                     print('invitedUser ===> ${invitedUser.toJson()}');
 
-                    DialogService(context).showCustomDialog(
-                        titleWidget: Text('Invite Friend',style: boldText.copyWith(fontSize: fontLg),),
-                        bodyWidget: Container(
-                          width: double.infinity,
-                          color: Colors.white,
-                          padding: EdgeInsets.all(offsetBase),
-                          child: Center(
-                            child: Column(
-                              children: [
-                                CircleAvatarWidget(headurl: invitedUser.imgurl),
-                                SizedBox(height: offsetBase,),
-                                Text('Full Name: ${invitedUser.username}', style: semiBold.copyWith(fontSize: fontMd),),
-                                SizedBox(height: offsetXSm,),
-                                Text(invitedUser.email, style: mediumText.copyWith(fontSize: fontBase),),
-                              ],
+                    var param = {
+                      'id' : currentUser.id,
+                      'userid' : invitedUser.id,
+                    };
+                    var resp = await NetworkService(context)
+                        .ajax('chat_check_friend', param, isProgress: true);
+                    if (resp['ret'] == 10000 && resp['result'] == 'NONE') {
+                      DialogService(context).showCustomDialog(
+                          titleWidget: Text('Invite Friend',style: boldText.copyWith(fontSize: fontLg),),
+                          bodyWidget: Container(
+                            width: double.infinity,
+                            color: Colors.white,
+                            padding: EdgeInsets.all(offsetBase),
+                            child: Center(
+                              child: Column(
+                                children: [
+                                  CircleAvatarWidget(headurl: invitedUser.imgurl),
+                                  SizedBox(height: offsetBase,),
+                                  Text('Full Name: ${invitedUser.username}', style: semiBold.copyWith(fontSize: fontMd),),
+                                  SizedBox(height: offsetXSm,),
+                                  Text(invitedUser.email, style: mediumText.copyWith(fontSize: fontBase),),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        bottomWidget: Container(
-                          padding: EdgeInsets.all(offsetBase),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(offsetBase),
-                                bottomRight: Radius.circular(offsetBase)),
-                          ),
-                          child: Row(
-                            children: [
-                              Spacer(),
-                              Container(
-                                width: 100, height: 40,
-                                child: FullWidthButton(
-                                  title: 'Cancel',
-                                  color: Colors.red,
-                                  action: () {
-                                    Navigator.of(context, rootNavigator: true).pop();
-                                  },
+                          bottomWidget: Container(
+                            padding: EdgeInsets.all(offsetBase),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(offsetBase),
+                                  bottomRight: Radius.circular(offsetBase)),
+                            ),
+                            child: Row(
+                              children: [
+                                Spacer(),
+                                Container(
+                                  width: 100, height: 40,
+                                  child: FullWidthButton(
+                                    title: 'Cancel',
+                                    color: Colors.red,
+                                    action: () {
+                                      Navigator.of(context, rootNavigator: true).pop();
+                                    },
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: offsetMd,
-                              ),
-                              Container(
-                                width: 100, height: 40,
-                                child: FullWidthButton(
-                                  title: 'Send',
-                                  action: () {
-                                    Navigator.of(context, rootNavigator: true).pop();
-                                    _request(invitedUser);
-                                  },
+                                SizedBox(
+                                  width: offsetMd,
                                 ),
-                              ),
-                              Spacer(),
-                            ],
-                          ),
-                        ));
+                                Container(
+                                  width: 100, height: 40,
+                                  child: FullWidthButton(
+                                    title: 'Send',
+                                    action: () {
+                                      Navigator.of(context, rootNavigator: true).pop();
+                                      _request(invitedUser);
+                                    },
+                                  ),
+                                ),
+                                Spacer(),
+                              ],
+                            ),
+                          )
+                      );
+                    } else if (resp['ret'] == 10000){
+                      var content = 'This user is you friend.';
+                      if (resp['result'] == 'REQUEST') {
+                        content = 'You already sent a friend request to user';
+                      }
+                      if (resp['result'] == 'REQUESTED') {
+                        content = 'User already sent a friend request to you';
+                      }
+                      DialogService(context).showSnackbar(content, _scaffoldKey, type: SnackBarType.INFO);
+                    } else {
+                      DialogService(context).showSnackbar('Network Error', _scaffoldKey, type: SnackBarType.ERROR);
+                    }
                   }
                 }
             );

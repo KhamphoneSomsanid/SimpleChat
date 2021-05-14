@@ -1,6 +1,12 @@
+import 'dart:io';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:simplechat/models/capture_result_model.dart';
 import 'package:simplechat/screens/auth/forgot_screen.dart';
 import 'package:simplechat/screens/auth/login_screen.dart';
 import 'package:simplechat/screens/post/follow_post_screen.dart';
@@ -13,6 +19,7 @@ import 'package:simplechat/screens/setting/my_post_screen.dart';
 import 'package:simplechat/screens/setting/privacy_screen.dart';
 import 'package:simplechat/screens/setting/profile_screen.dart';
 import 'package:simplechat/services/dialog_service.dart';
+import 'package:simplechat/services/file_service.dart';
 import 'package:simplechat/services/navigator_service.dart';
 import 'package:simplechat/services/network_service.dart';
 import 'package:simplechat/services/string_service.dart';
@@ -103,9 +110,33 @@ class _SettingScreenState extends State<SettingScreen> {
     },
   ];
 
+  final _boundaryKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
+  }
+
+  Future<void> _onCapturePressed() async {
+    CaptureResult _image = await captureImage();
+    // DialogService(context).showCustomModalBottomSheet(
+        // bodyWidget: Image.memory(_image.data, width: _image.width.toDouble(), height: _image.height.toDouble(),));
+    var rootPath = await FileService.getRootPath();
+    var file = await File('$rootPath/my_qr_code.jpg').writeAsBytes(_image.data);
+    print('my_qr_code ===> ${file.path}');
+    await FlutterShare.shareFile(
+      title: 'SimpleChat Share',
+      text: '${currentUser.username}\'s QR Code',
+      filePath: file.path,
+    );
+  }
+
+  Future<CaptureResult> captureImage() async {
+    final pixelRatio = MediaQuery.of(context).devicePixelRatio;
+    final boundary = _boundaryKey.currentContext.findRenderObject() as RenderRepaintBoundary;
+    final image = await boundary.toImage(pixelRatio: pixelRatio);
+    final data = await image.toByteData(format: ui.ImageByteFormat.png);
+    return CaptureResult(data.buffer.asUint8List(), image.width, image.height);
   }
 
   void showQRCode() {
@@ -119,14 +150,18 @@ class _SettingScreenState extends State<SettingScreen> {
           width: double.infinity,
           padding: EdgeInsets.all(offsetBase),
           child: Center(
-            child: QrImage(
-              data: encryptData,
-              version: QrVersions.auto,
-              embeddedImage: AssetImage('assets/icons/ic_logo.png'),
-              embeddedImageStyle: QrEmbeddedImageStyle(
-                size: Size(80, 80),
+            child: RepaintBoundary(
+              key: _boundaryKey,
+              child: QrImage(
+                data: encryptData,
+                version: QrVersions.auto,
+                backgroundColor: Colors.white,
+                embeddedImage: AssetImage('assets/images/icon_android.png'),
+                embeddedImageStyle: QrEmbeddedImageStyle(
+                  size: Size(64, 64),
+                ),
+                size: 256.0,
               ),
-              size: 250.0,
             ),
           ),
         ),
@@ -160,6 +195,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   title: 'Share',
                   action: () {
                     Navigator.of(context, rootNavigator: true).pop();
+                    _onCapturePressed();
                   },
                 ),
               ),

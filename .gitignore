@@ -4128,3 +4128,4 @@ android/.idea/libraries/Gradle__io_flutter_flutter_embedding_release_1_0_0_05e68
 android/.idea/libraries/Gradle__io_flutter_x86_64_release_1_0_0_05e680e202af9a92461070cb2d9982acad46c83c.xml
 android/app/release/app-release.apk
 android/app/release/output-metadata.json
+/android/.idea/libraries/
