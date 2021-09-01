@@ -37,17 +37,17 @@ android {
 
     signingConfigs {
         debug {
-            storeFile file('keystore.jks')
-            storePassword '123456'
-            keyAlias 'key0'
-            keyPassword '123456'
+            storeFile file('**********')
+            storePassword '**********'
+            keyAlias '**********'
+            keyPassword '**********'
         }
 
         release {
-            storeFile file('keystore.jks')
-            storePassword '123456'
-            keyAlias 'key0'
-            keyPassword '123456'
+            storeFile file('**********')
+            storePassword '**********'
+            keyAlias '**********'
+            keyPassword '**********'
         }
     }
 
