@@ -1,13 +1,13 @@
 # SChat-client
 
-##Features
+## Features
 Login Auth without Firebase.
 Post feeds and stories like Facebook. 
 Strong Chat without Firebase. 
 Management Setting.
 Invite and request friend.
 
-##Processing
+## Processing
 Local Auth using Finger Pinter and Face ID. 
 Nearby job matching.
 Video calling.
