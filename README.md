@@ -1,5 +1,4 @@
-# SChat-client
-
+# SimpleChat
 ## Features
 Login Auth without Firebase. <br>
 Post feeds and stories like Facebook. <br>
